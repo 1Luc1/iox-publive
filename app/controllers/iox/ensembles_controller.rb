@@ -69,7 +69,10 @@ module Iox
       @ensemble.created_by = current_user.id
       if @ensemble.save
 
-        Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'created', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: ensemble_path(@ensemble)
+        begin
+          Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'created', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: ensemble_path(@ensemble)
+        rescue
+        end
 
         flash.notice = t('ensemble.saved', name: @ensemble.name)
         if request.xhr?
@@ -120,7 +123,14 @@ module Iox
 
     def members_of
       if @ensemble = Ensemble.unscoped.where( id: params[:id] ).first
-        render json: @ensemble.ensemble_people.includes(:person).references(:iox_people).order("iox_people.lastname").load
+
+        @ensemble_people = @ensemble.ensemble_people.includes(:person).references(:iox_people).order("iox_people.lastname").load
+        # swipe out entries where person behind has gone
+        @ensemble_people.each do |epe|
+          epe.destroy unless epe.person
+        end
+
+        render json: @ensemble_people
       else
         render json: []
       end

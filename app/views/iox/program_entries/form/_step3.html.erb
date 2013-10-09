@@ -189,6 +189,7 @@ $(function(){
                   ' <i>${ data.city }</i>',
         filter: 'contains',
         minLength: 2,
+        placeholder: '<%= t('enter_search_term') %>',
         dataSource: {
             type: "json",
             serverFiltering: true,
@@ -234,6 +235,7 @@ $(function(){
         dataTextField: "title",
         template: '<span>${ data.title }</span>',
         filter: 'contains',
+        placeholder: '<%= t('enter_search_term') %>',
         minLength: 2,
         dataSource: {
             type: "json",

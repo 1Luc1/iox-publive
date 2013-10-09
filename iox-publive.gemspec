@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{iox extension for publishing and archiving events}
   spec.summary       = %q{This module extends the iox content management framework with a public event database}
   spec.homepage      = ""
-  spec.license       = "commercial"
+  spec.license       = "GPLv3"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

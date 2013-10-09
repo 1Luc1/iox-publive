@@ -353,6 +353,7 @@ module Iox
         :meta_keywords, :meta_description,
         :author, :coproduction,
         :others_can_change,
+        :published,
         :cabaret_artist_ids, :author_ids,
         :youtube_url, :vimeo_url,
         :show_cabaret_artists_in_title, :has_breaks,

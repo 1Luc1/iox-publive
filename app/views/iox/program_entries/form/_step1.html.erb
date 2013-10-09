@@ -1,7 +1,7 @@
 <div id="step1" class="step-pane active">
 
   <div class="row-fluid form-wrapper">
-    <%= form_for @program_entry, remote: !@program_entry.new_record? do |f| %>
+    <%= form_for @program_entry, remote: !@program_entry.new_record?, html: { :'data-form-id' => @program_entry.id } do |f| %>
 
 
       <% if current_user.is_admin? && (@program_entry.conflict || @program_entry.conflict_id) %>
@@ -115,6 +115,8 @@
         <%= f.text_field :coproduction, class: 'span8 coproduction' %>
       </div>
 
+      <%= f.hidden_field :published %>
+
     <% end %>
   </div>
 </div>
@@ -193,7 +195,10 @@
       ]
     });
 
+
+
     $('#step1 form:first').on('submit', function(e){
+      $('#program_entry_description').val( CKEDITOR.instances['program_entry_description'].getData() );
       $('.stepContainer').block();
     });
 

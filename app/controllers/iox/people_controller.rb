@@ -128,7 +128,10 @@ module Iox
         @person.attributes = person_params
         if @person.save
 
+        begin
           Iox::Activity.create! user_id: current_user.id, obj_name: @person.name, action: 'updated', icon_class: 'icon-group', obj_id: @person.id, obj_type: @person.class.name, obj_path: people_path(@person)
+        rescue
+        end
 
           flash.notice = t('person.saved', name: @person.name)
           flash.notice = t('settings_saved', name: @person.name) if params[:settings_form]

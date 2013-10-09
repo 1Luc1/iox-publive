@@ -86,16 +86,12 @@ function setupPEEvents(){
 
   $('[data-role=publish-and-finish]').on('click', function(e){
     e.preventDefault();
-    $.ajax({ url: $(this).closest('.iox-content-padding').find('form:first').attr('action')+'/publish',
-      data: { publish: true },
-      type: 'put',
-      dataType: 'json'
-    }).done( function(json){
-      iox.flash.rails(json.flash);
-      $('#pe-grid').data('kendoGrid').dataSource.get(json.item.id).set('published', json.item.published );
-      $('.iox-details-container').remove();
-      $('.iox-content').show();
-    });
+    var $form = $(this).closest('.iox-content-padding').find('form:first');
+    $form.find('#program_entry_published').val('1');
+    $form.submit();
+    $('#pe-grid').data('kendoGrid').dataSource.get($form.attr('data-form-id')).set('published', true );
+    $('.iox-details-container').remove();
+    $('.iox-content').show();
   });
 
 }
