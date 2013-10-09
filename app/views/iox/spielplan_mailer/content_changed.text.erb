@@ -1,0 +1,25 @@
+Hallo!
+
+Dein Eintrag <%= @obj.is_a?(Iox::ProgramEntry) ? @obj.title : @obj.name %> wurde von <%= @took_action.full_name %> geändert.
+
+Liste der geänderten Felder:
+
+
+<% @changes.each_pair do |field, values| %>
+<% next if field =~ /updated_at|updated_by/ %>
+<% next if values[0].blank? && values[1].blank? %>
+<%= @obj.is_a?(Iox::ProgramEntry) ? t("program_entry.form.#{field}") : t("#{@obj.class.name.sub('Iox::','').downcase}.#{field}") %>
+von:
+<%= values[0] %>
+
+zu:
+<%= values[1] %>
+<% end %>
+
+<% if @changes[:updated_at] && @changes[:updated_at][0] %>
+  Dabei wurde der Stand vom <%= @changes[:updated_at][0] %> überschreiben.
+<% end %>
+
+http://<%= Rails.configuration.iox.domain_name %><%= url_for @obj %>/edit
+
+<%= t 'auto_generated', support_email: Rails.configuration.iox.support_email %>

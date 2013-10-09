@@ -1,0 +1,85 @@
+<script type="text/javascript">
+
+  $(function(){
+
+    function queryResults(e){
+      e.preventDefault();
+      $filter = new Array();
+      $x = $('.query').val();
+      if( lastSearch === $x )
+        return;
+      if($x)
+        $filter.push({ field:"x", operator:"contains", value:$x});
+      lastSearch = $x;
+      kGrid.data('kendoGrid').dataSource.filter($filter);
+      if( $x.length > 0 )
+        $('.iox-grid-header .clear-query').fadeIn();
+      else
+        $('.iox-grid-header .clear-query').fadeOut();
+    }
+
+    var newValue = 0;
+    var lastSearch = '';
+    $('.query').on('keyup', function(e){
+      if( e.keyCode === 27 ){
+        $(this).val('');
+        return queryResults(e);
+      }
+      newValue = (new Date()).getTime();
+      setTimeout( function(){
+        if( newValue > (new Date()).getTime()-510 )
+          queryResults(e);
+      }, 500);
+    });
+    $('.submit-query').on('click', queryResults );
+
+    $('.iox-grid-header .options-container .item').on('click', function(e){
+      if( $(e.target).get(0).nodeName === 'INPUT' )
+        return;
+      $(this).closest('div').find('input').attr('checked', false);
+      $(this).find('input').click().attr('checked', true);
+    });
+
+    $('.iox-grid-header .clear-query').on('click', function(e){
+      $(this).hide();
+      $('.query').val('').focus();
+      queryResults(e);
+    });
+
+    $('.query').val('');
+
+    setTimeout( function(){
+      $.getScript('<%= asset_path('program_entries.js') %>');
+      $.getScript('<%= asset_path('events.js') %>');
+      $.getScript('/javascripts/3rdparty/ckeditor/ckeditor.js', function(){
+        CKEDITOR.basePath = '/javascripts/3rdparty/ckeditor/';
+        CKEDITOR.config.contentsCss = '/javascripts/3rdparty/ckeditor/contents.css';
+      });
+
+      $.getScript('<%= asset_path('3rdparty/leaflet.js') %>', function(){
+        L.Icon.Default.imagePath = '/images/3rdparty/leafletjs';
+      });
+      $('head link[href]:last')
+        .after('<link href="<%= asset_path('3rdparty/leaflet.css') %>" rel="stylesheet"/ >')
+        .after('<link href="<%= asset_path('3rdparty/leaflet.ie.css') %>" rel="stylesheet"/ >');
+
+      $.getScript('<%= asset_path('iox/venues.js') %>');
+
+
+    }, 500); // wait 500ms until other things have finished
+
+    $('.iox-k-grid').delegate("tbody>tr", "dblclick", function(){
+      $(this).find('.k-grid-editPE').click();
+    });
+
+    $('body').off('keyup', fireEditCell).on('keyup', fireEditCell);
+
+    function fireEditCell(e) {
+      if( e.keyCode === 13 && $('#venue-grid_active_cell:visible').length ){
+        $('#venue-grid_active_cell').closest('tr').find('.k-grid-editPE').click();
+      }
+    }
+
+  });
+
+</script>

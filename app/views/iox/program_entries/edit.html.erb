@@ -1,0 +1,10 @@
+<%= render partial: 'form' unless @insufficient_rights %>
+<% if flash.alert %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+
+  </script>
+<% end %>

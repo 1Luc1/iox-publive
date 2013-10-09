@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+
+    <div style="background-color:#C41000;">
+    <br/>
+    <div style="color:#ffffff; font-size:28px; font-weight:300; font-weight:lighter; letter-spacing:-0.04em; font-family:'OpenSans','Open Sans','Segoe UI','DejaVu Sans','Myriad Pro','Myriad','Calibri',Sans-Serif; text-shadow:0 -1px 0 #5E0800;">&nbsp;&nbsp;&nbsp;THE<span style="font-weight:bold; font-weight:900;"><span style="letter-spacing:-0.1em;">A</span>T</span>ER<span style="font-size:18px; font-weight:normal; font-weight:500; letter-spacing:0;">spielplan</span></div>
+    </br>
+    </div>
+    <br/>
+
+    <div style="font-size:16px; font-family:Sans-Serif; font-weight:bold;">Hallo!</div>
+
+    <div style="font-size:14px; font-family:Sans-Serif;">
+    Dein Eintrag <strong><%= @obj.is_a?(Iox::ProgramEntry) ? @obj.title : @obj.name %></strong> wurde von <storng><%= @took_action.full_name %></storng> geändert.
+    </div>
+
+    <div style="font-size:14px; font-family:Sans-Serif;">&nbsp;</div>
+
+    <div style="font-size:10px; font-family:Sans-Serif;">
+      <p><strong>Liste der geänderten Felder:</strong></p>
+
+      <ul>
+        <% @changes.each_pair do |field, values| %>
+          <% next if field =~ /updated_at|updated_by/ %>
+          <% next if values[0].blank? && values[1].blank? %>
+          <li>
+            <strong><%= @obj.is_a?(Iox::ProgramEntry) ? t("program_entry.form.#{field}") : t("#{@obj.class.name.sub('Iox::','').downcase}.#{field}") %></strong><br/>
+            <em>von:</em><br/>
+            <%= values[0] %><br/>
+            <br/>
+            <em>zu:</em><br/>
+            <%= values[1] %>
+          </li>
+        <% end %>
+      </ul>
+
+      <% if @changes[:updated_at] && @changes[:updated_at][0] %>
+        <p>Dabei wurde der Stand vom <%= @changes[:updated_at][0] %> von überschreiben.</p>
+      <% end %>
+
+    </div>
+
+    <div style="font-size:14px; font-family:Sans-Serif;">
+    <a href="http://<%= Rails.configuration.iox.domain_name %><%= url_for @obj %>/edit">http://<%= Rails.configuration.iox.domain_name %><%= url_for @obj %>/edit</a>
+    </div>
+
+    <div style="font-size:14px; font-family:Sans-Serif;">&nbsp;</div>
+    <div style="font-size:10px; font-family:Sans-Serif;"><%= t 'auto_generated', support_email: Rails.configuration.iox.support_email %></a>
+    </div>
+
+  </body>
+</html>

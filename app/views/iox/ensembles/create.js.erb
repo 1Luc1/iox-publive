@@ -1,0 +1,23 @@
+$.unblockUI();
+<% if flash.notice %>
+
+
+  var $newDtls = $('<div class="iox-details-container iox-content">').append( iox.loader );
+  $('.iox-content:last').after( $newDtls );
+  $('.iox-content').hide();
+  $newDtls.show().load( '<%= edit_ensemble_path(@ensemble) %>?layout=false' );
+
+  $('.select2-container-active').closest('.field-box').find('select')
+    .append('<option value="<%= @ensemble.id %>"><%= @ensemble.name %></option>')
+    .val('<%= @ensemble.id %>').trigger('change');
+
+  $('.select2-drop').hide();
+
+  if( typeof(reloadPreview) === 'function' )
+    reloadPreview();
+
+  iox.Win.closeVisible();
+
+<% end %>
+
+iox.flash.rails( <%= raw flash.to_json %> );

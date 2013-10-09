@@ -1,0 +1,25 @@
+<%= form_for @obj, remote: true, html: { class: 'iox-win-auth-form'} do |f| %>
+
+  <div class="content-padding">
+
+    <div class="field-box">
+      <%= f.label t('name') %>
+      <%= f.text_field :name, class: 'js-get-focus' %>
+      <% if @help_txt %><br /><span class="mini-desc"><%= @help_txt %></span><% end %>
+      <% if @hidden_fields %>
+        <% @hidden_fields.each do |hf| %>
+          <%= f.hidden_field hf %>
+        <% end %>
+      <% end %>
+      <%= hidden_field_tag(:skip_edit, true) if params[:skip_edit] %>
+      <%= f.submit '', style: 'display:none' %>
+    </div>
+
+  </div>
+
+  <div class="iox-win-footer">
+    <button type="submit" class="btn btn-primary"><%= t('create') %></button>
+    <button class="btn" data-close-win="true"><%= t('cancel') %></button>
+  </div>
+
+<% end %>

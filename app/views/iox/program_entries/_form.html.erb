@@ -1,0 +1,146 @@
+<% if @layout %>
+
+    <%= content_for :add_js do %>
+
+      <%= javascript_include_tag '/javascripts/3rdparty/ckeditor/ckeditor.js' %>
+      <%= javascript_include_tag '3rdparty/leaflet.js' %>
+
+      <%= javascript_include_tag 'program_entries' %>
+      <%= javascript_include_tag 'events' %>
+    <% end %>
+
+    <%= content_for :add_css do %>
+      <%= stylesheet_link_tag '3rdparty/leaflet' %>
+      <!--[if lte IE 8]>
+         <%= stylesheet_link_tag '3rdparty/leaflet.ie' %>
+      <![endif]-->
+
+      <%= stylesheet_link_tag 'program_entries' %>
+    <% end %>
+
+<div class="iox-content">
+  <div class="iox-sidebar-arrow"></div>
+<% end %>
+  <div class="iox-content-frame auto-overflow" style="right:auto; padding-right: 10px;">
+
+    <div class="iox-content-padding">
+
+      <div class="control">
+        <% if !@program_entry.new_record? && !@program_entry.published? %>
+          <a href="#" data-role="publish-and-finish" class="btn btn-primary"><i class="icon-ok-sign"></i> <%= t('publish_and_finish') %></a>
+        <% end %>
+        <a href="#" data-role="submit" class="btn btn-primary"><%= @program_entry.new_record? ? t('create') : t('save') %></a>
+        <% if !@layout %>
+         <a href="#" data-role="switch2content" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
+        <% else %>
+          <a href="<%= program_entries_path %>" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
+        <% end %>
+        <% unless @program_entry.new_record? %>
+          <a href="<%= edit_program_entry_path(@program_entry) %>" class="btn"><i class="icon-link" title="<%= t('program_entry.full_link') %>" target="_blank"></i></a>
+          <a href="#" data-xhr-win="true" data-xhr-href="<%= settings_for_program_entry_path(@program_entry) %>" class="btn" title="<%= t('settings') %>"><i class="icon-gear"></i></a>
+        <% end %>
+      </div>
+      <h3 class="title"><%= t('program_entries.title2') %></h3>
+
+      <div id="preview" class="events preview-container">
+        <p class="default-text">
+          <% if @program_entry.new_record? %>
+            <%= t('click_create_button_to_continue_to_other_steps') %>
+          <% else %>
+            <%= t('preview_is_available_after_created') %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="wizard swMain" id="program-entry-wizard">
+          <ul>
+            <li>
+              <a href="#step1">
+                <label class="stepNumber">1</label>
+                <span class="stepDesc">
+                  <br />
+                  <small><%= raw(t('program_entry.form.general')) %></small>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step2">
+                <label class="stepNumber">2</label>
+                <span class="stepDesc">
+                  <br />
+                  <small><%= raw(t('program_entry.form.crew')) %></small>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step3">
+                <label class="stepNumber">3</label>
+                <span class="stepDesc">
+                  <br />
+                  <small><%= raw(t('program_entry.form.dates_and_venues')) %></small>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step4">
+                <label class="stepNumber">4</label>
+                <span class="stepDesc">
+                  <br />
+                  <small><%= raw(t('program_entry.form.media_and_tickets')) %></small>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <%= render partial: 'iox/program_entries/form/step1' %>
+          <%= render partial: 'iox/program_entries/form/step2' unless @program_entry.new_record? %>
+          <%= render partial: 'iox/program_entries/form/step3' unless @program_entry.new_record? %>
+          <%= render partial: 'iox/program_entries/form/step4' unless @program_entry.new_record? %>
+      </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+      function reloadPreview(){
+
+        <% if !@program_entry.new_record? && @program_entry.events.size > 0 %>
+          $.get('/evts/<%= @program_entry.id %>/day_snippet?starts=<%= @program_entry.events.first.starts_at %>', function( response ){
+            $('#preview').html( response ).find('.day-wrapper > .day').html('<%= t('preview') %>');
+            setupEventItemActionListeners();
+          });
+        <% end %>
+
+      }
+
+      $(document).ready( function(){
+        var commonWizardAttrs = {
+          keyNavigation: false
+        };
+        <% unless @program_entry.new_record? %>
+          commonWizardAttrs.selected = <%= @proceed_to_step || 0 %>;
+          commonWizardAttrs.enableAllSteps = true;
+          commonWizardAttrs.enableFinishButton = true;
+          commonWizardAttrs.onFinish = function( obj ){
+            $.blockUI({ message: $('#preview-and-publish-modal').html() });
+          };
+          commonWizardAttrs.onLeaveStep = function( obj ){
+            var stepNum = parseInt(obj.attr('rel'));
+            // if( stepNum === 1 )
+            //   $('#program-entry-wizard form:first').submit();
+            return true;
+          };
+        <% end %>
+        $('#program-entry-wizard').smartWizard( commonWizardAttrs );
+
+        <% if @program_entry.events.size > 0 %>
+          reloadPreview();
+        <% end %>
+
+      });
+
+    </script>
+<% if @layout %>
+
+  </div>
+</div>
+<% end %>

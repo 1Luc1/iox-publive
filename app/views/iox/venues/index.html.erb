@@ -1,0 +1,166 @@
+<%= content_for :add_css do %>
+<%= stylesheet_link_tag 'program_entries' %>
+<% end %>
+
+<div class="iox-content iox-content-container" id="iox-venue-content">
+  <div class="iox-sidebar-arrow"></div>
+  <div class="iox-content-frame">
+
+    <div class="iox-content-padding">
+
+      <div class="iox-user-header iox-grid-header clearfix">
+        <a href="<%= new_venue_path %>" class="btn btn-primary" data-xhr-win="true" data-xhr-win-title="<%= t('venue.new') %>"><%= t('venue.new') %></a>
+        <div class="query-container">
+          <input type="text" class="query" name="query" autocomplete="off" />
+          <button class="clear-query"><i class="icon-remove"></i></button>
+          <button class="submit-query"><i class="icon-search"></i></button>
+        </div>
+        <div class="options-container">
+          <div class="options-container-inner">
+            <div class="item-col">
+              <span class="item"><input type="radio"<%= " checked=checked" if @only_mine %> name="only_mine" value="true" /><%= t('only_mine') %></span><br />
+              <span class="item"><input type="radio"<%= " checked=checked" unless @only_mine %> name="only_mine" value="false" /><%= t('all_entries') %></span><br />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="venue-grid" class="iox-k-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var kGrid;
+
+  $(function(){
+
+    kGrid = $("#venue-grid").kendoGrid({
+      columns: [
+        { field: "id",
+          title: "ID",
+          width: 70,
+          attributes: {
+            style: "text-align: right"
+          } },
+        { field: "name", title: "<%= t('venue.venue_name') %>", template: "<span#if(archived){# style='text-decoration:line-through'#}#>#= name #</span>" },
+        { field: 'zip', title: '<%= t('zip') %>', width: 70,
+          attributes: {
+            style: "text-align: right"
+          }
+        },
+        { field: 'city', title: '<%= t('city') %>' },
+        { field: "events_num",
+          title: "<%= t('events_num') %>",
+          sortable: false,
+          width: 70,
+          attributes: {
+            style: "text-align: right"
+          }
+        },
+        { field: "updater_name",
+          title: "<%= t('updated_by') %>"
+        },
+        { field: 'updated_at',
+          title: '<%= t('updated_at') %>',
+          format: '{0:dd.MM.yyyy HH:mm}',
+          width: 120,
+          attributes: {
+            style: 'text-align: right'
+          }
+        },
+        { command:
+          [
+            { name: 'editPE',
+              text: '<i class="icon-edit"></i>',
+              click: function(e){
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                $('#iox-venue-content').hide();
+
+                var $newDtls = $('<div class="iox-details-container iox-content">').append( iox.loader );
+                $('.iox-content').after( $newDtls );
+                $('.iox-content').hide();
+                $newDtls.show().load( '/iox/venues/'+dataItem.id+'/edit?layout=false', function(){
+                  setupPEEvents();
+                });
+              }
+            },
+            { name: 'deletePE', text: '<i class="icon-remove"></i>',
+              click: function(e){
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                $.ajax({
+                  url: '<%= venues_path %>/'+ dataItem.id,
+                  type: 'delete',
+                  dataType: 'json'
+                }).done( function(json){
+                  iox.flash.rails(json.flash);
+                  if( json.success )
+                    kGrid.data('kendoGrid').removeRow( $(e.target).closest('tr') );
+                }).fail( function(json){
+                  iox.flash.rails(json.flash);
+                });
+              }
+            }
+          ],
+          width: 62
+        }
+      ],
+      dataSource: {
+        type: "json",
+        transport: {
+          read: {
+            url: "<%= venues_path %>",
+            dataType: 'json',
+            data: function(){
+              return { only_mine: $('input[name=only_mine]:checked').val() === 'true' };
+            }
+          }
+        },
+        schema: {
+          total: 'total',
+          data: function(response) {
+            return response.items;
+          },
+          model: {
+            fields: {
+              id: { type: 'number' },
+              title: { type: 'string' },
+              venue_name: { type: 'string' },
+              venue_name: { type: 'string' },
+              starts_at: { type: 'date' },
+              zip: { type: 'string' },
+              city: { type: 'string' },
+              ends_at: { type: 'date' },
+              updater_name: { type: 'string' },
+              updated_at: { type: 'date', width: 110 }
+            }
+          }
+        },
+        serverPaging: true,
+        serverFiltering: true,
+        serverSorting: true,
+        sort: { field: "updated_at", dir: "desc" }
+      },
+      height: $(window).height()-150,
+      selectable: "multiple",
+      resizable: true,
+      navigatable: true,
+      sortable: true,
+      pageable: {
+        refresh: true,
+        pageSize: 30,
+        pageSizes: [10, 30, 50, 100]
+      }
+    });
+
+    $('input[name=only_mine]').on('click', function(){
+      kGrid.data('kendoGrid').dataSource.read();
+    });
+
+  }); // document.ready
+
+</script>
+
+<%= render partial: '/iox/program_entries/grid_common' %>

@@ -1,0 +1,336 @@
+<%= content_for :add_to_head do %>
+
+  <%= stylesheet_link_tag 'program_entries.css' %>
+  <%= javascript_include_tag 'iox/ensembles' %>
+
+<% end %>
+
+<% if @layout %>
+<div class="iox-content">
+  <div class="iox-sidebar-arrow"></div>
+
+<% end %>
+
+
+    <div class="iox-content-frame auto-overflow">
+
+      <div class="iox-content-padding">
+
+        <div class="control">
+        <% unless @insufficient_rights %>
+          <a href="#" data-role="submit" class="btn btn-primary"><%= @ensemble.new_record? ? t('create') : t('save') %></a>
+        <% end %>
+          <a href="#" data-role="switch2content" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
+        <% unless @insufficient_rights %>
+          <a href="/ens/<%= @ensemble.to_param %>" class="btn" title="<%= t('view') %>" target="_blank"><i class="icon-eye-open"></i></a>
+          <a href="#" data-xhr-win="true" data-xhr-href="<%= settings_for_ensemble_path(@ensemble) %>" class="btn"><i class="icon-gear"></i></a>
+        <% end %>
+        </div>
+
+        <div id="ensemble-tabs" class="tab-wrapper k-tab">
+
+          <ul>
+            <li class="k-state-active"><%= t('general') %></li>
+            <li><%= t('ensemble.members') %></li>
+            <li><%= t('ensemble.photos') %></li>
+          </ul>
+
+          <div class="tab-content clearfix">
+
+            <h3 class="title">
+              <% if @ensemble.new_record? %>
+                <%= t('ensemble.ensemble') %>
+              <% else %>
+                <%= @ensemble.name %>
+                <small><%= t('ensemble.ensemble') %></small>
+              <% end %>
+            </h3>
+
+            <%= form_for @ensemble, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
+
+              <% if current_user.is_admin? && @ensemble.import_foreign_db_id %>
+                <div class="admin-box field-box">
+                  <label>SYNCED</label>
+                  <%= f.text_field :import_foreign_db_name, disabled: true %>
+                  <%= f.text_field :import_foreign_db_id, style: 'width: 100px', disabled: true %>
+                </div>
+              <% end %>
+
+              <div class="field-box">
+                <%= f.label :organizer, t('type') %>
+                <%= f.radio_button :organizer, false %>
+                <span class="desc"><%= t('ensemble.ensemble') %></span>
+                <%= f.radio_button :organizer, true %>
+                <span class="desc"><%= t('ensemble.organizer') %></span>
+              </div>
+
+              <fieldset>
+                <legend><%= t('general') %></legend>
+                <div class="field-box">
+                  <%= f.label :name, t('name') %>
+                  <%= f.text_field :name %>
+                </div>
+                <div class="field-box">
+                    <%= f.label :email, t('email') %>
+                    <%= f.text_field :email %>
+                </div>
+                <div class="field-box">
+                    <%= f.label :phone, t('phone') %>
+                    <%= f.text_field :phone %>
+                </div>
+                <div class="field-box">
+                    <%= f.label :country, t('country') %>
+                    <%= f.select :country, raw(country_options_for_select(@ensemble.country)), { include_blank: false }, { class: 'country-select', style: 'width: 400px' } %>
+                </div>
+                <div class="field-box">
+                    <%= f.label :zip, t('zip_city') %>
+                    <%= f.text_field :zip, style: 'width: 100px' %>
+                    <%= f.text_field :city, style: 'width: 200px' %>
+                </div>
+                <div class="field-box">
+                    <%= f.label :street, t('street') %>
+                    <%= f.text_field :street %>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend><%= t('ensemble.about') %></legend>
+                <div class="field-box">
+                    <%= f.label :description, t('description') %>
+                    <%= f.text_area :description, class: 'ckeditor' %>
+                </div>
+
+              </fieldset>
+
+              <fieldset>
+                <legend><%= t('ensemble.social_media_and_contact') %></legend>
+
+                <div class="field-box">
+                    <%= f.label :url, t('website') %>
+                    <%= f.text_field :url, class: 'span8' %>
+                </div>
+
+                <div class="field-box">
+                  <label title="<%= t('ensemble.facebook_url') %>"><i class="label-icon icon-facebook-sign"></i></label>
+                    <%= f.text_field :facebook_url, class: 'span8' %>
+                </div>
+                <div class="field-box">
+                    <label title="<%= t('ensemble.twitter_url') %>"><i class="label-icon icon-twitter-sign"></i></label>
+                    <%= f.text_field :twitter_url, class: 'span8' %>
+                </div>
+                <div class="field-box">
+                  <label title="<%= t('ensemble.youtube_url') %>"><i class="label-icon icon-youtube-sign"></i></label>
+                  <%= f.text_field :youtube_url, class: 'span8' %>
+                </div>
+                <div class="field-box">
+                  <label title="<%= t('ensemble.google_plus_url') %>"><i class="label-icon icon-google-plus-sign"></i></label>
+                  <%= f.text_field :google_plus_url, class: 'span8' %>
+                </div>
+              </fieldset>
+              <%= f.submit '', class: 'hide' %>
+
+            <% end %>
+
+          </div>
+
+          <div class="tab-content clearfix">
+
+            <p><%= t('ensemble.members') %></p>
+
+            <div id="members-grid"></div>
+
+          </div>
+
+          <div class="tab-content clearfix">
+
+            <p><%= t('ensemble.photos') %></p>
+
+            <!-- logo column -->
+            <div class="avatar-box">
+              <div class="avatar">
+                <% if @ensemble.images.size > 0 %>
+                  <%= image_tag @ensemble.images.last.file.url(:thumb), class: 'logo', :"data-ensemble-id" => @ensemble.id %>
+                <% else %>
+                  <%= image_tag '/images/thumb/missing.png', class: 'logo', :"data-ensemble-id" => @ensemble.id %>
+                <% end %>
+                <p><%= t('click_to_change_picture') %></p>
+                <%= file_field_tag "ensemble[logo]", "data-url" => upload_logo_ensemble_path(@ensemble), :multiple => false, :class => "upload-avatar" %>
+              </div>
+            </div>
+
+          </div>
+
+        </div> <!-- tabs -->
+
+      </div>
+    </div>
+
+    <script type="text/html" id="person-template">
+      <li>
+        <i class="pull-right icon-remove"></i>
+        <span data-bind="text: firstname"></span>
+        <strong data-bind="text: lastname"></strong>
+      </li>
+    </script>
+
+    <% unless @ensemble.new_record? %>
+
+      <script type="text/javascript">
+        $(document).ready( function(){
+          setupEnsemble(<%= @ensemble.id %>);
+          $("#ensemble-tabs").kendoTabStrip();
+        });
+      </script>
+
+    <% end %>
+
+    <script type="text/javascript">
+
+      setupDefaultCKEditor( $('.ckeditor:visible') );
+
+    function prepareSaveCrew( options ){
+      var model = options.data.models[0];
+      model.ensemble_id = '<%= @ensemble.id %>';
+      if( !model.person_id ){
+        iox.flash.alert('<%= t('select_a_person') %>');
+        return;
+      }
+      return model;
+    }
+
+    function saveCrewSuccess( json, options ){
+        crewGrid.data('kendoGrid').dataSource.read();
+        iox.flash.rails(json.flash);
+        options.success(json.item);
+    }
+
+    function saveCrewError( json, options ){
+      iox.flash.rails(json.flash);
+      options.error();
+    }
+
+    var membersUrl = '<%= members_of_ensemble_path( @ensemble ) %>'
+      , crewDataSource = new kendo.data.DataSource({
+          transport: {
+              read:  function( options ){
+                $.getJSON( membersUrl, options.success );
+              },
+              update: function updateCrew( options ){
+                var model = prepareSaveCrew( options );
+                if( !model )
+                  return options.error('<%= t('select_a_person') %>');
+                $.ajax({ url: '<%= ensemble_people_path %>/'+model.id, type: 'patch', dataType: 'json',
+                         data: { ensemble_person: options.data.models[0] },
+                         success: function( json ){ saveCrewSuccess( json, options ) },
+                         error: function( json ){ saveCrewError( json, options ) }
+                });
+              },
+              destroy: function destroyCrewMember( options ){
+                var model = prepareSaveCrew( options );
+                if( !model )
+                  return options.error('<%= t('select_a_person') %>');
+                $.ajax({ url: '<%= ensemble_people_path %>/'+model.id, type: 'delete', dataType: 'json',
+                         success: function( json ){ iox.flash.rails(json.flash); options.success(); },
+                         error: function( json ){ iox.flash.rails(json.flash); options.error(); }
+                });
+              },
+              create: function createCrew( options ){
+                var model = prepareSaveCrew( options );
+                if( !model )
+                  return options.error('<%= t('select_a_person') %>');
+                $.ajax({ url: '<%= ensemble_people_path %>', type: 'post', dataType: 'json',
+                         data: { ensemble_person: options.data.models[0] },
+                         success: function( json ){ saveCrewSuccess( json, options ) },
+                         error: function( json ){ saveCrewError( json, options ) }
+                });
+              }
+          },
+          batch: true,
+          schema: {
+            model: {
+              id: 'id',
+              fields: {
+                  'name': { editable: true },
+                  'function': { editable: true },
+                  'ensemble_id': { editable: true },
+                  'person_id': { editable: true },
+                  updated_at: { editable: false, type: 'date' }
+              }
+            }
+          }
+      });
+
+      var crewGrid = $("#members-grid").kendoGrid({
+        dataSource: crewDataSource,
+        toolbar: [
+          { name: "create", text: "<%= t('ensemble.add_member') %>" }
+        ],
+        sortable: true,
+        pageable: false,
+        serverPaging: false,
+        serverFiltering: false,
+        serverSorting: false,
+        height: $(window).height()-350,
+        editable: {
+            confirmation: false,
+            mode: "inline"
+        },
+        columns: [
+          { field: 'name', title: "<%= t('name') %>", editor: personListEditor },
+          { field: 'function', title: "<%= t('program_entry.person.function') %>" },
+          {
+            field: "updated_at",
+            title: "<%= t('updated_at') %>",
+            width: 150,
+            format: "{0:dd.MM.yyyy HH:mm}"
+          },
+          { command: [
+            { name: "edit", text: { edit: 'Edit.', cancel: "<%= t('cancel')[0,3] %>.", update: "Ok"} },
+            { name: "destroy", text: '<%= t('delete')[0,4] %>'} ], title: "&nbsp;", width: "172px" },
+        ]
+      });
+
+    function personListEditor( container, options ){
+      var crewAutoComplete = $('<input type="text" data-bind="value:' + options.field + '"/>')
+      .appendTo(container)
+      .kendoAutoComplete({
+          dataTextField: "name",
+          template: '<span>${ data.name }</span>' +
+                    ' <i>${ data.ensemble_names }</i>',
+          filter: 'contains',
+          minLength: 2,
+          placeholder: '<%= t('person.type_person_name') %>',
+          dataSource: {
+              type: "json",
+              serverFiltering: true,
+              serverPaging: false,
+              transport: {
+                  read: '<%= simple_people_path %>'
+              }
+          },
+          change: function( e ) {
+            var idx = $(e.sender._current).index();
+            item = crewAutoComplete.data('kendoAutoComplete').dataItem( idx );
+            var crewEntry = crewGrid.data('kendoGrid').dataSource.at( container.closest('tr').index() );
+            if( typeof(item) === 'undefined' )
+              $.get( '<%= new_person_path %>?skip_edit=true&name='+crewAutoComplete.val(), function( html ){
+                $('.awaiting-new-record-id').removeClass('awaiting-new-record-id');
+                crewAutoComplete.addClass('awaiting-new-record-id').data('setNewRecordId', function setNewRecordId(record){
+                  crewEntry.set( 'person_id', record.id );
+                  crewAutoComplete.data('setNewRecordId',null).removeClass('awaiting-new-record-id');
+                });
+                new iox.Win({ content: html, title: '<%= t('person.add_person_question') %>' });
+              });
+            else
+              crewEntry.set( 'person_id', item.id );
+          }
+      });
+    }
+
+    </script>
+
+
+<% if @layout %>
+  </div>
+</div>
+<% end %>

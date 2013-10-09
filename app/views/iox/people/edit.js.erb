@@ -1,0 +1,10 @@
+var $elem = $('#edit-person-modal').clone();
+$elem.find('.block-body').html('<%= escape_javascript(render partial: 'form') %>');
+$.blockUI({
+  message: $elem,
+  css: { width: '80%', top: 0, left: 0, right: 0, bottom: 0, margin: 'auto', maxHeight: '80%' },
+  onBlock: function(){
+    setupPersonAvatarUpload();
+  }
+});
+//$elem.find('.block-body').css('height', $('.blockUI:visible').height()-210);

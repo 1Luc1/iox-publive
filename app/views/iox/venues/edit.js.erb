@@ -1,0 +1,16 @@
+var $elem = $('#edit-venue-modal').clone();
+$elem.find('.block-body').html('<%= escape_javascript(render partial: 'form') %>');
+$.blockUI({
+  message: $elem,
+  css: { width: '80%', top: 0, left: 0, right: 0, bottom: 0, margin: 'auto', maxHeight: '80%' },
+  onBlock: function(){
+    setupVenue( <%= raw @venue.to_json %>,
+      {
+        is_here: '<%= t('venue.is_here', name: @venue.name) %>',
+        save: '<%= t('save') %>',
+        set_as_location: '<%= t("venue.set_this_as_location") %>'
+      }
+    );
+  }
+});
+$elem.find('.block-body').css('height', $('.blockUI:visible').height()-225);

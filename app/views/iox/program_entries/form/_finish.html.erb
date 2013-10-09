@@ -1,0 +1,15 @@
+<div class="form-wrapper">
+
+    <p class="desc"><i class="icon-thumbs-up"></i><%= t('program_entry.you_are_finished') %></p>
+
+    <%= form_for @program_entry, method: :post, url: finish_program_entry_path(@program_entry), html: { class: 'pull-left', style: 'margin-right: 10px'} do |f| %>
+      <%= f.hidden_field :published, value: true %>
+      <%= f.submit t('program_entry.publish_now'), class: 'btn btn-flat success' %>
+    <% end %>
+
+    <%= form_for @program_entry, method: :post, url: finish_program_entry_path(@program_entry) do |f| %>
+      <%= f.hidden_field :published, value: false %>
+      <%= f.submit t('program_entry.publish_later'), class: 'btn btn-flat danger' %>
+    <% end %>
+
+</div>

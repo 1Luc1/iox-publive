@@ -1,0 +1,255 @@
+<div id="step1" class="step-pane active">
+
+  <div class="row-fluid form-wrapper">
+    <%= form_for @program_entry, remote: !@program_entry.new_record? do |f| %>
+
+
+      <% if current_user.is_admin? && (@program_entry.conflict || @program_entry.conflict_id) %>
+        <div class="field-box categories">
+          <label>KONFLIKT</label>
+          <% if @program_entry.conflict_id %>
+            <a href="/iox/program_entires/<%= @program_entry.conflict_id %>"><%= @program_entry.conflicting_item.title %></a>
+          <% else %>
+            <span>Unbekannt</span>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="field-box categories">
+        <%= f.label :categories, t('program_entry.form.categories') %>
+        <div style="width: 760px; margin-top: 5px">
+          <% get_clean_categories.each do |cat| %>
+              <%= f.radio_button :categories, cat, checked: @program_entry.categories == cat, class: 'category-selector' %>
+              <span><%= t("categories.#{cat}") %></span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field-box kab-only only-elem slide">
+        <%= f.label :cabaret_artist_ids, t('program_entry.form.cabaret_artist') %>
+        <%= f.select :cabaret_artist_ids, options_for_select( get_people, (@program_entry.cabaret_artist_ids.blank? ? 0 : @program_entry.cabaret_artist_ids.split(',').first.to_i) ), { include_blank: true }, { class: 'select-cabaret-artist-id', id: 'select-cabaret-artist-id', "data-url" => '/iox/people' } %>
+        <a href="#" class="btn edit-select2-btn" title="<%= t('person.edit') %>"><i class="icon-edit"></i></a>
+        <br />
+        <span class="label-offset">
+          <%= f.check_box :show_cabaret_artists_in_title %>
+          <%= t('program_entry.show_cabaret_artists_in_title') %>
+        </span>
+      </div>
+
+      <div class="field-box">
+        <label for="program_entry_title">
+          <span class="only-elem ttp-only jug-only kab-only"><%= t('program_entry.form.title') %></span>
+          <span class="only-elem fes-only"><%= t('program_entry.form.festival_title') %></span>
+        </label>
+        <%= f.text_field :title, class: 'span8 js-get-focus' %>
+
+        <% if @program_entry.errors && @program_entry.errors.messages.has_key?(:title) %>
+          <% @program_entry.errors.messages[:title].each do |msg| %>
+            <div class="field_with_errors alert-msg"><%= msg %></div>
+          <% end %>
+        <% end %>
+
+      </div>
+
+      <div class="field-box">
+        <%= f.label :subtitle, t('program_entry.form.subtitle') %>
+        <%= f.text_field :subtitle, class: 'span8' %>
+      </div>
+
+      <div class="field-box ttp-only jug-only only-elem slide">
+        <%= f.label :author_ids, t('program_entry.form.author') %>
+        <%= f.select :author_ids, options_for_select( get_people, (@program_entry.author_ids.blank? ? 0 : @program_entry.author_ids.split(',').first.to_i) ), { include_blank: true }, { id: 'select-author-id', class: 'select-cabaret-artist-id', "data-url" => '/iox/people' } %>
+        <a href="#" class="btn edit-select2-btn" title="<%= t('person.edit') %>"><i class="icon-edit"></i></a>
+      </div>
+
+      <div class="field-box">
+        <%= f.label :url, t('program_entry.form.url') %>
+        <%= f.text_field :url, class: 'span8', placeholder: 'z.B.: http://meine-gruppe.at/projekt-abc' %>
+      </div>
+      <div class="field-box">
+        <label>
+          <i class="icon-youtube-play"></i>
+          <%= t('program_entry.form.youtube_url') %>
+        </label>
+        <%= f.text_field :youtube_url, class: 'span8', placeholder: 'z.B.: http://www.youtube.com/watch?v=DNwA3DrdzwM' %>
+      </div>
+      <div class="field-box">
+        <label>
+          <i class="icon-film"></i>
+          <%= t('program_entry.form.vimeo_url') %>
+        </label>
+        <%= f.text_field :vimeo_url, class: 'span8', placeholder: 'z.B.: http://meine-gruppe.at/projekt-abc' %>
+      </div>
+      <div class="field-box">
+        <%= f.label :meta_keywords, t('program_entry.form.keywords') %>
+        <%= f.text_field :meta_keywords, class: 'select2-container meta-keywords' %>
+      </div>
+      <div class="field-box only-elem kab-only jug-only ttp-only">
+        <%= f.label :duration, t('program_entry.form.duration_in_min') %>
+        <div class="pull-right">
+          <%= f.check_box :has_breaks, style: 'margin: -1px 5px 0 0' %>
+          <span><%= t('program_entry.has_breaks') %></span>
+        </div>
+        <%= f.text_field :duration, class: 'span2', style: 'width: 80px; text-align: right;', placeholder: t('program_entry.form.in_mins') %>
+        <div class="slider duration-slider"></div>
+        <br />
+        <div class="offset2 desc"><%= t('program_entry.form.duration_desc') %></div>
+      </div>
+      <div class="field-box jug-only only-elem slide age-selector">
+        <%= f.label :age, t('program_entry.form.age') %>
+        <%= f.text_field :age, class: 'span2', style: 'width: 80px; text-align: right;', placeholder: 'z.B.: 5' %>
+        <div class="slider age-slider"></div>
+        <div class="offset2 desc"><%= t('program_entry.form.age_desc') %></div>
+      </div>
+      <div class="field-box">
+        <%= f.label :description, t('program_entry.form.description') %>
+        <%= f.text_area :description %>
+      </div>
+      <div class="field-box only-elem kab-only jug-only ttp-only">
+        <%= f.label :ensemble_id, t('program_entry.form.ensemble') %>
+        <%= f.select :ensemble_id, options_for_select( get_ensembles, @program_entry.ensemble_id ), { include_blank: true }, { class: 'ensemble-select2', :"data-url" => '/iox/ensembles' } %>
+        <a href="#" class="btn edit-select2-btn" title="<%= t('ensemble.edit') %>"><i class="icon-edit"></i></a>
+      </div>
+      <div class="field-box">
+        <%= f.label :coproduction, t('program_entry.form.coproduction') %>
+        <%= f.text_field :coproduction, class: 'span8 coproduction' %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  function updateOnlyElems(){
+    $('.form-wrapper .only-elem.slide').slideUp();
+    $('.form-wrapper .only-elem:not(.slide)').hide();
+    var val = $('.category-selector:checked').val();
+    $('.'+val+'-only').each( function(){
+      if( $(this).get(0).nodeName === 'DIV' )
+        $(this).slideDown();
+      else
+        $(this).show();
+    });
+  }
+
+  $(document).ready(function(){
+
+    updateOnlyElems();
+    $('.category-selector').on('change', updateOnlyElems);
+
+    $('#select-cabaret-artist-id').select2()
+      .select2('container').find('.select2-input').on('keydown', function( e ){
+        var term = $(this).val();
+        if( e.keyCode !== 13 || term.indexOf(' ') < 1 )
+          return;
+        if( confirm( term + ' <%= t('does_not_exist_create') %>') )
+          $.ajax({
+            url: '/iox/people',
+            type: 'post',
+            dataType: 'script',
+            data: { person: { name: term } }
+          });
+    });
+
+    $('#select-author-id').select2()
+      .select2('container').find('.select2-input').on('keydown', function( e ){
+        var term = $(this).val();
+        if( e.keyCode !== 13 || term.indexOf(' ') < 1 )
+          return;
+        if( confirm( term + ' <%= t('does_not_exist_create') %>') )
+          $.ajax({
+            url: '/iox/people',
+            type: 'post',
+            dataType: 'script',
+            data: { person: { name: term } }
+          });
+    });
+
+    $('.ensemble-select2').select2({
+      formatNoMatches: function( term ){
+        return '<%= t('no_matches') %>! '+term+' <%= t("create").downcase %>? <%= t('if_yes_press_enter') %>';
+      }
+    }).select2('container').find('.select2-input').on('keydown', function( e ){
+      if( e.keyCode !== 13 )
+        return;
+      var term = $(this).val();
+      if( confirm( term + ' <%= t('does_not_exist_create') %>') )
+        $.ajax({
+          url: '/iox/ensembles',
+          type: 'post',
+          dataType: 'script',
+          data: { ensemble: { name: term } }
+        });
+    });
+
+    CKEDITOR.replace( $('#program_entry_description').get(0), {
+      removePlugins: 'elementspath',
+      resize_enabled: false,
+      toolbar: [
+        [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],
+        [ 'Bold', 'Italic', 'OrderedList', 'UnorderedList'],
+        ['Source' ]
+      ]
+    });
+
+    $('#step1 form:first').on('submit', function(e){
+      $('.stepContainer').block();
+    });
+
+    $('#program_entry_title').on( 'change', function(e){
+      var self = this;
+      $.getJSON( '/iox/program_entries/find_conflicting_names?title='+$(this).val()+'&program_entry_id=<%= @program_entry.id %>', function(json){
+        if( json.length > 0 ){
+          $('#conflicting-items ul').html('');
+          new iox.Win({
+            content: $('#conflicting-items').html(),
+            completed: function($win){
+              ko.applyBindings( { items: json }, $win.get(0) );
+            }
+          });
+          $(self).addClass('nok').removeClass('ok');
+          $(self).attr('title', '<%= t('program_entry.conflicting_name_ignored') %>');
+        } else {
+          $(self).removeClass('nok').addClass('ok');
+        }
+      });
+    });
+
+  });
+</script>
+
+<script id="conflicting-item-template" type="text/html">
+  <li>
+    <a data-bind="attr: { href: '/iox/program_entries/'+id+'/edit' }" target="_blank">
+      <span data-bind="text: title"></span><br />
+      <%= t('ensemble.ensemble') %>: <span data-bind="text: ensemble_name"></span>
+      (<%= t('venue.venue') %>: <span data-bind="text: venue_name"></span>)<br />
+      <span data-bind="html: (starts_at ? moment(starts_at).format('DD. MMMM YYYY') : '')+' &mdash; ' + ( ends_at ? moment(ends_at).format('DD. MMMM YYYY') : '')"></span>
+    </a>
+  </li>
+</script>
+
+<div style="display:none;">
+
+  <div id="conflicting-items">
+    <span data-iox-win-title="true"><%= t('program_entry.conflicts_found') %></span>
+
+    <ul class="conflicting-items-list" data-bind="template: { name: 'conflicting-item-template', foreach: items }"></ul>
+
+    <div class="iox-win-footer">
+      <button type="submit" class="btn btn-warning" data-close-win="true"><%= t('program_entry.ignore_conflict_and_continue') %></button>
+      <button class="btn" data-close-win="true"><%= t('cancel') %></button>
+    </div>
+  </div>
+
+  <div id="finish_step1_first">
+    <p class="warning"><i class="icon-warning-sign"></i><%= t('program_entry.finish_step1_first') %></p>
+
+    <div class="iox-win-footer">
+      <button class="btn" data-close-win="true"><%= t('ok') %></button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,185 @@
+<%= content_for :add_css do %>
+<%= stylesheet_link_tag 'program_entries' %>
+<% end %>
+
+<div class="iox-content iox-content-container" id="iox-pe-content">
+  <div class="iox-sidebar-arrow"></div>
+  <div class="iox-content-frame">
+
+    <div class="iox-content-padding">
+
+      <div class="iox-user-header iox-grid-header clearfix">
+        <a href="<%= new_program_entry_path %>" class="btn btn-primary" data-tree-role="new" rel="tooltip"><%= t('program_entry.new') %></a>
+        <div class="query-container">
+          <input type="text" class="query" name="query" autocomplete="off" />
+          <button class="clear-query"><i class="icon-remove"></i></button>
+          <button class="submit-query"><i class="icon-search"></i></button>
+        </div>
+        <div class="options-container">
+          <div class="options-container-inner">
+            <div class="item-col">
+              <span class="item"><input type="radio"<%= " checked=checked" if @only_mine %> name="only_mine" value="true" /><%= t('only_mine') %></span><br />
+              <span class="item"><input type="radio"<%= " checked=checked" unless @only_mine %> name="only_mine" value="false" /><%= t('all_entries') %></span><br />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pe-grid" class="iox-k-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var kGrid;
+
+  $(function(){
+
+    kGrid = $("#pe-grid").kendoGrid({
+      columns: [
+        { field: "id",
+          title: "ID",
+          width: 70,
+          attributes: {
+            style: "text-align: right"
+          } },
+        { field: "published", title: "<%= t('published') %>", template: '<span class="publish-button #= published ? "icon-ok-sign" : "icon-ban-circle" #"></span>', width: 30 },
+        { field: "title", title: "<%= t('program_entry.form.title') %>" },
+        { field: 'starts_at', title: '<%= t('program_entry.form.from') %>',
+          format: '{0:dd.MM.yyyy}',
+          width: 100
+        },
+        { field: 'ends_at', title: '<%= t('program_entry.form.to') %>',
+          format: '{0:dd.MM.yyyy}',
+          width: 100 },
+        { field: 'categories', title: '<%= t('program_entry.form.categories') %>', width: 50, sortable: false },
+        { field: "ensemble_name",
+          title: "<%= t('ensemble.ensemble_name') %>"
+        },
+        { field: "venue_name",
+          title: "<%= t('venue.venue_name') %>",
+          sortable: false
+        },
+        { field: "updater_name",
+          title: "<%= t('updated_by') %>"
+        },
+        { field: 'updated_at',
+          title: '<%= t('updated_at') %>',
+          format: '{0:dd.MM.yyyy HH:mm}',
+          width: 120,
+          attributes: {
+            style: 'text-align: right'
+          }
+        },
+        { command:
+          [
+            { name: 'editPE',
+              text: '<i class="icon-edit"></i>',
+              click: function(e){
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                $('#iox-pe-content').hide();
+
+                var $newDtls = $('<div class="iox-details-container iox-content">').append( iox.loader );
+                $('.iox-content').after( $newDtls );
+                $('.iox-content').hide();
+                $newDtls.show().load( '/iox/program_entries/'+dataItem.id+'/edit?layout=false', function(){
+                  setupPEEvents();
+                });
+              }
+            },
+            { name: 'deletePE', text: '<i class="icon-remove"></i>',
+              click: function(e){
+                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                $.ajax({
+                  url: '<%= program_entries_path %>/'+ dataItem.id,
+                  type: 'delete',
+                  dataType: 'json'
+                }).done( function(json){
+                  iox.flash.rails(json.flash);
+                  if( json.success )
+                    kGrid.data('kendoGrid').removeRow( $(e.target).closest('tr') );
+                }).fail( function(json){
+                  iox.flash.rails(json.flash);
+                });
+              }
+            }
+          ],
+          width: 62
+        }
+      ],
+      dataSource: {
+        type: "json",
+        transport: {
+          read: {
+            url: "<%= program_entries_path %>",
+            dataType: 'json',
+            data: function(){
+              return { only_mine: $('input[name=only_mine]:checked').val() === 'true' };
+            }
+          }
+        },
+        schema: {
+          total: 'total',
+          data: function(response) {
+            return response.items;
+          },
+          model: {
+            fields: {
+              id: { type: 'number' },
+              published: { type: 'boolean' },
+              title: { type: 'string' },
+              ensemble_name: { type: 'string' },
+              venue_name: { type: 'string' },
+              starts_at: { type: 'date' },
+              ends_at: { type: 'date' },
+              updater_name: { type: 'string' },
+              updated_at: { type: 'date', width: 110 }
+            }
+          }
+        },
+        serverPaging: true,
+        serverFiltering: true,
+        serverSorting: true,
+        sort: { field: "updated_at", dir: "desc" }
+      },
+      height: $(window).height()-150,
+      selectable: "multiple",
+      resizable: true,
+      navigatable: true,
+      sortable: true,
+      pageable: {
+        refresh: true,
+        pageSize: 30,
+        pageSizes: [10, 30, 50, 100]
+      }
+    });
+
+    $(document).on('click', '.publish-button', function(){
+      var $elem = $(this);
+      var node = kGrid.data('kendoGrid').dataItem( $(this).closest('tr').get(0) );
+      node.published = !node.published;
+      $.ajax({ url: '/iox/program_entries/'+node.id+'/publish?publish='+(node.published ? 'true' : 'false'),
+               type: 'put',
+               dataType: 'json',
+               data: { publish: $(this).hasClass('on') },
+               success: function( data ){
+                 iox.flash.rails( data.flash );
+                 if( data.success )
+                  if( data.item.published )
+                    $elem.addClass('icon-ok-sign').removeClass('icon-ban-circle');
+                  else
+                    $elem.removeClass('icon-ok-sign').addClass('icon-ban-circle');
+               }
+      });
+    });
+
+    $('input[name=only_mine]').on('click', function(){
+      kGrid.data('kendoGrid').dataSource.read();
+    });
+
+  }); // document.ready
+
+</script>
+<%= render partial: '/iox/program_entries/grid_common' %>

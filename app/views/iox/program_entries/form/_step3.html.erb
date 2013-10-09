@@ -1,0 +1,271 @@
+<div id="step3" class="step-pane">
+  <div id="events-grid"></div>
+</div>
+
+<% unless @program_entry.new_record? %>
+
+<script type="text/javascript">
+
+$(function(){
+
+  function prepareSaveCrew( options ){
+    var model = options.data.models[0];
+    model.program_entry_id = '<%= @program_entry.id %>';
+    return model;
+  }
+
+  function saveCrewSuccess( json, options ){
+      eventsGrid.data('kendoGrid').dataSource.read();
+      iox.flash.rails(json.flash);
+      options.success(json.item);
+  }
+
+  function saveCrewError( json, options ){
+    iox.flash.rails(json.flash);
+    options.error();
+  }
+
+  function setupMultiplierEvent( field, $container, model ){
+    var $btn = $('<span class="icon-magic"></span>');
+    $btn.attr('title', '<%= t('program_event.multiply_field') %>')
+       .css({cursor: 'pointer', 'marginLeft': 40});
+    var $input = $container.find('input[name='+field+']')
+    $input.after($btn);
+    $btn.on('click', function(e){
+      if( confirm('<%= t('program_event.multiply_field') %>') ){
+        $.ajax({ url: '/iox/program_events/'+model.id+'/multiply_field', data: { field: field, value: $input.val() },
+                 type: 'post',
+                 dataType: 'json'
+        }).done( function( json ){
+          iox.flash.rails( json.flash );
+          eventsGrid.data('kendoGrid').dataSource.read();
+        });
+      }
+    })
+  }
+
+  var eventUrl = '<%= events_for_program_entry_path( @program_entry ) %>'
+    , eventDataSource = new kendo.data.DataSource({
+        transport: {
+            read:  function( options ){
+              $.getJSON( eventUrl, options.success );
+            },
+            update: function updateCrew( options ){
+              var model = prepareSaveCrew( options );
+              if( !model )
+                return options.error('<%= t('select_a_person') %>');
+              $.ajax({ url: '<%= program_events_path %>/'+model.id, type: 'patch', dataType: 'json',
+                       data: { program_event: options.data.models[0] },
+                       success: function( json ){ saveCrewSuccess( json, options ) },
+                       error: function( json ){ saveCrewError( json, options ) }
+              });
+            },
+            destroy: function destroyCrewMember( options ){
+              var model = prepareSaveCrew( options );
+              if( !model )
+                return options.error('<%= t('select_a_person') %>');
+              $.ajax({ url: '<%= program_events_path %>/'+model.id, type: 'delete', dataType: 'json',
+                       success: function( json ){ iox.flash.rails(json.flash); options.success(); },
+                       error: function( json ){ iox.flash.rails(json.flash); options.error(); }
+              });
+            },
+            create: function createCrew( options ){
+              var model = prepareSaveCrew( options );
+              if( !model )
+                return options.error('<%= t('select_a_person') %>');
+              $.ajax({ url: '<%= program_events_path %>', type: 'post', dataType: 'json',
+                       data: { program_event: options.data.models[0] },
+                       success: function( json ){ saveCrewSuccess( json, options ) },
+                       error: function( json ){ saveCrewError( json, options ) }
+              });
+            }
+        },
+        batch: true,
+        schema: {
+          model: {
+            id: 'id',
+            fields: {
+                'starts_at': { editable: true, type: 'date' },
+                'program_entry_id': { editable: true },
+                'description': { editable: true },
+                'additional_note': { editable: true },
+                'price_from': { editable: true, type: 'number' },
+                'price_to': { editable: true, type: 'number' },
+                'event_type': { editable: true },
+                'tickets_url': { editable: true },
+                'tickets_phone': { editable: true },
+                'reductions_arr': { editable: true },
+                'venue_id': { editable: true },
+                'venue_name': { editable: true },
+                'festival_id': { editable: true },
+                'updated_by': { editable: true },
+                'updater_name': { editable: false },
+                'updated_at': { editable: false, type: 'date' }
+            }
+          }
+        }
+    });
+
+    var eventsGrid = $("#events-grid").kendoGrid({
+      dataSource: eventDataSource,
+      toolbar: [
+        { name: "create", text: "<%= t('program_entry.add_event') %>" }
+      ],
+      sortable: true,
+      pageable: false,
+      serverPaging: false,
+      serverFiltering: false,
+      serverSorting: false,
+      height: 230,
+      editable: {
+        confirmation: false,
+        mode: 'popup'
+      },
+      edit: function(e){
+        var last = getLastEventItem();
+        if( last && e.model.isNew() && !e.model.dirty) {
+          e.model.set( 'venue_id', last.venue_id );
+          e.model.set( 'venue_name', last.venue_name );
+          e.model.set( 'festival_id', last.festival_id );
+          e.model.set( 'festival_name', last.festival_name );
+          e.model.set( 'starts_at', last.starts_at );
+          e.model.set( 'tickets_url', last.tickets_url );
+          e.model.set( 'tickets_phone', last.tickets_phone );
+          e.model.set( 'price_from', last.price_from );
+          e.model.set( 'price_to', last.price_to );
+          e.model.set( 'additional_note', last.additional_note );
+          e.model.set( 'reductions', last.reductions );
+          e.model.set( 'reductions_arr', last.reductions_arr );
+        }
+        setupMultiplierEvent('venue_id', e.container, e.model);
+        setupMultiplierEvent('tickets_url', e.container, e.model);
+        setupMultiplierEvent('tickets_phone', e.container, e.model);
+        setupMultiplierEvent('reductions', e.container, e.model);
+        setupMultiplierEvent('price_from', e.container, e.model);
+        setupMultiplierEvent('price_to', e.container, e.model);
+        setupMultiplierEvent('additional_note', e.container, e.model);
+      },
+      columns: [
+        { field: 'venue_name', title: "<%= t('venue.title') %>", editor: venueEditor },
+        { field: 'starts_at', title: "<%= t('program_entry.starts') %>",
+          width: 150,
+          editor: dateTimeEditor,
+          format: "{0:dd.MM.yyyy HH:mm}" },
+        { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
+        { field: 'reductions_arr', title: '<%= t('program_event.reductions') %>', hidden: true, editor : reductionsEditor },
+        { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' } },
+        { field: 'tickets_phone', title: '<%= t('program_event.tickets_phone') %>', hidden: true },
+        { field: 'additional_note', title: '<%= t('program_event.additional_note') %>' },
+        { field: 'price_from', title: '<%= t('program_event.price_from') %>', hidden: true, format: "{0:c}" },
+        { field: 'price_to', title: '<%= t('program_event.price_to') %>', hidden: true, format: "{0:c}" },
+        { field: 'festival_name', title: "<%= t('program_event.festival') %>", editor: festivalEditor, hidden: true },
+        { field: 'updater_name', title: '<%= t('updated_by') %>', hidden: true },
+        { command: [
+          { name: "edit", text: { edit: 'Edit.', cancel: "<%= t('cancel') %>", update: "<%= t('save') %>"}},
+          { name: "destroy", text: '<%= t('delete')[0,4] %>'}
+          ], title: "&nbsp;", width: "172px" },
+      ]
+    });
+
+  function reductionsEditor( container, options ){
+    var multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions_arr').appendTo(container).kendoMultiSelect({
+        dataSource: <%= raw Rails.configuration.iox.spielplan_reductions.to_json %>
+    });
+
+  }
+
+  function dateTimeEditor(container, options) {
+      var dateTimePicker = $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+              .appendTo(container)
+              .kendoDateTimePicker({});
+  }
+
+  function venueEditor( container, options ){
+    var eventAutoComplete = $('<input type="text" data-bind="value:' + options.field + '"/>')
+    .appendTo(container)
+    .kendoAutoComplete({
+        dataTextField: "name",
+        template: '<span>${ data.name }</span>' +
+                  ' <i>${ data.city }</i>',
+        filter: 'contains',
+        minLength: 2,
+        dataSource: {
+            type: "json",
+            serverFiltering: true,
+            serverPaging: false,
+            transport: {
+                read: '<%= simple_venues_path %>'
+            }
+        },
+        change: function( e ) {
+            var idx = $(e.sender._current).index();
+            item = eventAutoComplete.data('kendoAutoComplete').dataItem( idx );
+            var eventEntry = options.model;
+            if( typeof(item) === 'undefined' )
+              $.get( '<%= new_venue_path %>?skip_edit=true&name='+eventAutoComplete.val(), function( html ){
+                $('.awaiting-new-record-id').removeClass('awaiting-new-record-id');
+                eventAutoComplete.addClass('awaiting-new-record-id').data('setNewRecordId', function setNewRecordId(record){
+                  eventEntry.set( 'venue_id', record.id );
+                  eventEntry.set( 'venue_name', record.name );
+                  eventAutoComplete.data('setNewRecordId',null).removeClass('awaiting-new-record-id');
+                });
+                new iox.Win({ content: html, title: '<%= t('venue.add_venue_question') %>' });
+              });
+            else{
+              eventEntry.set( 'venue_id', item.id );
+              eventEntry.set( 'venue_name', item.name );
+            }
+        }
+    });
+
+    // var last = getLastEventItem();
+    // if( last && options.model.isNew() && !options.model.dirty){
+    //   setTimeout( function(){
+    //     eventAutoComplete.data('kendoAutoComplete').value( last.venue_name );
+    //   }, 10);
+    // }
+
+  }
+
+  function festivalEditor( container, options ){
+    var festivalAutoComplete = $('<input type="text" data-bind="value:' + options.field + '"/>')
+    .appendTo(container)
+    .kendoAutoComplete({
+        dataTextField: "title",
+        template: '<span>${ data.title }</span>',
+        filter: 'contains',
+        minLength: 2,
+        dataSource: {
+            type: "json",
+            serverFiltering: true,
+            serverPaging: false,
+            transport: {
+                read: '<%= festivals_program_entries_path %>'
+            }
+        },
+        change: function( e ) {
+            var idx = $(e.sender._current).index();
+            item = festivalAutoComplete.data('kendoAutoComplete').dataItem( idx );
+            var eventEntry = options.model;
+            eventEntry.set( 'festival_id', item.id );
+            eventEntry.set( 'festival_name', item.title );
+        }
+    });
+  }
+
+  function getLastEventItem(){
+    var data = eventsGrid.data('kendoGrid').dataSource._data;
+    return (data.length > 1 ? data[data.length-1] : null)
+  }
+
+
+  $("#add-event").click(function(e) {
+    eventsGrid.add();
+    e.preventDefault();
+  });
+
+});
+
+</script>
+
+<% end %>

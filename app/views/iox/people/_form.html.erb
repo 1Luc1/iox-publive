@@ -1,0 +1,94 @@
+<%= content_for :add_to_head do %>
+
+  <%= stylesheet_link_tag 'program_entries.css' %>
+  <%= javascript_include_tag 'program_entries.js' %>
+
+<% end %>
+
+<% if @layout %>
+<div class="iox-content">
+  <div class="iox-sidebar-arrow"></div>
+
+<% end %>
+    <div class="iox-content-frame auto-overflow">
+
+      <div class="iox-content-padding">
+
+        <div class="control">
+          <a href="#" data-role="submit" class="btn btn-primary"><%= @person.new_record? ? t('create') : t('save') %></a>
+          <a href="#" data-role="switch2content" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
+          <a href="#" data-xhr-win="true" data-xhr-href="<%= settings_for_person_path(@person) %>" class="btn"><i class="icon-gear"></i></a>
+        </div>
+
+        <h3 class="title">
+          <% if @person.new_record? %>
+            <%= t('person.title') %>
+          <% else %>
+            <%= @person.name %>
+            <small><%= t('person.title') %></small>
+          <% end %>
+        </h3>
+
+        <%= form_for @person, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
+
+          <div class="field-box">
+            <%= f.label :firstname, t('firstname') %>
+            <%= f.text_field :firstname %>
+          </div>
+          <div class="field-box">
+            <%= f.label :lastname, t('lastname') %>
+            <%= f.text_field :lastname %>
+          </div>
+          <div class="field-box">
+              <%= f.label :url, t('url') %>
+              <%= f.text_field :url %>
+          </div>
+          <div class="field-box">
+              <%= f.label :email, t('email') %>
+              <%= f.text_field :email %>
+          </div>
+          <div class="field-box">
+              <%= f.label :zip, t('zip_city') %>
+              <%= f.text_field :zip, style: 'width: 100px' %>
+              <%= f.text_field :city, style: 'width: 200px' %>
+          </div>
+          <div class="field-box">
+              <%= f.label :description, t('description') %>
+              <%= f.text_area :description, class: 'ckeditor' %>
+          </div>
+
+        <% end %>
+
+        <!-- right column -->
+        <div class="iox-right-pane pull-right">
+          <% if @person.new_record? %>
+            <div class="field-box">
+              <p class="alert"><%= t('you_can_upload_after_created') %></p>
+            </div>
+          <% else %>
+            <!-- avatar column -->
+            <div class="span3 avatar-box">
+                <div class="avatar">
+                  <%= image_tag @person.avatar.url(:thumb), class: 'avatar person-main-avatar', :"data-person-id" => @person.id %>
+                  <p><%= t('click_to_change_picture') %></p>
+                  <%= file_field_tag "person[avatar]", "data-url" => upload_avatar_person_path(@person), :multiple => false, :class => "upload-avatar" %>
+                </div>
+            </div>
+            <div class="field-box">
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script type="text/javascript">
+      setupPersonAvatarUpload();
+      setupDefaultCKEditor( $('.ckeditor:visible') );
+    </script>
+
+<% if @layout %>
+  </div>
+</div>
+<% end %>

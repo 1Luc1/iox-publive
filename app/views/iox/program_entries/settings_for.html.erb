@@ -1,0 +1,87 @@
+<span data-iox-win-title="true"><%= t('settings_for', name: (@obj.respond_to?(:name) ? @obj.name : @obj.title)) %> (ID: <%= @obj.id %>)</span>
+<%= form_for @obj, remote: true, html: { class: 'iox-win-auth-form'} do |f| %>
+
+  <div class="content-padding">
+
+    <% if (!current_user.is_admin? && current_user.id != @obj.created_by) %>
+      <p class="iox-inline-notice"><%= raw t('settings_locked') %></p>
+    <% else %>
+
+      <p class="iox-inline-notice"><%= raw t('settings_you_owner') %></p>
+
+      <% if @obj.is_a?(Iox::Venue) %>
+        <div class="field-box">
+          <label>
+            <%= t('venue.transfer', count: @obj.program_events.count ) %>
+            <span class="icon-info-sign" title="<%= raw t('venue.transfer_desc') %>"></span>
+          </label><br />
+          <%= text_field_tag :transfer_to_venue_name, '', id: 'transfer-venue-name', style: 'width: 100%' %>
+          <%= hidden_field_tag :transfer_to_venue_id, '', id: 'transfer-venue-id' %>
+          <br />
+        </div>
+        <script type="text/javascript">
+          var transferAutoComplete = $("#transfer-venue-name").kendoAutoComplete({
+            dataTextField: "name",
+            template: '<span>${ data.name }</span>' +
+                      ' <i>${ data.city }</i>' +
+                      ' <span style="font-size:0.7em">${ data.id }</span>',
+            filter: 'contains',
+            minLength: 2,
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                serverPaging: false,
+                transport: {
+                    read: '<%= simple_venues_path %>'
+                }
+            },
+            change: function(e){
+              var idx = $(e.sender._current).index();
+              item = transferAutoComplete.data('kendoAutoComplete').dataItem( idx );
+              $('#transfer-venue-id').val( item.id );
+            }
+          })
+        </script>
+      <% end %>
+
+      <% if @obj.respond_to?(:archived) %>
+        <div class="field-box">
+          <%= f.check_box :archived %>
+          <span><%= t('archive_this_entry') %></span>
+        </div>
+      <% end %>
+
+      <div class="field-box">
+        <%= f.check_box :others_can_change %>
+        <span><%= t('program_entry.others_can_change') %></span>
+      </div>
+
+      <div class="field-box">
+        <%= f.check_box :notify_me_on_change %>
+        <span><%= t('program_entry.notify_me_on_change') %></span>
+      </div>
+
+      <% if current_user.is_admin? %>
+        <p>
+          <label><%= t('change_ownership') %></label>
+          <br />
+          <%= select_tag :with_user, options_from_collection_for_select( Iox::User.all, :id, :full_name, (@obj.created_by || current_user.id )), class: 'admin-select-user' %>
+        </p>
+        <script type="text/javascript">
+          $(document).ready(function(){
+            $('.admin-select-user').select2();
+          });
+        </script>
+      <% end %>
+
+      <%= hidden_field_tag :settings_form, true %>
+    <% end %>
+
+  </div>
+
+  <div class="iox-win-footer">
+    <button type="submit" class="btn btn-primary"><%= t('save') %></button>
+    <button class="btn" data-close-win="true"><%= t('cancel') %></button>
+  </div>
+
+<% end %>

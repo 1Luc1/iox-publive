@@ -1,0 +1,6 @@
+<% if flash.alert %>
+  iox.flash.alert('<%= flash.alert %>');
+<% else %>
+  eventsData.data.push( <%= raw(@json_event) %> );
+  reloadPreview();
+<% end %>

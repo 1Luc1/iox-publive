@@ -1,0 +1,158 @@
+<div id="step4" class="images-step">
+
+  <div class="row-fluid form-wrapper">
+    <div class="clearfix with-border">
+
+      <div class="upload-images-box">
+        <i class="icon-picture"></i>
+        <p><%= t('program_file.drop_here') %></p>
+        <%= file_field_tag "image[file]", "data-url" => upload_image_program_entry_path(@program_entry), :multiple => true, :class => "upload-avatar" %>
+      </div>
+      <div id="images-progress">
+        <div class="bar" style="width: 0%;"></div>
+      </div>
+
+      <div class="field-box">
+        <label for="description"><%= t('description') %></label>
+        <input type="text" name="image-description" style="width: 100%" />
+      </div>
+
+      <div class="field-box">
+        <label for="copyright"><%= t('copyright') %></label>
+        <input type="text" name="image-copyright" style="width: 100%" />
+      </div>
+
+      <div class="field-box">
+        <label for="url" style="width:100%;float:none;"><%= t('program_entry.image_url') %></label>
+        <input type="text" name="image-url" style="width: 80%" />
+        <button id="download-from-url" style="width: 18%" class="btn"><%= t('download') %></button>
+      </div>
+
+    </div>
+    <div class="images-sidebar clearfix">
+      <ul class="clearfix" id="images-list" data-bind="template: { name: 'image-template', foreach: data }"></ul>
+    </div>
+  </div>
+
+</div>
+
+
+<script type="text/html" id="image-template">
+  <li data-bind="attr: { id: 'image_'+id }">
+    <div class="overlay">
+      <i class="icon-remove"></i>
+      <i class="icon-th"></i>
+    </div>
+    <a data-bind="attr: { href: url, title: '<%= t('description') %>: '+description+' <%= t('copyright') %>: '+copyright}" data-lightbox="images">
+      <img data-bind="attr: { src: thumbnail_url, 'data-orig': url }" />
+    </a>
+  </li>
+</script>
+
+<script type="text/javascript">
+
+  var imagesData;
+
+  $(document).ready( function(){
+
+    imagesData = { data: ko.observableArray([]) };
+
+    $.getJSON( '<%= images_for_program_entry_path( @program_entry ) %>', function( json ){
+      json.forEach( function( image ){
+        imagesData.data.push( image );
+      });
+      ko.applyBindings( imagesData, $('#images-list').get(0) );
+    });
+
+    $('#images-list').on('click', 'li .icon-remove', function(e){
+      var image = ko.dataFor($(this).closest('li').get(0));
+      $.ajax({ url: '<%= program_files_path %>/'+image.id, type: 'delete', dataType: 'json', success: function( json ){
+          if( json.success ){
+            imagesData.data.remove( image );
+            reloadPreview();
+          }
+        }
+      })
+    }).on('click', 'li .icon-th', function(e){
+      $(this).closest('li').find('a').click();
+    }).sortable({
+      stop: function( e, ui ){
+        var newOrder = $(this).sortable('toArray').toString();
+        $.ajax({ url: '<%= order_images_program_entry_path(@program_entry) %>',
+                  type: 'post',
+                  data: { order: newOrder },
+                  dataType: 'json',
+                  success: function( json ){
+                    var error, notice;
+                    json.forEach( function( msg ){
+                      if( msg[0] === 'notice' )
+                        notice = msg[1];
+                      else if( msg[0] === 'alert' )
+                        error = msg[1];
+                    });
+                    if( error )
+                      iox.flash.alert( error );
+                    if( notice ){
+                      iox.flash.notice( notice );
+                      reloadPreview();
+                    }
+                  }
+        });
+      }
+    });
+
+    $('#image_file').fileupload({
+      dataType: 'json',
+      formData: function(){
+        return [
+          { name: "authenticity_token", value: $('input[name="authenticity_token"]:first').val() },
+          { name: "description", value: $('input[name=image-description]').val() },
+          { name: "copyright", value: $('input[name=image-copyright]').val() }
+        ];
+      },
+      done: function (e, data) {
+        var image = data._response.result.item;
+        imagesData.data.push( image );
+        iox.flash.rails( data._response.result.flash );
+        reloadPreview();
+        setTimeout( function(){
+          $('#images-progress .bar').css( 'width', 0 );
+        }, 500 );
+      },
+      error: function( response, type, msg ){
+        iox.flash.alert( JSON.parse(response.responseText).errors.file[0] );
+      },
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#images-progress .bar').css(
+            'width',
+            progress + '%'
+        );
+      }
+    });
+
+    $('#download-from-url').on('click', function(e){
+      $(this).closest('.field-box').block();
+      var self = this;
+      e.preventDefault();
+      $.ajax({ url: '<%= download_image_from_url_program_entry_path(@program_entry) %>',
+        type: 'post',
+        dataType: 'json',
+        data: {
+          description: $('input[name=image-description]').val(),
+          copyright: $('input[name=image-copyright]').val(),
+          download_url: $('input[name=image-url]').val()
+        }
+      }).done( function(json){
+        $(self).closest('.field-box').unblock();
+        iox.flash.rails( json.flash );
+        imagesData.data.push( json.item );
+        $('input[name=image-url]').val('');
+        reloadPreview();
+      });
+    });
+
+
+  });
+
+</script>

@@ -1,0 +1,14 @@
+<% if flash.notice %>
+  if( typeof(reloadPreview) === 'function' )
+    reloadPreview();
+  if( $('.iox-win:visible').length )
+    iox.Win.closeVisible();
+  $.unblockUI();
+
+  $('.ensemble-select2:visible').find('option[value=<%= @ensemble.id %>]')
+    .text('<%= @ensemble.name %>').change();
+
+  $('#ensemble-grid').data('kendoGrid').dataSource.read();
+
+<% end %>
+iox.flash.rails( <%= raw flash.to_json %> );
