@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'iox/spielplan/version'
+require 'iox/publive/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "iox-spielplan"
-  spec.version       = Iox::Spielplan::VERSION
+  spec.name          = "iox-publive"
+  spec.version       = Iox::Publive::VERSION
   spec.authors       = ["quaqua"]
   spec.email         = ["quaqua@tastenwerk.com"]
-  spec.description   = %q{spielplan module}
-  spec.summary       = %q{spielplan module for iox}
+  spec.description   = %q{iox extension for publishing and archiving events}
+  spec.summary       = %q{This module extends the iox content management framework with a public event database}
   spec.homepage      = ""
   spec.license       = "commercial"
 

@@ -169,7 +169,7 @@ $(function(){
 
   function reductionsEditor( container, options ){
     var multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions_arr').appendTo(container).kendoMultiSelect({
-        dataSource: <%= raw Rails.configuration.iox.spielplan_reductions.to_json %>
+        dataSource: <%= raw Rails.configuration.iox.publive_reductions.to_json %>
     });
 
   }

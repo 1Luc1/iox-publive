@@ -1,7 +1,7 @@
 require 'iox/engine'
 
 module Iox
-  module Spielplan
+  module Publive
 
     class Engine < ::Rails::Engine
 

@@ -35,7 +35,7 @@ module Iox
 
     def notify_owner_by_email
       if updater && creator && updater.id != creator.id && notify_me_on_change
-        Iox::SpielplanMailer.content_changed( self, changes ).deliver
+        Iox::PubliveMailer.content_changed( self, changes ).deliver
       end
     end
 

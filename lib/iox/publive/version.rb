@@ -1,5 +1,5 @@
 module Iox
-  module Spielplan
+  module Publive
     VERSION = "0.1.0"
   end
 end

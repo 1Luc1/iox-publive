@@ -1,4 +1,4 @@
-# Iox::Spielplan
+# Iox::Publive
 
 TODO: Write a gem description
 
@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'iox-spielplan'
+    gem 'iox-publive'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install iox-spielplan
+    $ gem install iox-publive
 
 ## Usage
 

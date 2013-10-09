@@ -1,5 +1,5 @@
 module Iox
-  class SpielplanMailer < ActionMailer::Base
+  class PubliveMailer < ActionMailer::Base
 
     def content_changed( obj, changes )
       return unless ( obj.creator || obj.creator.email.blank? )

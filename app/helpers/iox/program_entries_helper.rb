@@ -18,11 +18,11 @@ module Iox
     end
 
     def get_reductions
-      Rails.configuration.iox.spielplan_reductions
+      Rails.configuration.iox.publive_reductions
     end
 
     def get_clean_categories
-      Rails.configuration.iox.spielplan_categories.reject{ |c| c == 'all' }
+      Rails.configuration.iox.publive_categories.reject{ |c| c == 'all' }
     end
 
   end

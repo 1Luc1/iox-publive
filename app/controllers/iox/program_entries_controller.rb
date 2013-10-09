@@ -78,7 +78,7 @@ module Iox
     end
 
     def new
-      @program_entry = ProgramEntry.new duration: 90, categories: Rails.configuration.iox.spielplan_categories.first
+      @program_entry = ProgramEntry.new duration: 90, categories: Rails.configuration.iox.publive_categories.first
       @layout = true
     end
 

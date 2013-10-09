@@ -10,7 +10,7 @@ module Iox
 
       def setup_and_create
 
-        directory "leafletjs", "public/images/3rdparty/"
+        directory "leafletjs", "public/leafletjs"
 
       end
 
