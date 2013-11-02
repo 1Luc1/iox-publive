@@ -158,6 +158,7 @@ de:
     time_desc: "z.B.: 19:30 Uhr"
     o_clock: "Uhr"
     date: "Datum"
+    edit: "Termin bearbeiten"
     saved: "Spielplantermin vom %{starts} in %{venue} gespeichert"
     saving_failed: "Spielplantermin konnte nicht gespeichert werden"
     deleted: "Spielplantermin vom %{starts} in %{venue} wurde gelöscht"

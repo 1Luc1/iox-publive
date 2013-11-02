@@ -85,6 +85,7 @@ $(function(){
           model: {
             id: 'id',
             fields: {
+                'id': { editable: false },
                 'starts_at': { editable: true, type: 'date' },
                 'program_entry_id': { editable: true },
                 'description': { editable: true },
@@ -146,6 +147,7 @@ $(function(){
         setupMultiplierEvent('additional_note', e.container, e.model);
       },
       columns: [
+        { field: 'id', title: "ID", hidden: true },
         { field: 'venue_name', title: "<%= t('venue.title') %>", editor: venueEditor },
         { field: 'starts_at', title: "<%= t('program_entry.starts') %>",
           width: 150,
