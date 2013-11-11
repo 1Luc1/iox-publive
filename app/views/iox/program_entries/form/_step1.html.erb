@@ -117,6 +117,10 @@
 
       <%= f.hidden_field :published %>
 
+      <p style="text-align:right">
+        <a href="#" data-role="submit" class="btn btn-primary"><%= @program_entry.new_record? ? t('create') : t('save') %></a>
+      </p>
+
     <% end %>
   </div>
 </div>

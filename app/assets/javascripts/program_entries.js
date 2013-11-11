@@ -89,7 +89,8 @@ function setupPEEvents(){
     var $form = $(this).closest('.iox-content-padding').find('form:first');
     $form.find('#program_entry_published').val('1');
     $form.submit();
-    $('#pe-grid').data('kendoGrid').dataSource.get($form.attr('data-form-id')).set('published', true );
+    if( $('#pe-grid').length )
+      $('#pe-grid').data('kendoGrid').dataSource.get($form.attr('data-form-id')).set('published', true );
     $('.iox-details-container').remove();
     $('.iox-content').show();
   });

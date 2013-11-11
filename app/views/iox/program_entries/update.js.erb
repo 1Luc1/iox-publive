@@ -2,7 +2,8 @@
   //$('#program-entry-wizard').smartWizard('setError', {stepnum:0,iserror:false});
   if( typeof(reloadPreview) === 'function' )
     reloadPreview();
-  $('#pe-grid').data('kendoGrid').dataSource.read()
+  if( $('#pe-grid').length )
+    $('#pe-grid').data('kendoGrid').dataSource.read()
 <% else %>
   //$('#program-entry-wizard').smartWizard('setError', {stepnum:0,iserror:true});
   $('ul.anchor a[href="#step1"]').click();
