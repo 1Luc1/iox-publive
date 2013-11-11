@@ -44,7 +44,7 @@ module Iox
       if params[:sort]
         sort = params[:sort]['0'][:field]
         unless sort.blank?
-          sort = "iox_venues.#{sort}" if sort.match(/updated_at/)
+          sort = "iox_venues.#{sort}" if sort.match(/updated_at|id/)
           sort = "LOWER(name)" if sort === 'name'
           sort = "LOWER(iox_users.username)" if sort == 'updater_name'
           @order = "#{sort} #{params[:sort]['0'][:dir]}"
