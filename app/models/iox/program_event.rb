@@ -27,9 +27,10 @@ module Iox
 
     def as_json(options = { })
       h = super(options)
-      h[:venue_name] = venue.name if venue
-      h[:festival_name] = festival.title if festival
-      h[:reductions_arr] = reductions.split(',') if reductions
+      h[:venue_name] = venue ? venue.name : ''
+      h[:program_entry] = program_entry
+      h[:festival_name] = festival ? festival.title : ''
+      h[:reductions_arr] = reductions ? reductions.split(',') : ''
       h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       h
     end

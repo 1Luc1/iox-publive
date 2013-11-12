@@ -87,7 +87,14 @@ module Iox
       h = super(options)
       h[:venue_id] = venue_id
       h[:venue_name] = venue_name
-      h[:ensemble_name] = ensemble_name
+      h[:url] = to_param
+      if image = images.first
+        h[:thumb_url] = image.file.url(:thumb)
+        h[:thumb_title] = image.description.blank? && image.copyright.blank? ? '' : "#{image.description} ©#{image.copyright}"
+      end
+      h[:votes_mean] = votes_mean
+      h[:votes_count] = votes.count
+      h[:ensemble_name] = ensemble.name if ensemble
       h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       h
     end
