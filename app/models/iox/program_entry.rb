@@ -79,6 +79,10 @@ module Iox
       self.tmp_author = artist_ids
     end
 
+    def authors
+      program_entry_people.where( "function='Autor' OR function='Autorin'" ).map{ |a| a.person.full_name }
+    end
+
     def to_param
       [id, title.parameterize].join("-")
     end
