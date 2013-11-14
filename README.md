@@ -1,19 +1,5 @@
-# publive
+# openhapp
 
-Publive is an event management tool for large organisations collecting public event data for performances, shows, movies and similar.
+openhapp is a public database of happenings (theatre, cinema, music, presentations, ...) It can connect with other openhapps and sync their content.
 
-## Preface
-
-Publive has been originally created in collaboration with the "IG Freie Theaterarbeit" Austria.
-
-## Installation
-
-If you are just after a demo of publive, it is recommended to visit http://github.com/tastenwerk/publive where you can download an out of the box working version of publive.
-
-Add this line to your application's Gemfile:
-
-    gem 'iox-publive'
-
-## Documentation
-
-still has to be written. If you are interrested in publive and how to use it, give us a push and we'll start documenting
+openhapp is implemented in ruby, so it can be attached as a rails engine into a rails app serving a theatre's website providing the theatre with all required forms and models to maintain their events in a very easy way. All events which have been published to the world, can then be synced from any other server either by using their API key or bey just granting all sync read operations. It is even possible to allow write operations from specified servers.
