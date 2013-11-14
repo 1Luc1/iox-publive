@@ -249,6 +249,9 @@ de:
     new: "Neuer Eintrag"
     new_entries: "Neue Enträge"
 
+    duration: "Dauer"
+    one_or_more_breaks: "mit Pause"
+    recommended_from_age: "Empfohlen ab %{years} Jahren"
     form:
       general: "Allgemeine Daten"
       crew: "Mitwirkende"
