@@ -32,6 +32,7 @@ module Iox
       h[:festival_name] = festival ? festival.title : ''
       h[:reductions_arr] = reductions ? reductions.split(',') : ''
       h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
+      h[:show_tickets] = !tickets_url.blank? || !tickets_other.blank? || !tickets_phone.blank?
       h
     end
 
