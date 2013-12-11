@@ -19,6 +19,7 @@ module Iox
     has_many    :events, -> { order(:starts_at) }, class_name: 'Iox::ProgramEvent', dependent: :delete_all
     has_many    :festival_events, -> { order(:starts_at) }, foreign_key: :festival_id, class_name: 'Iox::ProgramEvent', dependent: :delete_all
     has_many    :images, -> { order(:position) }, class_name: 'Iox::ProgramFile', dependent: :destroy
+    has_many    :venues, through: :events
 
     validates   :title, presence: true, length: { in: 2..255 }
     validates   :subtitle, length: { maximum: 255 }
@@ -51,7 +52,7 @@ module Iox
       self.class.where(id: conflict_id).first
     end
 
-    def venues
+    def venue_names
       v = ''
       if events.size > 0 and events.first.venue
         v << "<a href='/iox/venues/#{events.first.venue.id}'>#{events.first.venue.name}/edit</a>"
@@ -72,7 +73,7 @@ module Iox
     end
 
     def author_ids
-      a = program_entry_people.where( "function='Autor' OR function='Autorin'" ).map{ |a| a.person_id }.join(',')
+      program_entry_people.where( "function='Autor' OR function='Autorin'" ).map{ |a| a.person_id }.join(',')
     end
 
     def author_ids=(artist_ids)
