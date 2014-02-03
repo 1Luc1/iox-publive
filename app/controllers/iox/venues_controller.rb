@@ -154,23 +154,6 @@ module Iox
       end
     end
 
-    #
-    # upload logo
-    #
-    def upload_logo
-      if @venue = Venue.unscoped.where( id: params[:id] ).first
-        @img = @venue.images.build file: params[:venue][:logo]
-        @img.name = @img.file.original_filename
-        if @img.save
-          render :json => [@img.to_jq_upload('file')].to_json
-        else
-          render :json => [{:error => "custom_failure"}], :status => 304
-        end
-      else
-        render :json => [{:error => 'not found'}], :status => 404
-      end
-    end
-
     def destroy
       if check_404_and_privileges true
         if @venue && @venue.delete

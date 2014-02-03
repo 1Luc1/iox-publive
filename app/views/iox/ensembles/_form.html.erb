@@ -46,7 +46,7 @@
               <% end %>
             </h3>
 
-            <%= form_for @ensemble, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
+            <%= form_for @ensemble, remote: !@layout, html: { class: 'iox-form', :'data-role' => 'submitAndBack' } do |f| %>
 
               <% if current_user.is_admin? && @ensemble.import_foreign_db_id %>
                 <div class="admin-box field-box">
@@ -111,19 +111,19 @@
                 </div>
 
                 <div class="field-box">
-                  <label title="<%= t('ensemble.facebook_url') %>"><i class="label-icon icon-facebook-sign"></i></label>
+                  <label title="<%= t('ensemble.facebook_url') %>"><i class="label-icon icon-facebook-square"></i></label>
                     <%= f.text_field :facebook_url, class: 'span8' %>
                 </div>
                 <div class="field-box">
-                    <label title="<%= t('ensemble.twitter_url') %>"><i class="label-icon icon-twitter-sign"></i></label>
+                    <label title="<%= t('ensemble.twitter_url') %>"><i class="label-icon icon-twitter-square"></i></label>
                     <%= f.text_field :twitter_url, class: 'span8' %>
                 </div>
                 <div class="field-box">
-                  <label title="<%= t('ensemble.youtube_url') %>"><i class="label-icon icon-youtube-sign"></i></label>
+                  <label title="<%= t('ensemble.youtube_url') %>"><i class="label-icon icon-youtube-square"></i></label>
                   <%= f.text_field :youtube_url, class: 'span8' %>
                 </div>
                 <div class="field-box">
-                  <label title="<%= t('ensemble.google_plus_url') %>"><i class="label-icon icon-google-plus-sign"></i></label>
+                  <label title="<%= t('ensemble.google_plus_url') %>"><i class="label-icon icon-google-plus-square"></i></label>
                   <%= f.text_field :google_plus_url, class: 'span8' %>
                 </div>
               </fieldset>
@@ -143,20 +143,7 @@
 
           <div class="tab-content clearfix">
 
-            <p><%= t('ensemble.photos') %></p>
-
-            <!-- logo column -->
-            <div class="avatar-box">
-              <div class="avatar">
-                <% if @ensemble.images.size > 0 %>
-                  <%= image_tag @ensemble.images.last.file.url(:thumb), class: 'logo', :"data-ensemble-id" => @ensemble.id %>
-                <% else %>
-                  <%= image_tag '/images/thumb/missing.png', class: 'logo', :"data-ensemble-id" => @ensemble.id %>
-                <% end %>
-                <p><%= t('click_to_change_picture') %></p>
-                <%= file_field_tag "ensemble[logo]", "data-url" => upload_logo_ensemble_path(@ensemble), :multiple => false, :class => "upload-avatar" %>
-              </div>
-            </div>
+            <%= render partial: 'iox/common/images', locals: { pictures_path: ensemble_pictures_path, item_id: @ensemble.id, item_url: '/iox/ensembles' } %>
 
           </div>
 

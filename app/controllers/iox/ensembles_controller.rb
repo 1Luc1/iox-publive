@@ -68,7 +68,6 @@ module Iox
       @ensemble = Ensemble.new ensemble_params
       @ensemble.created_by = current_user.id
       if @ensemble.save
-
         begin
           Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'created', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: ensemble_path(@ensemble)
         rescue
@@ -133,23 +132,6 @@ module Iox
         render json: @ensemble_people
       else
         render json: []
-      end
-    end
-
-    #
-    # upload logo
-    #
-    def upload_logo
-      if @ensemble = Ensemble.unscoped.where( id: params[:id] ).first
-        @img = @ensemble.images.build file: params[:ensemble][:logo]
-        @img.name = @img.file.original_filename
-        if @img.save
-          render :json => [@img.to_jq_upload('file')].to_json
-        else
-          render :json => [{:error => "custom_failure"}], :status => 304
-        end
-      else
-        render :json => [{:error => 'not found'}], :status => 404
       end
     end
 

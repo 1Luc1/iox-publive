@@ -17,6 +17,7 @@ module Iox
 
     validates   :name, presence: true
 
+    before_save :set_default_country
     after_save :notify_owner_by_email
 
     def to_param
@@ -32,6 +33,12 @@ module Iox
     end
 
     private
+
+    # set default country if no country was given
+    def set_default_country
+      return unless country.blank?
+      self.country = Rails.configuration.iox.default_country
+    end
 
     def notify_owner_by_email
       if updater && creator && updater.id != creator.id && notify_me_on_change

@@ -16,7 +16,7 @@ module Iox
         @ensemble_member = EnsemblePerson.new ensemble_member_params
       end
       if @ensemble_member && @ensemble_member.save
-        flash.now.notice = t('program_entry_person.saved')
+        flash.now.notice = t('program_entry_person.saved', name: @ensemble_member.person.name)
       else
         flash.now.alert = t('program_entry_person.saving_failed')
       end

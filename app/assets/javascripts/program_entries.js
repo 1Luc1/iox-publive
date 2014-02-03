@@ -7,6 +7,7 @@
 
 //= require 3rdparty/jquery.fileupload
 
+//= require iox/common
 //= require iox/ensembles
 //= require iox/venues
 

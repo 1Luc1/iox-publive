@@ -57,29 +57,32 @@ function setupVenue( venue, i18n ){
 
   var latlng = ((venue.lat && venue.lng) ? [venue.lat,venue.lng] : [47.425, 14.59]);
 
-  window.map = L.map('map', {
-    center: latlng,
-    zoom: ((venue.lat && venue.lng) ? '16' : '7'),
-    layers: [markers]
-  });
-
-  L.tileLayer('http://{s}.tile.cloudmade.com/aab372c18d514879b1b8b26032da5aa4/997/256/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-      maxZoom: 18
-  }).addTo(window.map);
-
-  $(document).on('click', '.save-new-marker', function(){
-    $('#venue_lat').val( $(this).attr('data-lat'));
-    $('#venue_lng').val( $(this).attr('data-lng'));
-    $('.iox-form').submit();
-  });
-
-  window.map
-    .on('click', function(e){
-      console.log(e.latlng);
-      L.popup()
-        .setLatLng(e.latlng)
-        .setContent(i18n.set_as_location+" <a href='#' data-lat='"+e.latlng.lat+"' data-lng='"+e.latlng.lng+"' class='save-new-marker'>"+i18n.save+"</a>?")
-        .openOn(window.map);
+  setTimeout( function(){
+    window.map = L.map('map', {
+      center: latlng,
+      zoom: ((venue.lat && venue.lng) ? '16' : '7'),
+      layers: [markers]
     });
+
+    L.tileLayer('http://{s}.tile.cloudmade.com/aab372c18d514879b1b8b26032da5aa4/997/256/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+        maxZoom: 18
+    }).addTo(window.map);
+
+    $(document).on('click', '.save-new-marker', function(){
+      $('#venue_lat').val( $(this).attr('data-lat'));
+      $('#venue_lng').val( $(this).attr('data-lng'));
+      $('.iox-form').submit();
+    });
+
+    window.map
+      .on('click', function(e){
+        console.log(e.latlng);
+        L.popup()
+          .setLatLng(e.latlng)
+          .setContent(i18n.set_as_location+" <a href='#' data-lat='"+e.latlng.lat+"' data-lng='"+e.latlng.lng+"' class='save-new-marker'>"+i18n.save+"</a>?")
+          .openOn(window.map);
+      });
+    }, 500);
+
 }

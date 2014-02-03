@@ -13,6 +13,9 @@ class IoxEnsemblePictures < ActiveRecord::Migration
       t.string      :import_file_url
       t.string      :import_foreign_db_name
 
+      t.integer       :created_by
+      t.integer       :updated_by
+
       t.timestamps
 
     end

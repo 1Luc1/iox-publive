@@ -34,30 +34,46 @@ Iox::Engine.routes.draw do
       get  :members_of
       get  :settings_for
       post :restore
+      post :download_image_from_url
+      post :order_images
     end
+    resources :ensemble_pictures, path: 'images'
   end
+  resources :ensemble_pictures
 
   resources :venues do
     member do
       post :upload_logo
       get  :settings_for
       post :restore
+      get :images_for
+      post :upload_image
+      post :download_image_from_url
     end
     collection do
       get :simple
     end
+    resources :venue_pictures, path: 'images'
   end
-
+  resources :venue_pictures
+  
   resources :people do
     member do
       post :upload_avatar
       get  :settings_for
       post :restore
+      get :images_for
+      post :upload_image
+      post :download_image_from_url
+      post :order_images
     end
     collection do
       get :simple
     end
+    resources :person_pictures, path: 'images'
   end
+  resources :person_pictures
+  
   resources :ensemble_people
 
   resources :program_files

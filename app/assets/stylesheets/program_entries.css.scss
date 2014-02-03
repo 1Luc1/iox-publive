@@ -3,6 +3,9 @@
  *= require 3rdparty/bootstrap.datepicker
  *= require 3rdparty/lightbox
  *
+ *= require iox/iox_win
+ *= require iox/iox_grid
+ *
  *= require_self
  *
  *= require events
@@ -195,6 +198,10 @@ ul.members.with-img{
       width: 80px;
       height: 80px;
       background: rgba( 255, 255, 255, 0.7 );
+    }
+    img{
+      max-width: 80px;
+      max-height: 80px;
     }
     &:first-child{
       margin-right: 40px;
@@ -453,8 +460,13 @@ ul.members.with-img{
   left: 6px;
   right: 6px;
   bottom: 5px;
+  overflow: auto !important;
 }
 
 .select2-drop{
   z-index: 11002;
+}
+
+.images-wrapper input[type=text]{
+  padding: 7px 0;
 }

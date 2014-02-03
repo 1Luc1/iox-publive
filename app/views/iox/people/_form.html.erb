@@ -20,72 +20,70 @@
           <a href="#" data-xhr-win="true" data-xhr-href="<%= settings_for_person_path(@person) %>" class="btn"><i class="icon-gear"></i></a>
         </div>
 
-        <h3 class="title">
-          <% if @person.new_record? %>
-            <%= t('person.title') %>
-          <% else %>
-            <%= @person.name %>
-            <small><%= t('person.title') %></small>
-          <% end %>
-        </h3>
+        <div id="person-tabs" class="tab-wrapper k-tab">
 
-        <%= form_for @person, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
+          <ul>
+            <li class="k-state-active"><%= t('general') %></li>
+            <li><%= t('ensemble.photos') %></li>
+          </ul>
 
-          <div class="field-box">
-            <%= f.label :firstname, t('firstname') %>
-            <%= f.text_field :firstname %>
-          </div>
-          <div class="field-box">
-            <%= f.label :lastname, t('lastname') %>
-            <%= f.text_field :lastname %>
-          </div>
-          <div class="field-box">
-              <%= f.label :url, t('url') %>
-              <%= f.text_field :url %>
-          </div>
-          <div class="field-box">
-              <%= f.label :email, t('email') %>
-              <%= f.text_field :email %>
-          </div>
-          <div class="field-box">
-              <%= f.label :zip, t('zip_city') %>
-              <%= f.text_field :zip, style: 'width: 100px' %>
-              <%= f.text_field :city, style: 'width: 200px' %>
-          </div>
-          <div class="field-box">
-              <%= f.label :description, t('description') %>
-              <%= f.text_area :description, class: 'ckeditor' %>
+          <div class="tab-content clearfix">
+            <h3 class="title">
+              <% if @person.new_record? %>
+                <%= t('person.title') %>
+              <% else %>
+                <%= @person.name %>
+                <small><%= t('person.title') %></small>
+              <% end %>
+            </h3>
+
+            <%= form_for @person, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
+
+              <div class="field-box">
+                <%= f.label :firstname, t('firstname') %>
+                <%= f.text_field :firstname %>
+              </div>
+              <div class="field-box">
+                <%= f.label :lastname, t('lastname') %>
+                <%= f.text_field :lastname %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :url, t('url') %>
+                  <%= f.text_field :url %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :email, t('email') %>
+                  <%= f.text_field :email %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :zip, t('zip_city') %>
+                  <%= f.text_field :zip, style: 'width: 100px' %>
+                  <%= f.text_field :city, style: 'width: 200px' %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :description, t('description') %>
+                  <%= f.text_area :description, class: 'ckeditor' %>
+              </div>
+
+            <% end %>
           </div>
 
-        <% end %>
+          <div class="tab-content clearfix">
 
-        <!-- right column -->
-        <div class="iox-right-pane pull-right">
-          <% if @person.new_record? %>
-            <div class="field-box">
-              <p class="alert"><%= t('you_can_upload_after_created') %></p>
-            </div>
-          <% else %>
-            <!-- avatar column -->
-            <div class="span3 avatar-box">
-                <div class="avatar">
-                  <%= image_tag @person.avatar.url(:thumb), class: 'avatar person-main-avatar', :"data-person-id" => @person.id %>
-                  <p><%= t('click_to_change_picture') %></p>
-                  <%= file_field_tag "person[avatar]", "data-url" => upload_avatar_person_path(@person), :multiple => false, :class => "upload-avatar" %>
-                </div>
-            </div>
-            <div class="field-box">
-            </div>
-          <% end %>
-        </div>
+            <%= render partial: 'iox/common/images', locals: { pictures_path: person_pictures_path, item_id: @person.id, item_url: '/iox/people' } %>
+
+          </div>
 
       </div>
 
     </div>
 
     <script type="text/javascript">
-      setupPersonAvatarUpload();
-      setupDefaultCKEditor( $('.ckeditor:visible') );
+      $(function(){
+        $("#person-tabs").kendoTabStrip();
+        setupPersonAvatarUpload();
+        setupDefaultCKEditor( $('.ckeditor:visible') );
+      });
     </script>
 
 <% if @layout %>

@@ -1,0 +1,59 @@
+
+<div class="row-fluid form-wrapper images-wrapper">
+
+  <div class="iox-grid-header clearfix">
+    <div class="select-files">
+      <i class="icon-upload"></i>
+      &nbsp;<span><%= t('webfile.upload') %></span>
+      <input type="file" name="file" id="upload-file" multiple />
+      <div class="progress-num"></div>
+      <div class="progress"><div class="bar"></div></div>
+    </div>
+    <div class="query-container">
+      <input type="text" class="query" name="query" autocomplete="off" />
+      <button class="clear-query"><i class="icon-remove"></i></button>
+      <button class="submit-query"><i class="icon-search"></i></button>
+    </div>
+  </div>
+
+  <div class="images-grid iox-k-grid" id="images-grid"></div>
+
+</div>
+
+<script id="edit-image-template" type="text/html">
+
+  <form data-bind="submit: save" class="content-padding iox-form">
+
+    <div class="field-box">
+      <label><%= t('name') %></label>
+      <input type="text" name="webfile[name]" data-bind="value: item.name" />
+    </div>
+
+    <div class="field-box">
+      <label><%= t('webfile.copyright') %></label>
+      <input type="text" name="webfile[copyright]" data-bind="value: item.copyright" />
+    </div>
+
+    <div class="field-box">
+      <label><%= t('webfile.description') %></label>
+      <textarea name="webfile[description]" data-bind="value: item.description"></textarea>
+    </div>
+
+    <input type="submit" class="hide" value="submit" />
+
+    <div class="iox-win-footer">
+      <button type="submit" class="btn btn-primary"><%= t('save') %></button>
+      <button class="btn" data-close-win="true"><%= t('close') %></button>
+    </div>
+
+  </form>
+
+</script>
+
+<script type="text/javascript">
+
+  $(document).ready( function(){
+    iox.publive.setupGrid( $('.images-grid:visible'), '<%= item_id %>', '<%= pictures_path %>', '<%= item_url %>' )
+  });
+
+</script>

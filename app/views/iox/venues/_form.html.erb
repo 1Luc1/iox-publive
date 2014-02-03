@@ -15,147 +15,145 @@
 <% end %>
 
 
-    <div class="iox-content-frame auto-overflow">
+  <div class="iox-content-frame auto-overflow">
 
-      <div class="iox-content-padding">
+    <div class="iox-content-padding">
 
-        <div class="control">
-          <% unless @insufficient_rights %>
-            <a href="#" data-role="submit" class="btn btn-primary"><%= @venue.new_record? ? t('create') : t('save') %></a>
-          <% end %>
-          <a href="#" data-role="switch2content" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
-          <% unless @insufficient_rights %>
-          <a href="/ven/<%= @venue.to_param %>" class="btn" title="<%= t('view') %>" target="_blank"><i class="icon-eye-open"></i></a>
-          <a href="#" title="<%= t('settings') %>" data-xhr-win="true" data-xhr-href="<%= settings_for_venue_path(@venue) %>" class="btn"><i class="icon-gear"></i></a>
-          <% end %>
-        </div>
-
-        <h3 class="title">
-          <% if @venue.new_record? %>
-            <%= t('venue.title') %>
-          <% else %>
-            <%= @venue.name %>
-            <small><%= t('venue.title') %></small>
-          <% end %>
-        </h3>
-
-      <%= form_for @venue, remote: !@layout, html: { class: 'iox-form iox-left-pane', :'data-role' => 'submitAndBack' } do |f| %>
-
-        <%= f.hidden_field :lat %>
-        <%= f.hidden_field :lng %>
-
-
-        <% if current_user.is_admin? && @venue.import_foreign_db_id %>
-          <div class="admin-box field-box">
-            <label>SYNCED</label>
-            <%= f.text_field :import_foreign_db_name, class: 'span6', disabled: true %>
-            <%= f.text_field :import_foreign_db_id, class: 'span2', disabled: true %>
-          </div>
+      <div class="control">
+        <% unless @insufficient_rights %>
+          <a href="#" data-role="submit" class="btn btn-primary"><%= @venue.new_record? ? t('create') : t('save') %></a>
         <% end %>
+        <a href="#" data-role="switch2content" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
+        <% unless @insufficient_rights %>
+        <a href="/ven/<%= @venue.to_param %>" class="btn" title="<%= t('view') %>" target="_blank"><i class="icon-eye-open"></i></a>
+        <a href="#" title="<%= t('settings') %>" data-xhr-win="true" data-xhr-href="<%= settings_for_venue_path(@venue) %>" class="btn"><i class="icon-gear"></i></a>
+        <% end %>
+      </div>
 
-        <fieldset>
-          <legend><%= t('general') %></legend>
-          <div class="field-box">
-            <%= f.label :name, t('name') %>
-            <%= f.text_field :name %>
-          </div>
-          <div class="field-box">
-              <%= f.label :email, t('email') %>
-              <%= f.text_field :email %>
-          </div>
-          <div class="field-box">
-              <%= f.label :phone, t('phone') %>
-              <%= f.text_field :phone %>
-          </div>
+      <div id="venue-tabs" class="tab-wrapper k-tab">
 
-          <div class="field-box">
-              <%= f.label :zip, t('zip_city') %>
-              <%= f.text_field :zip, style: 'width: 100px' %>
-              <%= f.text_field :city, style: 'width: 200px' %>
-          </div>
-          <div class="field-box">
-              <%= f.label :street, t('street') %>
-              <%= f.text_field :street %>
-          </div>
-          <div class="field-box">
-              <%= f.label :country, t('country') %>
-              <%= f.select :country, raw(country_options_for_select(@venue.country)), { include_blank: true }, { class: 'span8 country-select', style: 'width: 400px' } %>
-          </div>
+        <ul>
+          <li class="k-state-active"><%= t('general') %></li>
+          <li><%= t('venue.map') %></li>
+          <li><%= t('venue.photos') %></li>
+        </ul>
+        
+        <div class="tab-content clearfix">
 
-        </fieldset>
+          <h3 class="title">
+            <% if @venue.new_record? %>
+              <%= t('venue.title') %>
+            <% else %>
+              <%= @venue.name %>
+              <small><%= t('venue.title') %></small>
+            <% end %>
+          </h3>
 
-        <fieldset>
-          <legend><%= t('venue.social_media_and_contact') %></legend>
+          <%= form_for @venue, remote: !@layout, html: { class: 'iox-form', :'data-role' => 'submitAndBack' } do |f| %>
 
-          <div class="field-box">
-              <%= f.label :url, t('website') %>
-              <%= f.text_field :url, class: 'span8' %>
-          </div>
+            <%= f.hidden_field :lat %>
+            <%= f.hidden_field :lng %>
 
-          <div class="field-box">
-              <%= f.label :tickets_url, t('venue.general_tickets_link') %>
-              <%= f.text_field :tickets_url, class: 'span8' %>
-          </div>
 
-          <div class="field-box">
-            <label title="<%= t('ensemble.facebook_url') %>"><i class="label-icon icon-facebook-sign"></i></label>
-              <%= f.text_field :facebook_url, class: 'span8' %>
-          </div>
-          <div class="field-box">
-              <label title="<%= t('ensemble.twitter_url') %>"><i class="label-icon icon-twitter-sign"></i></label>
-              <%= f.text_field :twitter_url, class: 'span8' %>
-          </div>
-          <div class="field-box">
-            <label title="<%= t('ensemble.youtube_url') %>"><i class="label-icon icon-youtube-sign"></i></label>
-            <%= f.text_field :youtube_url, class: 'span8' %>
-          </div>
-          <div class="field-box">
-            <label title="<%= t('ensemble.google_plus_url') %>"><i class="label-icon icon-google-plus-sign"></i></label>
-            <%= f.text_field :google_plus_url, class: 'span8' %>
-          </div>
+            <% if current_user.is_admin? && @venue.import_foreign_db_id %>
+              <div class="admin-box field-box">
+                <label>SYNCED</label>
+                <%= f.text_field :import_foreign_db_name, class: 'span6', disabled: true %>
+                <%= f.text_field :import_foreign_db_id, class: 'span2', disabled: true %>
+              </div>
+            <% end %>
 
-        </fieldset>
+            <fieldset>
+              <legend><%= t('general') %></legend>
+              <div class="field-box">
+                <%= f.label :name, t('name') %>
+                <%= f.text_field :name %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :email, t('email') %>
+                  <%= f.text_field :email %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :phone, t('phone') %>
+                  <%= f.text_field :phone %>
+              </div>
 
-        <fieldset>
-          <legend><%= t('venue.about') %></legend>
-          <div class="field-box">
-              <%= f.label :description, t('description') %>
-              <%= f.text_area :description, class: 'ckeditor' %>
-          </div>
-        </fieldset>
+              <div class="field-box">
+                  <%= f.label :zip, t('zip_city') %>
+                  <%= f.text_field :zip, style: 'width: 100px' %>
+                  <%= f.text_field :city, style: 'width: 200px' %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :street, t('street') %>
+                  <%= f.text_field :street %>
+              </div>
+              <div class="field-box">
+                  <%= f.label :country, t('country') %>
+                  <%= f.select :country, raw(country_options_for_select(@venue.country)), { include_blank: true }, { class: 'span8 country-select', style: 'width: 400px' } %>
+              </div>
 
-        <%= f.submit '', class: 'hide' %>
+            </fieldset>
 
-      <% end %>
+            <fieldset>
+              <legend><%= t('venue.social_media_and_contact') %></legend>
 
-    <% unless @insufficient_rights %>
-    <!-- right column -->
-    <div class="iox-right-pane">
-      <% if @venue.new_record? %>
-        <div class="field-box">
-          <p class="alert"><%= t('you_can_upload_after_created') %></p>
+              <div class="field-box">
+                  <%= f.label :url, t('website') %>
+                  <%= f.text_field :url, class: 'span8' %>
+              </div>
+
+              <div class="field-box">
+                  <%= f.label :tickets_url, t('venue.general_tickets_link') %>
+                  <%= f.text_field :tickets_url, class: 'span8' %>
+              </div>
+
+              <div class="field-box">
+                <label title="<%= t('ensemble.facebook_url') %>"><i class="label-icon icon-facebook-square"></i></label>
+                  <%= f.text_field :facebook_url, class: 'span8' %>
+              </div>
+              <div class="field-box">
+                  <label title="<%= t('ensemble.twitter_url') %>"><i class="label-icon icon-twitter-square"></i></label>
+                  <%= f.text_field :twitter_url, class: 'span8' %>
+              </div>
+              <div class="field-box">
+                <label title="<%= t('ensemble.youtube_url') %>"><i class="label-icon icon-youtube-square"></i></label>
+                <%= f.text_field :youtube_url, class: 'span8' %>
+              </div>
+              <div class="field-box">
+                <label title="<%= t('ensemble.google_plus_url') %>"><i class="label-icon icon-google-plus-square"></i></label>
+                <%= f.text_field :google_plus_url, class: 'span8' %>
+              </div>
+
+            </fieldset>
+
+            <fieldset>
+              <legend><%= t('venue.about') %></legend>
+              <div class="field-box">
+                  <%= f.label :description, t('description') %>
+                  <%= f.text_area :description, class: 'ckeditor' %>
+              </div>
+            </fieldset>
+
+            <%= f.submit '', class: 'hide' %>
+
+          <% end %>
+
         </div>
-      <% else %>
-        <!-- logo column -->
-        <div class="span3 avatar-box">
-            <div class="avatar">
-              <% if @venue.images.size > 0 %>
-                <%= image_tag @venue.images.last.file.url(:thumb), class: 'logo', :"data-venue-id" => @venue.id %>
-              <% else %>
-                <%= image_tag '/images/thumb/missing.png', class: 'logo', :"data-venue-id" => @venue.id %>
-              <% end %>
-              <p><%= t('click_to_change_picture') %></p>
-              <%= file_field_tag "venue[logo]", "data-url" => upload_logo_venue_path(@venue), :multiple => false, :class => "upload-avatar" %>
-            </div>
+
+
+        <div class="tab-content clearfix">
+          <div id="map" style="height: 300px"></div>
+          <div style="font-size: 20px; color: #999; font-weight: 100; text-align: center; margin: 50px">
+            <%= t('venue.map_desc') %>
+          </div>
         </div>
 
-        <div class="clearfix"></div>
-        <div id="map" style="height: 300px"></div>
 
-      <% end %>
-    </div>
+        <div class="tab-content clearfix">
+          <%= render partial: 'iox/common/images', locals: { pictures_path: venue_pictures_path, item_id: @venue.id, item_url: '/iox/venues' } %>
+        </div>
 
-    <% end # insufficent_rights %>
+      </div>
 
   </div>
 </div>
@@ -163,6 +161,9 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
+
+    $("#venue-tabs").kendoTabStrip()
+    $('#venue-tabs').kendoTabStrip().data("kendoTabStrip").select(1);
     $('.country-select').select2();
     <% unless @venue.new_record? %>
       setupVenue( <%= raw @venue.to_json %>,
