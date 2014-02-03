@@ -16,6 +16,7 @@ module Iox
 
     validates :name, presence: true
 
+    before_save :set_default_country
     after_save :notify_owner_by_email
 
     def program_entries(query='')
@@ -59,6 +60,12 @@ module Iox
       if updater && creator && updater.id != creator.id && notify_me_on_change
         Iox::PubliveMailer.content_changed( self, changes ).deliver
       end
+    end
+
+    # set default country if no country was given
+    def set_default_country
+      return unless country.blank?
+      self.country = Rails.configuration.iox.default_country
     end
 
   end
