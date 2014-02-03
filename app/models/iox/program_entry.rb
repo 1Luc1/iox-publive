@@ -92,6 +92,7 @@ module Iox
       h = super(options)
       h[:venue_id] = venue_id
       h[:venue_name] = venue_name
+      h[:cabaret_artist_names] = cabaret_artist_names
       h[:url] = to_param
       if image = images.first
         h[:thumb_url] = image.file.url(:thumb)

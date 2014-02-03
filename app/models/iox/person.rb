@@ -21,7 +21,7 @@ module Iox
                       :url => "/data/iox/person_avatars/:hash.:extension",
                       :hash_secret => "5b1b59b59b08dfef721470feed062327909b8f92"
 
-    validates :firstname, presence: true
+    #validates :firstname, presence: true
     validates :lastname, presence: true
 
     after_save :notify_owner_by_email
@@ -43,11 +43,10 @@ module Iox
     end
 
     def name=(full_name)
-      if( full_name.split(' ').size > 1 )
-        name_arr = full_name.split(' ')
-        self.lastname = name_arr.delete( name_arr[ name_arr.size-1 ] )
-        self.firstname = name_arr.join(' ')
-      end
+      self.lastname = full_name.split(' ').length > 1 ? full_name.split(' ')[full_name.length-1] : full_name
+      puts "having lastname #{lastname}"
+      self.firstname = full_name.sub(self.lastname,'') if full_name.split(' ').length > 1
+      puts "firstname #{self.firstname}"
     end
 
     def to_param
