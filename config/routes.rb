@@ -37,6 +37,9 @@ Iox::Engine.routes.draw do
       post :download_image_from_url
       post :order_images
     end
+    collection do
+      get :simple
+    end
     resources :ensemble_pictures, path: 'images'
   end
   resources :ensemble_pictures

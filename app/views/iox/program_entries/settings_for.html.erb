@@ -9,10 +9,10 @@
 
       <p class="iox-inline-notice"><%= raw t('settings_you_owner') %></p>
 
-      <% if @obj.is_a?(Iox::Venue) %>
+      <% if @obj.is_a?(Iox::Venue) || @obj.is_a?(Iox::Ensemble) %>
         <div class="field-box">
           <label>
-            <%= t('venue.transfer', count: @obj.program_events.count ) %>
+            <%= t('venue.transfer', count: (@obj.is_a?(Iox::Venue) ? @obj.program_events.count : @obj.program_entries.count) ) %>
             <span class="icon-info-sign" title="<%= raw t('venue.transfer_desc') %>"></span>
           </label><br />
           <%= text_field_tag :transfer_to_venue_name, '', id: 'transfer-venue-name', style: 'width: 100%' %>
@@ -32,7 +32,7 @@
                 serverFiltering: true,
                 serverPaging: false,
                 transport: {
-                    read: '<%= simple_venues_path %>'
+                    read: '<%= @obj.is_a?(Iox::Venue) ? simple_venues_path : simple_ensembles_path %>'
                 }
             },
             change: function(e){

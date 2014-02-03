@@ -62,6 +62,9 @@ de:
     add_member: "Mitglied hinzufügen"
     members: "Mitglieder"
     photos: "Bilder"
+    transfered:
+      one: "Ein Termin wurde nach %{name} transferiert"
+      other: "%{count} Termine wurde nach %{name} transferiert"
 
 
 

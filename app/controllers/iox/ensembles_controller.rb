@@ -57,6 +57,17 @@ module Iox
 
     end
 
+    def simple
+      @query = ''
+      filter = (params[:filter] && params[:filter][:filters] && params[:filter][:filters]['0'] && params[:filter][:filters]['0'][:value]) || ''
+      @ensembles = Ensemble
+      unless filter.blank?
+        filter = filter.downcase
+        @ensembles = @ensembles.where("LOWER(name) LIKE ?", "%#{filter}%")
+      end
+      render json: @ensembles.order(:name).load
+    end
+
 
     def new
       @obj = Ensemble.new country: 'at'
@@ -105,6 +116,32 @@ module Iox
       if check_404_and_privileges
         @ensemble.attributes = ensemble_params
         @ensemble.updated_by = current_user.id
+
+        if params[:with_user]
+          @ensemble.created_by = params[:with_user]
+        end
+
+        # ATTENTION! the param is still called transfer_to_venue_id
+        # as it is processed in the same javascript function
+        if params[:transfer_to_venue_id] && !params[:transfer_to_venue_id].blank?
+          if @receipient = Iox::Ensemble.where(id: params[:transfer_to_venue_id]).first
+            entries_count = 0
+            @ensemble.program_entries.each do |program_entry|
+              program_entry.ensemble = @receipient
+              entries_count += 1 if program_entry.save
+            end
+            flash.now.notice = t('ensemble.transfered', count: entries_count, name: @receipient.name)
+
+            Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'moved_entries', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: venue_path(@receipient), recipient_name: @receipient.name
+            @ensemble.save
+            return
+
+          else
+            flash.now.alert = t('venue.transfer_target_not_found_aborted')
+            return
+          end
+        end
+
         if @ensemble.save
 
           Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'updated', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: ensemble_path(@ensemble)

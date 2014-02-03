@@ -126,6 +126,11 @@ module Iox
       if check_404_and_privileges
         @person.updater = current_user
         @person.attributes = person_params
+
+        if params[:with_user]
+          @person.created_by = params[:with_user]
+        end
+
         if @person.save
 
         begin

@@ -112,7 +112,12 @@ module Iox
       if check_404_and_privileges
         @venue.updater = current_user
         @venue.attributes = venue_params
-        if params[:transfer_to_venue_id]
+
+        if params[:with_user]
+          @venue.created_by = params[:with_user]
+        end
+
+        if params[:transfer_to_venue_id] && !params[:transfer_to_venue_id].blank?
           if @receipient = Iox::Venue.where(id: params[:transfer_to_venue_id]).first
             venue_count = 0
             @venue.program_events.each do |event|
