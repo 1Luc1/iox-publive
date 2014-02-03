@@ -18,6 +18,7 @@ de:
   click_create_button_to_continue_to_other_steps: "Klick auf den blauen 'Erstellen'-Knopf um zu den Schritten 2-4 zu gelangen"
   publish_and_finish: "Veröffentlichen und Abschließen"
   enter_search_term: "Suchbegriff eingeben"
+  show_past_events: "Abgespielte Termine anzeigen"
 
   ensembles:
     title: "Ensembles"
@@ -152,6 +153,7 @@ de:
     type: "Typ"
     tickets_url: "Tickets (URL)"
     tickets_phone: "Tickets (Tel)"
+    tickets_email: "Tickets (Email)"
     price_range: "Preisspanne"
     price_range_desc: "z.B.: 5&euro; &mdash; 15&euro;"
     time: "Zeit"

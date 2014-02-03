@@ -121,7 +121,14 @@ module Iox
     def update
       if check_404_and_privileges
         @program_entry.updated_by = current_user.id
-        if @program_entry.update entry_params
+
+        if params[:with_user]
+          @program_entry.created_by = params[:with_user]
+        end
+
+        @program_entry.attributes = entry_params
+        
+        if @program_entry.save
 
           Iox::Activity.create! user_id: current_user.id, obj_name: @program_entry.title, action: 'updated', icon_class: 'icon-calendar', obj_id: @program_entry.id, obj_type: @program_entry.class.name, obj_path: program_entries_path(@program_entry)
 

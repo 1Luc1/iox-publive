@@ -16,7 +16,7 @@
             <span class="icon-info-sign" title="<%= raw t('venue.transfer_desc') %>"></span>
           </label><br />
           <%= text_field_tag :transfer_to_venue_name, '', id: 'transfer-venue-name', style: 'width: 100%' %>
-          <%= hidden_field_tag :transfer_to_venue_id, '', id: 'transfer-venue-id' %>
+          <%= hidden_field_tag :transfer_to_venue_id, '' %>
           <br />
         </div>
         <script type="text/javascript">
@@ -38,7 +38,7 @@
             change: function(e){
               var idx = $(e.sender._current).index();
               item = transferAutoComplete.data('kendoAutoComplete').dataItem( idx );
-              $('#transfer-venue-id').val( item.id );
+              $('#transfer_to_venue_id').val( item.id );
             }
           })
         </script>

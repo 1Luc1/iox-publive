@@ -16,6 +16,7 @@ class CreateIoxProgramEvents < ActiveRecord::Migration
 
       t.text          :tickets_url
       t.string        :tickets_phone
+      t.string        :tickets_email
       t.text          :tickets_other
 
       t.integer       :creator_id # DEPRECATED

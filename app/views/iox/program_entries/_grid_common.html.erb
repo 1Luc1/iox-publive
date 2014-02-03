@@ -33,12 +33,12 @@
     });
     $('.submit-query').on('click', queryResults );
 
-    $('.iox-grid-header .options-container .item').on('click', function(e){
-      if( $(e.target).get(0).nodeName === 'INPUT' )
-        return;
-      $(this).closest('div').find('input').attr('checked', false);
-      $(this).find('input').click().attr('checked', true);
-    });
+    // $('.iox-grid-header .options-container .item').on('click', function(e){
+    //   if( $(e.target).get(0).nodeName === 'INPUT' )
+    //     return;
+    //   $(this).closest('div').find('input').attr('checked', false);
+    //   $(this).find('input').click().attr('checked', true);
+    // });
 
     $('.iox-grid-header .clear-query').on('click', function(e){
       $(this).hide();
