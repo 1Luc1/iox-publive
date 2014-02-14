@@ -94,6 +94,7 @@ $(function(){
                 'price_to': { editable: true, type: 'number' },
                 'event_type': { editable: true },
                 'tickets_url': { editable: true },
+                'tickets_email': { editable: true },
                 'tickets_phone': { editable: true },
                 'reductions_arr': { editable: true },
                 'venue_id': { editable: true },
@@ -132,6 +133,7 @@ $(function(){
           e.model.set( 'starts_at', last.starts_at );
           e.model.set( 'tickets_url', last.tickets_url );
           e.model.set( 'tickets_phone', last.tickets_phone );
+          e.model.set( 'tickets_email', last.tickets_email );
           e.model.set( 'price_from', last.price_from );
           e.model.set( 'price_to', last.price_to );
           e.model.set( 'additional_note', last.additional_note );
@@ -141,6 +143,7 @@ $(function(){
         setupMultiplierEvent('venue_id', e.container, e.model);
         setupMultiplierEvent('tickets_url', e.container, e.model);
         setupMultiplierEvent('tickets_phone', e.container, e.model);
+        setupMultiplierEvent('tickets_email', e.container, e.model);
         setupMultiplierEvent('reductions', e.container, e.model);
         setupMultiplierEvent('price_from', e.container, e.model);
         setupMultiplierEvent('price_to', e.container, e.model);
@@ -222,6 +225,16 @@ $(function(){
         }
     });
 
+    var $btn = $('<span class="icon-trash"></span>');
+    $btn.attr('title', 'Feld leeren')
+       .css({cursor: 'pointer', 'marginLeft': 40})
+       .on('click', function(){
+          var eventEntry = options.model;
+          eventEntry.set('venue_id', '');
+          eventEntry.set('venue_name', '');
+       });
+    container.append($btn);
+
     // var last = getLastEventItem();
     // if( last && options.model.isNew() && !options.model.dirty){
     //   setTimeout( function(){
@@ -239,7 +252,7 @@ $(function(){
         template: '<span>${ data.title }</span>',
         filter: 'contains',
         placeholder: '<%= t('enter_search_term') %>',
-        minLength: 2,
+        minLength: 1,
         dataSource: {
             type: "json",
             serverFiltering: true,
@@ -249,13 +262,23 @@ $(function(){
             }
         },
         change: function( e ) {
-            var idx = $(e.sender._current).index();
-            item = festivalAutoComplete.data('kendoAutoComplete').dataItem( idx );
-            var eventEntry = options.model;
-            eventEntry.set( 'festival_id', item.id );
-            eventEntry.set( 'festival_name', item.title );
+          var idx = $(e.sender._current).index();
+          item = festivalAutoComplete.data('kendoAutoComplete').dataItem( idx );
+          var eventEntry = options.model;
+          eventEntry.set( 'festival_id', item.id );
+          eventEntry.set( 'festival_name', item.title );
         }
     });
+
+    var $btn = $('<span class="icon-trash"></span>');
+    $btn.attr('title', 'Feld leeren')
+       .css({cursor: 'pointer', 'marginLeft': 40})
+       .on('click', function(){
+          var eventEntry = options.model;
+          eventEntry.set('festival_id', '');
+          eventEntry.set('festival_name', '');
+       });
+    container.append($btn);
   }
 
   function getLastEventItem(){

@@ -43,10 +43,9 @@ module Iox
     end
 
     def name=(full_name)
+      return if full_name.blank?
       self.lastname = full_name.split(' ').length > 1 ? full_name.split(' ')[full_name.length-1] : full_name
-      puts "having lastname #{lastname}"
-      self.firstname = full_name.sub(self.lastname,'') if full_name.split(' ').length > 1
-      puts "firstname #{self.firstname}"
+      self.firstname = full_name.sub(self.lastname ? self.lastname : '','') if full_name.split(' ').length > 1
     end
 
     def to_param

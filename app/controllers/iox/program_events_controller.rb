@@ -5,7 +5,8 @@ module Iox
 
     def create
       @program_event = ProgramEvent.new program_event_params
-      @program_event.reductions = params[:program_event][:reductions_arr].join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
+      #@program_event.reductions = params[:program_event][:reductions_arr].join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
+      @program_event.reductions = params[:program_event][:reductions_arr]
       if @program_event.save
         flash.now.notice = t('program_event.saved', starts: l(@program_event.starts_at, format: :short), venue: (@program_event.venue ? @program_event.venue.name : '') )
         @pentry = @program_event.program_entry
