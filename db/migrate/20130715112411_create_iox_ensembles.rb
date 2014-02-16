@@ -7,6 +7,7 @@ class CreateIoxEnsembles < ActiveRecord::Migration
       t.string          :street
       t.string          :city
       t.string          :zip
+      t.integer         :gkz
       t.string          :country
 
       t.text            :description

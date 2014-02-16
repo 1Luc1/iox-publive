@@ -16,7 +16,9 @@ module Iox
 
     validates :name, presence: true
 
-    before_save :set_default_country
+    before_save :set_default_country,
+                :convert_zip_gkz
+
     after_save :notify_owner_by_email
 
     def program_entries(query='')
@@ -66,6 +68,14 @@ module Iox
     def set_default_country
       return unless country.blank?
       self.country = Rails.configuration.iox.default_country
+    end
+
+    def convert_zip_gkz
+      return if zip.blank?
+      self.gkz = 1 if zip.to_i < 2000 # Vienna
+      if conversion = Iox::TspGkzZipConversion.where( zip: zip ).first
+        self.gkz = conversion.gkz
+      end
     end
 
   end

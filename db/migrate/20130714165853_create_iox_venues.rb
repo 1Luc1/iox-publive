@@ -13,6 +13,7 @@ class CreateIoxVenues < ActiveRecord::Migration
       t.string          :country
       t.string          :city
       t.string          :zip
+      t.integer         :gkz
       t.string          :street
 
       t.string          :facebook_url
