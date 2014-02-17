@@ -54,8 +54,20 @@ $(function(){
               var model = prepareSaveCrew( options );
               if( !model )
                 return options.error('<%= t('select_a_person') %>');
+              var data = JSON.parse(JSON.stringify(options.data.models[0]));
+              var redArr = [];
+              for( var i in options.data.models[0].reductions ){
+                var item = options.data.models[0].reductions;
+                item.forEach( function( val ){
+                  console.log('checking val', val, redArr);
+                  val = val.text ? val.text : val;
+                  if( val && val.length > 0 && redArr.indexOf(val) < 0 )
+                    redArr.push( val );
+                });
+              }
+              data.reductions = redArr.join(',');
               $.ajax({ url: '<%= program_events_path %>/'+model.id, type: 'patch', dataType: 'json',
-                       data: { program_event: options.data.models[0] },
+                       data: { program_event: data },
                        success: function( json ){ saveCrewSuccess( json, options ) },
                        error: function( json ){ saveCrewError( json, options ) }
               });
@@ -96,7 +108,7 @@ $(function(){
                 'tickets_url': { editable: true },
                 'tickets_email': { editable: true },
                 'tickets_phone': { editable: true },
-                'reductions_arr': { editable: true },
+                'reductions': { editable: true },
                 'venue_id': { editable: true },
                 'venue_name': { editable: true },
                 'festival_id': { editable: true },
@@ -138,7 +150,6 @@ $(function(){
           e.model.set( 'price_to', last.price_to );
           e.model.set( 'additional_note', last.additional_note );
           e.model.set( 'reductions', last.reductions );
-          e.model.set( 'reductions_arr', last.reductions_arr );
         }
         setupMultiplierEvent('venue_id', e.container, e.model);
         setupMultiplierEvent('tickets_url', e.container, e.model);
@@ -157,7 +168,7 @@ $(function(){
           editor: dateTimeEditor,
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
-        { field: 'reductions_arr', title: '<%= t('program_event.reductions') %>', hidden: true },
+        { field: 'reductions', title: '<%= t('program_event.reductions') %>', editor: reductionsEditor, hidden: true },
         { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' } },
         { field: 'tickets_email', title: '<%= t('program_event.tickets_email') %>', hidden: true },
         { field: 'tickets_phone', title: '<%= t('program_event.tickets_phone') %>', hidden: true },
@@ -174,8 +185,34 @@ $(function(){
     });
 
   function reductionsEditor( container, options ){
-    var multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions_arr').appendTo(container).kendoMultiSelect({
-        dataSource: <%= raw Rails.configuration.iox.publive_reductions.to_json %>
+    var multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions').appendTo(container).kendoMultiSelect({
+        placeholder: '<%= t('select_reductions') %>',
+        serverFiltering: false,
+        dataTextField: 'text',
+        dataValueField: 'id',
+        dataSource: {
+          type: "json",
+          transport: {
+            read: {
+              url: '/iox/program_events/reductions',
+            }
+          }
+        }
+    });
+    multiSelect.data('kendoMultiSelect').input.on('keyup',function(e){
+      if( e.keyCode !== 13 && e.keyCode !== 188 )
+        return;
+      var value = $(this).val().replace(',','');
+      if( value.length < 1 )
+        return;
+      var multiselect = multiSelect.data('kendoMultiSelect');
+      if( !multiselect.search(value) )
+        multiselect.dataSource.add({ value: value, text: value });
+      //var selected = multiselect.value();
+      //var res = $.merge($.merge([], selected), [value]);
+      //multiselect.value(res);
+      $(this).val('');
+      
     });
 
   }

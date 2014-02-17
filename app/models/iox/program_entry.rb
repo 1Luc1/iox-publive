@@ -100,7 +100,7 @@ module Iox
       end
       h[:votes_mean] = votes_mean
       h[:votes_count] = votes.count
-      h[:ensemble_name] = ensemble.name if ensemble
+      h[:ensemble_name] = ensemble ? ensemble.name : ''
       h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       h
     end

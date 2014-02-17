@@ -22,6 +22,9 @@ Iox::Engine.routes.draw do
   resources :program_entry_events
 
   resources :program_events do
+    collection do
+      get :reductions
+    end
     member do
       post :multiply_field
     end

@@ -5,8 +5,9 @@ module Iox
 
     def create
       @program_event = ProgramEvent.new program_event_params
+      #@program_event.reductions = @program_event.reductions.join(',')
       #@program_event.reductions = params[:program_event][:reductions_arr].join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
-      @program_event.reductions = params[:program_event][:reductions_arr]
+      #@program_event.reductions = params[:program_event][:reductions_arr]
       if @program_event.save
         flash.now.notice = t('program_event.saved', starts: l(@program_event.starts_at, format: :short), venue: (@program_event.venue ? @program_event.venue.name : '') )
         @pentry = @program_event.program_entry
@@ -29,7 +30,7 @@ module Iox
       @program_event = ProgramEvent.find_by_id params[:id]
       @program_event.updated_by = current_user.id
       @program_event.attributes = program_event_params
-      @program_event.reductions = params[:program_event][:reductions_arr] #.join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
+      #@program_event.reductions = @program_event.reductions.join(',') #params[:program_event][:reductions_arr] #.join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
       if @program_event.save
         flash.now.notice = t('program_event.saved', starts: (@program_event.starts_at ? l(@program_event.starts_at, format: :short) : ''), venue: (@program_event.venue ? @program_event.venue.name : '') )
       else
@@ -66,10 +67,37 @@ module Iox
       render json: { flash: flash, item: @program_event }
     end
 
+    def reductions
+      reductions = ['']
+      Iox::ProgramEvent.group(:reductions).each do |event|
+        next unless event.reductions
+        event.reductions.split(',').each do |reduction|
+          next if params[:q] && !reduction.include?(params[:q])
+          reductions << reduction.downcase.titleize unless reductions.include?(reduction.downcase.titleize)
+        end
+      end
+      render json: reductions.map{ |red| { id: red, text: red }}
+    end
+
     private
 
     def program_event_params
-      params.require(:program_event).permit([:starts_at, :ends_at, :festival_id, :event_type, :starts_at_time, :venue_id, :price_from, :price_to, :additional_note, :program_entry_id, :tickets_url, :tickets_phone, :tickets_email, :description, :reductions, :reductions_arr => [] ])
+      params.require(:program_event).permit([
+        :starts_at, 
+        :ends_at, 
+        :festival_id, 
+        :event_type, 
+        :starts_at_time, 
+        :venue_id, 
+        :price_from, 
+        :price_to, 
+        :additional_note, 
+        :program_entry_id, 
+        :tickets_url, 
+        :tickets_phone, 
+        :tickets_email, 
+        :description, 
+        :reductions ])
     end
 
   end
