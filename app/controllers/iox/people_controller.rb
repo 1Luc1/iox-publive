@@ -99,6 +99,8 @@ module Iox
           redirect_to edit_person_path( @person )
         end
       else
+        puts "person failed to save "
+        puts @person.errors.inspect
         flash.alert = t('person.saving_failed')
         unless request.xhr?
           render template: 'iox/people/new'

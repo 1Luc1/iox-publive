@@ -47,8 +47,12 @@ module Iox
 
     def name=(full_name)
       return if full_name.blank?
-      self.lastname = full_name.split(' ').length > 1 ? full_name.split(' ')[full_name.length-1] : full_name
-      self.firstname = full_name.sub(self.lastname ? self.lastname : '','') if full_name.split(' ').length > 1
+      if full_name.split(' ').size > 1
+        self.firstname = full_name.split(' ')[0]
+        self.lastname = full_name.split(' ')[1]
+      else
+        self.lastname = full_name
+      end
     end
 
     def to_param
