@@ -56,10 +56,14 @@ $(function(){
                 return options.error('<%= t('select_a_person') %>');
               var data = JSON.parse(JSON.stringify(options.data.models[0]));
               var redArr = [];
+
+              // fix cet -> gmt issue with kendo datetimepicker
+              if( data.starts_at && moment(data.starts_at).isValid() )
+                data.starts_at = moment(data.starts_at).toDate();
+
               for( var i in options.data.models[0].reductions ){
                 var item = options.data.models[0].reductions;
                 item.forEach( function( val ){
-                  console.log('checking val', val, redArr);
                   val = val.text ? val.text : val;
                   if( val && val.length > 0 && redArr.indexOf(val) < 0 )
                     redArr.push( val );
@@ -220,7 +224,7 @@ $(function(){
   function dateTimeEditor(container, options) {
       var dateTimePicker = $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
               .appendTo(container)
-              .kendoDateTimePicker({});
+              .kendoDateTimePicker();
   }
 
   function venueEditor( container, options ){
