@@ -27,7 +27,7 @@ module Iox
     after_save :notify_owner_by_email
 
     before_save :set_default_country,
-            :convert_zip_gkz
+                :convert_zip_gkz
 
     has_many    :images, -> { order(:position) }, class_name: 'Iox::PersonPicture', dependent: :destroy
 
