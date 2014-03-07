@@ -72,7 +72,6 @@ module Iox
 
     def convert_zip_gkz
       return if zip.blank?
-      self.gkz = 1 if zip.to_i < 2000 # Vienna
       if conversion = Iox::TspGkzZipConversion.where( zip: zip ).first
         self.gkz = conversion.gkz
       end

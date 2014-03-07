@@ -26,6 +26,9 @@ module Iox
 
     after_save :notify_owner_by_email
 
+    before_save :set_default_country,
+            :convert_zip_gkz
+
     has_many    :images, -> { order(:position) }, class_name: 'Iox::PersonPicture', dependent: :destroy
 
     def name
@@ -65,10 +68,23 @@ module Iox
 
     private
 
+    def convert_zip_gkz
+      return if zip.blank?
+      if conversion = Iox::TspGkzZipConversion.where( zip: zip ).first
+        self.gkz = conversion.gkz
+      end
+    end
+
     def notify_owner_by_email
       if updater && creator && updater.id != creator.id && notify_me_on_change
         Iox::PubliveMailer.content_changed( self, changes ).deliver
       end
+    end
+
+    # set default country if no country was given
+    def set_default_country
+      return unless country.blank?
+      self.country = Rails.configuration.iox.default_country
     end
 
   end
