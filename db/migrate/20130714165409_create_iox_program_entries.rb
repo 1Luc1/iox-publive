@@ -39,6 +39,9 @@ class CreateIoxProgramEntries < ActiveRecord::Migration
       t.integer         :import_foreign_db_id
       t.string          :import_foreign_db_name
 
+      t.string          :sync_id
+      t.string          :sync_name
+
       t.boolean         :show_cabaret_artists_in_title, default: true
 
       t.boolean         :others_can_change, default: true

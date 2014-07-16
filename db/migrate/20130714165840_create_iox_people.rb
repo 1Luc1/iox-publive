@@ -18,6 +18,9 @@ class CreateIoxPeople < ActiveRecord::Migration
       t.integer           :import_foreign_db_id, unique: true
       t.string            :import_foreign_db_name
 
+      t.string          :sync_id
+      t.string          :sync_name
+
       t.integer         :conflicting_with_id
 
       t.timestamps

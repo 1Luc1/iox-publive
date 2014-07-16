@@ -38,6 +38,9 @@ class CreateIoxVenues < ActiveRecord::Migration
       t.integer         :import_foreign_db_id
       t.string          :import_foreign_db_name
 
+      t.string          :sync_id
+      t.string          :sync_name
+
       t.integer         :conflicting_with_id
 
       t.timestamps
