@@ -21,6 +21,13 @@ Iox::Engine.routes.draw do
   end
   resources :program_entry_events
 
+  resources :syncers do
+    member do
+      get :sync
+      get :now
+    end
+  end
+
   resources :program_events do
     collection do
       get :reductions

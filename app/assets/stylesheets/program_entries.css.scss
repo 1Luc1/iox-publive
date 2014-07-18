@@ -470,3 +470,38 @@ ul.members.with-img{
 .images-wrapper input[type=text]{
   padding: 7px 0;
 }
+
+table.syncers{
+  width: 100%;
+}
+
+table.syncers td,
+table.syncers th{
+  padding: 5px 10px;
+  text-align: left;
+}
+
+table.syncers th{
+  color: #999;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 3px;
+}
+
+.syncer-form{
+  padding: 50px 10%;
+}
+
+.syncer-form h1{
+  color: #999;
+  padding-bottom: 5px;
+  margin-bottom: 2em;
+  border-bottom: 1px solid #ddd;
+}
+
+.syncer-form .iox-form input[type=text].fill-width{
+  width: 100%;
+}
+
+.syncer-form .iox-form .field-box label{
+  width: auto;
+}

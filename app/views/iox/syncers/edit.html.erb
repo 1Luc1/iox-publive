@@ -1,0 +1,26 @@
+<%= content_for :add_css do %>
+<%= stylesheet_link_tag 'program_entries' %>
+<% end %>
+
+<div class="iox-content iox-content-container" id="iox-pe-content">
+  <div class="iox-sidebar-arrow"></div>
+  <div class="iox-content-frame">
+
+    <div class="iox-content-padding syncer-form">
+
+      <%= form_for @syncer, html: { class: 'iox-form' } do |f| %>
+
+        <%= render partial: 'form', locals: { f: f } %>
+
+        <div class="iox-form-control">
+          <%= link_to t('back'), syncers_path %>
+          <%= link_to t('syncer.now'), sync_syncer_path(@syncer), class: "btn btn-primary" %>
+          <button type="submit" class="btn btn-primary"><%= t('save') %></button>
+        </div>
+
+      <% end %>
+
+    </div>
+
+  </div>
+</div>

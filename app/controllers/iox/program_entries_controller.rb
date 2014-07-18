@@ -252,6 +252,7 @@ module Iox
     end
 
     def download_image_from_url
+      render( :json => {:errors => @image.errors}.to_json, :status => 500 ) if params[:download_url].blank?
       if @program_entry = ProgramEntry.find_by_id( params[:id] )
         extname = File.extname(params[:download_url])
         basename = File.basename(params[:download_url], extname)

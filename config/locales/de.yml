@@ -317,6 +317,11 @@ de:
     uploaded: "Bild %{name} wurde erfolgreich gespeichert"
     uploading_failed: "Bild konnte nicht am Server gespeichert werden"
 
+  syncer:
+    saved: "Synchronisation %{name} wurde gespeichert"
+    saving_failed: "Synchronisation konnte nicht gespeichert werden"
+    now: "Jetzt synchronisieren"
+
   obj:
     mailer:
       subject: "Dein Eintrag wurde geändert"

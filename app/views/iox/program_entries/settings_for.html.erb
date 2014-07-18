@@ -61,6 +61,15 @@
         <span><%= t('program_entry.notify_me_on_change') %></span>
       </div>
 
+      <% if @obj.sync_id %>
+        <div class="field-box">
+          <p>Synchronisiert aus:</p>
+          <b><%= @obj.sync_name %></b><br>
+          <tt>ID: <%= @obj.sync_id %></tt>
+        </div>
+      <% end %>
+        
+
       <% if current_user.is_admin? %>
         <p>
           <label><%= t('change_ownership') %></label>

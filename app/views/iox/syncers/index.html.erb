@@ -1,0 +1,47 @@
+<%= content_for :add_css do %>
+<%= stylesheet_link_tag 'program_entries' %>
+<% end %>
+
+<div class="iox-content iox-content-container" id="iox-pe-content">
+  <div class="iox-sidebar-arrow"></div>
+  <div class="iox-content-frame">
+
+    <div class="iox-content-padding">
+
+      <div class="iox-user-header iox-grid-header clearfix">
+        <a href="<%= new_syncer_path %>" class="btn btn-primary" data-tree-role="new" rel="tooltip">Neue Synchronisation</a>
+      </div>
+
+      <table class="syncers">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Eigentümer</th>
+            <th>URL</th>
+            <th>Letzte Synchronisation</th>
+            <th>OK</th>
+            <th>Fail</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @syncers.each do |syncer| %>
+          <tr>
+            <td><%= syncer.name %></td>
+            <td><%= syncer.user.name %></td>
+            <td><%= syncer.url %></td>
+            <td><%= syncer.sync_logs.first.created_at if syncer.sync_logs.size > 0 %></td>
+            <td><%= syncer.sync_logs.first.ok if syncer.sync_logs.size > 0 %></td>
+            <td><%= syncer.sync_logs.first.failed if syncer.sync_logs.size > 0 %></td>
+            <td>
+              <%= link_to t('edit'), edit_syncer_path(syncer), class: 'btn' %>
+              <%= link_to t('delete'), syncer_path(syncer), class: 'btn', "data-method" => "delete" %>
+
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+  </div>
+</div>

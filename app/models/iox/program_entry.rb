@@ -5,7 +5,7 @@ module Iox
 
     acts_as_iox_document
 
-    attr_accessor :venue_id, :venue_name, :ensemble_name, :tmp_cab_artist, :tmp_author
+    attr_accessor :venue_id, :venue_name, :ensemble_name, :tmp_cab_artist, :tmp_author, :is_festival
 
     default_scope { where( deleted_at: nil ) }
 

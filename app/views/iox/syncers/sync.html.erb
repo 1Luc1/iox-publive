@@ -1,0 +1,50 @@
+<%= content_for :add_css do %>
+<%= stylesheet_link_tag 'program_entries' %>
+<% end %>
+
+<div class="iox-content iox-content-container" id="iox-pe-content">
+  <div class="iox-sidebar-arrow"></div>
+  <div class="iox-content-frame">
+
+    <div class="iox-content-padding syncer-form">
+
+      <h1>Syncrhonisiere <%= @syncer.name %></h1>
+      <p>URL: <%= @syncer.url %></p>
+
+      <table class="results syncers">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th></th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      
+      <div class="loader" id="loader">
+        <%= image_tag 'iox/loader.gif' %>
+        Synchronisation l&auml;ft... (dieser Vorgang kann mehrere Minuten dauern)
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.getJSON('/iox/syncers/<%= @syncer.id %>/now')
+    .then(function(response){
+      if( !response.ok ) return;
+      response.failed.forEach(function(entry){
+        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.title+'</td><td>FEHLER</td>');
+      });
+      response.ok.forEach(function(entry){
+        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.title+'</td><td><a href="/iox/program_entries/'+entry.id+'/edit"><i class="icon icon-pencil"></i></a> &nbsp; <a href="/spielplan/'+entry.id+'"<i class="icon icon-eye"></i></a><td>OK</td>');
+      });
+
+      $('#loader').hide();
+    });
+  });
+</script>
