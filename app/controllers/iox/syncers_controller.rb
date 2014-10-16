@@ -9,6 +9,7 @@ module Iox
       unless current_user.is_admin?
         @syncers.where( user_id: current_user.id )
       end
+      @syncers.load
     end
 
     def edit
@@ -78,7 +79,6 @@ module Iox
         redirect_to syncers_path
       else
         flash[:error] = "Einstellungen konnten nicht gespeichert werden"
-        render template: 'new'
       end
     end
 
@@ -117,6 +117,7 @@ module Iox
       failed = 0
       program_entry.images.each do |image|
         next unless image.orig_url
+        puts "downloading for #{program_entry.id}"
         extname = File.extname( image.orig_url )
         basename = File.basename( image.orig_url, extname)
         file = Tempfile.new([basename, extname])
