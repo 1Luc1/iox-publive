@@ -38,6 +38,7 @@ Iox::Engine.routes.draw do
   end
 
   resources :program_entry_people
+
   resources :ensembles do
     member do
       post :upload_logo

@@ -80,9 +80,17 @@ module Iox
     end
 
     def new
-      @obj = Person.new name: (params[:name] || '')
+      @person = Person.new name: (params[:name] || '')
+      names = params[:name].split(' ')
+      @found = Person.where({})
+      if names.size > 1
+        @found = @found.where("firstname LIKE ?", "%#{names[0..-2].join(' ')}%")
+      end
+      if names.size > 0
+        @found = @found.where("lastname LIKE ?", "%#{names.last}%")
+      end
       @help_txt = t('person.firstname_lastname')
-      render template: 'iox/common/new_form', layout: false
+      render template: 'iox/people/new_modal', layout: false
     end
 
     def create
@@ -99,8 +107,6 @@ module Iox
           redirect_to edit_person_path( @person )
         end
       else
-        puts "person failed to save "
-        puts @person.errors.inspect
         flash.alert = t('person.saving_failed')
         unless request.xhr?
           render template: 'iox/people/new'

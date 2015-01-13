@@ -120,9 +120,10 @@
           {
             field: "updated_at",
             title: "<%= t('updated_at') %>",
-            width: 150,
+            width: 140,
             format: "{0:dd.MM.yyyy HH:mm}"
           },
+          { field: 'person_id', title: "ID", width: 60 },
           { command: [
             { name: "edit", text: { edit: 'Edit.', cancel: "<%= t('cancel')[0,3] %>.", update: "Ok"} },
             { name: "destroy", text: '<%= t('delete')[0,4] %>'} ], title: "&nbsp;", width: "172px" },
@@ -152,6 +153,7 @@
             item = crewAutoComplete.data('kendoAutoComplete').dataItem( idx );
 
             var crewEntry = crewGrid.data('kendoGrid').dataSource.at( container.closest('tr').index() );
+            window.crewEntry = crewEntry;
             if( typeof(item) === 'undefined' )
               $.get( '<%= new_person_path %>?skip_edit=true&name='+crewAutoComplete.val(), function( html ){
                 $('.awaiting-new-record-id').removeClass('awaiting-new-record-id');

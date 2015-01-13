@@ -61,15 +61,15 @@ $(function(){
               if( data.starts_at && moment(data.starts_at).isValid() )
                 data.starts_at = moment(data.starts_at).toDate();
 
-              for( var i in options.data.models[0].reductions ){
-                var item = options.data.models[0].reductions;
-                item.forEach( function( val ){
-                  val = val.text ? val.text : val;
-                  if( val && val.length > 0 && redArr.indexOf(val) < 0 )
-                    redArr.push( val );
-                });
-              }
-              data.reductions = redArr.join(',');
+              // for( var i in options.data.models[0].reductions ){
+              //   var item = options.data.models[0].reductions;
+              //   item.forEach( function( val ){
+              //     val = val.text ? val.text : val;
+              //     if( val && val.length > 0 && redArr.indexOf(val) < 0 )
+              //       redArr.push( val );
+              //   });
+              // }
+              // data.reductions = redArr.join(',');
               $.ajax({ url: '<%= program_events_path %>/'+model.id, type: 'patch', dataType: 'json',
                        data: { program_event: data },
                        success: function( json ){ saveCrewSuccess( json, options ) },
@@ -172,7 +172,7 @@ $(function(){
           editor: dateTimeEditor,
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
-        { field: 'reductions', title: '<%= t('program_event.reductions') %>', editor: reductionsEditor, hidden: true },
+        { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true },
         { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' } },
         { field: 'tickets_email', title: '<%= t('program_event.tickets_email') %>', hidden: true },
         { field: 'tickets_phone', title: '<%= t('program_event.tickets_phone') %>', hidden: true },
@@ -188,36 +188,44 @@ $(function(){
       ]
     });
 
-  function reductionsEditor( container, options ){
-    var multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions').appendTo(container).kendoMultiSelect({
-        placeholder: '<%= t('select_reductions') %>',
-        serverFiltering: false,
-        dataTextField: 'text',
-        dataValueField: 'id',
-        dataSource: {
-          type: "json",
-          transport: {
-            read: {
-              url: '/iox/program_events/reductions',
+    function reductionsEditor( container, options ){
+      function createMultiSelect(){
+        var $multiSelect = $('<select/>').attr('multiple', true).attr('data-bind', 'value: reductions');
+        var multiSelect = $multiSelect.appendTo(container).kendoMultiSelect({
+            placeholder: '<%= t('select_reductions') %>',
+            serverFiltering: false,
+            dataTextField: 'text',
+            dataValueField: 'id',
+            dataSource: {
+              type: "json",
+              transport: {
+                read: {
+                  url: '/iox/program_events/reductions',
+                }
+              }
             }
+            });
+        multiSelect.data('kendoMultiSelect').input.on('keyup',function(e){
+          if( e.keyCode !== 13 && e.keyCode !== 188 )
+            return;
+          var value = $(this).val().replace(',','');
+          if( value.length < 1 )
+            return;
+          var multiselect = multiSelect.data('kendoMultiSelect');
+          if( !multiselect.search(value) ){
+            multiselect.dataSource.add({ value: value, text: value, title: value, label: value });
+          // $('.k-window [data-container-for="reductions"] select').append( $('option').text(value).val(value).attr('selected',true))
+            // multiselect.refresh();
           }
-        }
-    });
-    multiSelect.data('kendoMultiSelect').input.on('keyup',function(e){
-      if( e.keyCode !== 13 && e.keyCode !== 188 )
-        return;
-      var value = $(this).val().replace(',','');
-      if( value.length < 1 )
-        return;
-      var multiselect = multiSelect.data('kendoMultiSelect');
-      if( !multiselect.search(value) )
-        multiselect.dataSource.add({ value: value, text: value });
-      //var selected = multiselect.value();
-      //var res = $.merge($.merge([], selected), [value]);
-      //multiselect.value(res);
-      $(this).val('');
-      
-    });
+            // alert('Bitte wähle die Ermäßigung noch einmal aus (BUG: #79)')
+            // var selected = multiselect.value();
+          // selected.push(value);
+          // multiselect.value(selected);
+          // multiselect.value( value );
+          // $(this).val('');
+          });
+      }
+      createMultiSelect();
 
   }
 
