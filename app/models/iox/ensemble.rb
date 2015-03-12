@@ -50,8 +50,13 @@ module Iox
 
     def convert_zip_gkz
       return if zip.blank?
-      if conversion = Iox::TspGkzZipConversion.where( zip: zip ).first
+      if conversion = Iox::TspGkzZipConversion.where( "zip >= ?", zip ).limit(1).order(:zip).first
         self.gkz = conversion.gkz
+        if conversion.zip != zip
+          Iox::TspGkzZipConversion.create zip: zip, gkz: conversion.gkz
+        end
+      else
+        puts "ensemble failed to find conversion for #{zip} #{city} #{name}"
       end
     end
 

@@ -18,11 +18,21 @@
         <div class="options-container">
           <div class="options-container-inner">
             <div class="item-col">
+              <span class="item"><input type="radio"<%= " checked=checked" if @only_mine %> name="only_venues" value="true" /><%= t('search_in_venues') %></span><br />
+              <span class="item"><input type="radio"<%= " checked=checked" unless @only_mine %> name="only_venues" value="false" /><%= t('search_in_title') %></span><br />
+            </div>
+          </div>
+        </div>
+
+        <div class="options-container">
+          <div class="options-container-inner">
+            <div class="item-col">
               <span class="item"><input type="radio"<%= " checked=checked" if @only_mine %> name="only_mine" value="true" /><%= t('only_mine') %></span><br />
               <span class="item"><input type="radio"<%= " checked=checked" unless @only_mine %> name="only_mine" value="false" /><%= t('all_entries') %></span><br />
             </div>
           </div>
         </div>
+
       </div>
 
       <div id="pe-grid" class="iox-k-grid"></div>
@@ -116,7 +126,9 @@
             url: "<%= program_entries_path %>",
             dataType: 'json',
             data: function(){
-              return { only_mine: $('input[name=only_mine]:checked').val() === 'true' };
+              return { 
+                only_mine: $('input[name=only_mine]:checked').val() === 'true',
+                only_venues: $('input[name=only_venues]:checked').val() === 'true' };
             }
           }
         },

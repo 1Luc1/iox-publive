@@ -15,11 +15,17 @@ module Iox
         if filter.match(/^[\d]*$/)
           @query = "iox_program_entries.import_foreign_db_id LIKE '#{filter}%' OR iox_program_entries.id =#{filter}"
         else
-          @query = "LOWER(title) LIKE '%#{filter}%' OR LOWER(subtitle) LIKE '%#{filter}%' OR LOWER(iox_program_entries.meta_keywords) LIKE '%#{filter}%'"
+          if params[:only_venues] && params[:only_venues] == 'true'
+            puts "\n\n DETECTED \n\n"
+            return search_by_venue_name(filter)
+          else
+            @query = "LOWER(title) LIKE '%#{filter}%' OR LOWER(subtitle) LIKE '%#{filter}%' OR LOWER(iox_program_entries.meta_keywords) LIKE '%#{filter}%'"
+          end
         end
       end
 
       @only_mine = !params[:only_mine] || params[:only_mine] == 'true'
+
       @conflict = params[:conflict] && params[:conflict] == 'true'
       @future_only = params[:future_only] && params[:future_only] == 'true'
       @only_unpublished = params[:only_unpublished] && params[:only_unpublished] == 'true'
@@ -401,5 +407,65 @@ module Iox
       @insufficient_rights = false
       true
     end
+
+    def search_by_venue_name(filter)
+
+      @only_mine = !params[:only_mine] || params[:only_mine] == 'true'
+
+      @query = "LOWER(name) LIKE '%#{filter}%'"
+
+      if @only_mine
+        @query << " AND " if @query.size > 0
+        @query << " created_by = #{current_user.id}"
+      end
+
+      matching_venue_ids = Venue.where( @query ).map do |venue|
+        venue.id
+      end
+
+      if matching_venue_ids.size < 1
+        return render json: { items: [], total: 0 }
+      end
+
+      clause = "iox_program_events.venue_id IN (#{matching_venue_ids.join(',')})"
+      @total_items = ProgramEntry.joins(:events).where(clause).count
+      @page = (params[:skip] || 0).to_i
+      @page = @page / params[:pageSize].to_i if @page > 0 && params[:pageSize]
+      @limit = (params[:take] || 20).to_i
+      @total_pages = @total_items/@limit
+      @total_pages += 1 if ((@total_items % @limit) > 0)
+
+      @order = 'iox_program_entries.id'
+      if params[:sort]
+        sort = params[:sort]['0'][:field]
+        unless sort.blank?
+          sort = "iox_program_entries.#{sort}" if sort.match(/id|created_at|updated_at|starts_at|ends_at/)
+          sort = "LOWER(title)" if sort === 'title'
+          sort = "LOWER(iox_ensembles.name)" if sort == 'ensemble_name'
+          sort = "LOWER(iox_users.username)" if sort == 'updater_name'
+          @order = "#{sort} #{params[:sort]['0'][:dir]}"
+        end
+      end
+
+
+      @program_entries = ProgramEntry.joins(:events).where(clause).limit( @limit ).offset( (@page) * @limit ).order(@order).map do |pe|
+        pe.venue_id = ''
+        pe.venue_name = ''
+        pe.ensemble_name = ''
+        if pe.events.size > 0 && pe.events.first.venue
+          pe.venue_id = pe.events.first.venue.id
+          pe.venue_name = pe.events.first.venue.name
+        end
+        if pe.ensemble
+          pe.ensemble_name = pe.ensemble.name
+        end
+        pe
+      end
+
+      render json: { items: @program_entries, total: @total_items, order: @order }
+
+    end
+
+
   end
 end
