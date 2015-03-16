@@ -32,6 +32,7 @@ module Iox
     has_many :votes, class_name: 'Iox::ProgramEntryVote', dependent: :delete_all
 
     before_save :cleanup_youtube_url
+    after_save :update_people_links
     after_save :notify_owner_by_email
 
     def votes_total
@@ -110,7 +111,9 @@ module Iox
     def update_people_links
       unless tmp_cab_artist.blank?
         tmp_cab_artist.split(',').each do |artist_id|
-          program_entry_people.where( function: 'Künstler', person_id: artist_id ).first_or_create
+          unless program_entry_people.where( function: 'Künstler', person_id: artist_id ).first
+            program_entry_people.create( person_id: artist_id, function: 'Künstler' )
+          end
         end
       end
       unless tmp_author.blank?

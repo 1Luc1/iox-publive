@@ -48,8 +48,8 @@ module Iox
     def name=(full_name)
       return if full_name.blank?
       if full_name.split(' ').size > 1
-        self.firstname = full_name.split(' ')[0]
-        self.lastname = full_name.split(' ')[1]
+        self.firstname = full_name.split(' ')[0..-2].join(' ')
+        self.lastname = full_name.split(' ')[-1]
       else
         self.lastname = full_name
       end

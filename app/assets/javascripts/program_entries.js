@@ -74,10 +74,10 @@ function setupPEEvents(){
   $('.edit-select2-btn').on('click', function(e){
     e.preventDefault();
     var sel = $(this).parent().find('select');
-    if( !sel.find('option:selected') && !sel.find('option:selected').val() )
+    if( !sel.find('option:selected') || sel.find('option:selected').val() === '' )
       return;
     var $newDtls = $('<div class="iox-details-container iox-content">').append( iox.loader );
-    $('.iox-details-container').after( $newDtls );
+    $('.iox-content').after( $newDtls );
     $('.iox-content').hide();
     $newDtls.show().load( sel.attr('data-url')+'/'+sel.find('option:selected').val()+'/edit?layout=false' );
   });
