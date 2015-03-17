@@ -52,7 +52,7 @@ module Iox
       if params[:sort]
         sort = params[:sort]['0'][:field]
         unless sort.blank?
-          sort = "iox_people.#{sort}" if sort.match(/id|created_at|updated_at/)
+          sort = "iox_people.#{sort}" if sort.match(/id|created_at|updated_at|lastname|firstname/)
           sort = "LOWER(title)" if sort === 'title'
           sort = "LOWER(iox_ensembles.name)" if sort == 'ensemble_name'
           sort = "LOWER(iox_users.username)" if sort == 'updater_name'
