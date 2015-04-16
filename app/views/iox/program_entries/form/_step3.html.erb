@@ -55,6 +55,10 @@ $(function(){
               if( !model )
                 return options.error('<%= t('select_a_person') %>');
               var data = JSON.parse(JSON.stringify(options.data.models[0]));
+
+              if( !data.venue_id )
+                return alert('Spielort muss angegeben werden');
+              
               var redArr = [];
 
               // fix cet -> gmt issue with kendo datetimepicker
@@ -89,8 +93,12 @@ $(function(){
               var model = prepareSaveCrew( options );
               if( !model )
                 return options.error('<%= t('select_a_person') %>');
+              var data = options.data.models[0];
+              if( !data.venue_id )
+                return alert('Spielort muss angegeben werden');
+              console.log('data', data);
               $.ajax({ url: '<%= program_events_path %>', type: 'post', dataType: 'json',
-                       data: { program_event: options.data.models[0] },
+                       data: { program_event: data },
                        success: function( json ){ saveCrewSuccess( json, options ) },
                        error: function( json ){ saveCrewError( json, options ) }
               });

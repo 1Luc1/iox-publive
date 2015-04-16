@@ -40,7 +40,7 @@ module Iox
 
     def update_start_end_time
       if new_record? && ends_at.blank? && program_entry && program_entry.duration && program_entry.duration > 0
-        self.ends_at = starts_at+(program_entry.duration.minutes || 0)
+        self.ends_at = starts_at + (program_entry.duration && program_entry.duration.is_a?(Fixnum) ? program_entry.duration.minutes : 0)
       end
     end
 
