@@ -254,6 +254,12 @@ ul.members.with-img{
 }
 
 .stepContainer{
+  .select2-container .select2-choice{
+    cursor: text;
+  }
+  .select2-container .select2-choice .select2-arrow{
+    cursor: pointer;
+  }
   .iox-left-pane{
     max-width: 58%;
   }
