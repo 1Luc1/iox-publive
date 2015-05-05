@@ -292,9 +292,12 @@ module Iox
         if params[:order]
           errors = 0
           params[:order].split(',').each_with_index do |img_id, pos|
-            @image = @program_entry.images.where( id: img_id.sub('image_','') ).first
-            @image.position = pos
-            errors += 1 unless @image.save
+            if @image = @program_entry.images.where( id: img_id.sub('image_','') ).first
+              @image.position = pos
+              errors += 1 unless @image.save
+            else
+              errors += 1
+            end
           end
           if errors == 0
             flash.now.notice = t('program_file.order_saved')
