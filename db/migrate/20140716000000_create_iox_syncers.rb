@@ -6,6 +6,8 @@ class CreateIoxSyncers < ActiveRecord::Migration
       t.string      :cron_line
       t.integer     :festival_id
       t.integer     :user_id
+      t.boolean     :send_report
+      t.string      :send_report_to
       t.timestamps
     end
 

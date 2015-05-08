@@ -64,6 +64,10 @@
       $('#seconds-ran').text( response.sync_log.seconds_ran );
       $('#entries-count').text( response.sync_log.ok + response.sync_log.failed );
       $('#loader').hide();
+    })
+    .fail(function(response){
+      $('#loader').hide();
+      $('#sync-log').html( "Fehler" );
     });
   });
 </script>

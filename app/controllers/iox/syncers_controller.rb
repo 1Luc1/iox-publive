@@ -24,8 +24,11 @@ module Iox
 
     def now
       syncer = Iox::Syncer.find_by_id params[:id]
-      sync_log = sync_now( syncer )
-      render json: { ok: sync_log.ok_entries, failed: sync_log.failed_entries, sync_log: sync_log }
+      if sync_log = sync_now( syncer )
+        render json: { ok: sync_log.ok_entries, failed: sync_log.failed_entries, sync_log: sync_log }
+      else
+        render json: {}, status: 409
+      end
     end
 
     def update
@@ -68,7 +71,7 @@ module Iox
 
     def syncer_params
       params.require(:syncer).permit(
-        %w( name cron_line url festival_id )
+        %w( name cron_line url festival_id send_report send_report_to )
       )
     end
 

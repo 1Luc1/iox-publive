@@ -7,9 +7,20 @@
   <label>zieladresse</label>
   <%= f.text_field :url, class: "fill-width" %>
 </div>
+
 <div class="field-box">
   <label>Festival-ID (alle synchronisierten Termine mit folgender Festival-ID verkn&uuml;pfen)</label>
   <%= f.text_field :festival_id, class: "fill-width" %>
+</div>
+
+<div class="field-box">
+  <%= f.check_box :send_report %> &nbsp;
+  <label style="float:none; display: inline-block;">Synchronisationsbericht an meine Email Adresse</label>
+</div>
+
+<div class="field-box">
+  <label>Andere Email Adresse verwenden</label>
+  <%= f.text_field :send_report_to, class: "fill-width" %>
 </div>
 
 <div class="field-box">
