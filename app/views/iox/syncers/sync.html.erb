@@ -11,10 +11,26 @@
       <h1>Syncrhonisiere <%= @syncer.name %></h1>
       <p>URL: <%= @syncer.url %></p>
 
+      <table style="width: 100%; margin: 20px 0; font-family: monospace; font-size: 12px;">
+        <tr>
+          <td>Completed at</td>
+          <td>Seconds ran</td>
+          <td>Entries</td>
+        </tr>
+        <tr>
+          <td><span id="completed_at"></span></td>
+          <td><span id="seconds-ran"></span></td>
+          <td><span id="entries-count"></span></td>
+        </tr>
+      </table>
+
+      <tt id="sync-log"></tt>
+
       <table class="results syncers">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>EXT ID</th>
+            <th>TSP ID</th>
             <th>Name</th>
             <th></th>
             <th>Status</th>
@@ -38,12 +54,15 @@
     .then(function(response){
       if( !response.ok ) return;
       response.failed.forEach(function(entry){
-        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.title+'</td><td>FEHLER</td>');
+        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.id+'</td><td>'+entry.title+'</td><td></td><td>FEHLER</td>');
       });
       response.ok.forEach(function(entry){
-        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.title+'</td><td><a href="/iox/program_entries/'+entry.id+'/edit"><i class="icon icon-pencil"></i></a> &nbsp; <a href="/spielplan/'+entry.id+'"<i class="icon icon-eye"></i></a><td>OK</td>');
+        $('.results.syncers tbody').append('<tr><td>'+entry.sync_id+'</td><td>'+entry.id+'</td><td>'+entry.title+'</td><td><a href="/iox/program_entries/'+entry.id+'/edit"><i class="icon icon-pencil"></i></a> &nbsp; <a href="/spielplan/'+entry.id+'"<i class="icon icon-eye"></i></a><td>OK</td>');
       });
-
+      $('#completed_at').text( moment(response.sync_log.created_at).format('LLLL') );
+      $('#sync-log').html( response.sync_log.message );
+      $('#seconds-ran').text( response.sync_log.seconds_ran );
+      $('#entries-count').text( response.sync_log.ok + response.sync_log.failed );
       $('#loader').hide();
     });
   });

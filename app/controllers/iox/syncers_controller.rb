@@ -1,6 +1,8 @@
 module Iox
   class SyncersController < Iox::ApplicationController
 
+    include Iox::SyncersHelper
+
     before_filter :authenticate!
     layout 'iox/application'
 
@@ -21,29 +23,9 @@ module Iox
     end
 
     def now
-      @syncer = Iox::Syncer.find_by_id params[:id]
-      require Rails.root.join("lib/tsp/parsers/ess/ess")
-      return unless @channel = ESS.parse_file( @syncer.url ).first
-      ok = []
-      failed = []
-      @channel.converted_feeds( @channel.link, @channel.rights ).each do |program_entry|
-        unless link_or_create_venues(program_entry)
-          Rails.logger.info "not all venues could be found or created for #{program_entry.title}"
-          failed << program_entry
-          next
-        end
-        unless download_images(program_entry)
-          Rails.logger.info "downloading images failed for #{program_entry.title}"
-          failed << program_entry
-          next
-        end
-        if program_entry.save
-          ok << program_entry
-        else
-          failed << program_entry
-        end
-      end
-      render json: { ok: ok, failed: failed }
+      syncer = Iox::Syncer.find_by_id params[:id]
+      sync_log = sync_now( syncer )
+      render json: { ok: sync_log.ok_entries, failed: sync_log.failed_entries, sync_log: sync_log }
     end
 
     def update
@@ -88,51 +70,6 @@ module Iox
       params.require(:syncer).permit(
         %w( name cron_line url festival_id )
       )
-    end
-
-    def link_or_create_venues(program_entry)
-      failed = 0
-      program_entry.events.each do |event|
-        event.festival_id = @syncer.festival_id unless @syncer.festival_id.blank?
-        event.save
-        next unless (event.venue && event.venue.new_record?)
-        if venue = Venue.find_by_sync_id( event.venue.sync_id )
-          event.venue = venue
-          next
-        end
-        venues = Venue.find_by_name( event.venue.name ).all
-        if venues.size == 1
-          event.venue = venues.first
-          next
-        elsif venues.size == 0
-          event.venue.save
-          next
-        end
-        failed += 1
-      end
-      failed == 0
-    end
-
-    def download_images( program_entry )
-      failed = 0
-      program_entry.images.each do |image|
-        next unless image.orig_url
-        puts "downloading for #{program_entry.id}"
-        extname = File.extname( image.orig_url )
-        basename = File.basename( image.orig_url, extname)
-        file = Tempfile.new([basename, extname])
-        file.binmode
-        open( image.orig_url ) do |data|
-          file.write data.read
-        end
-        file.rewind
-
-        image.file = file
-        unless image.save
-          failed += 1
-        end
-      end
-      failed == 0
     end
 
   end

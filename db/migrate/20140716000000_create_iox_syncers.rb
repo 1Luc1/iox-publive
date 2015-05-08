@@ -10,7 +10,8 @@ class CreateIoxSyncers < ActiveRecord::Migration
     end
 
     create_table :iox_sync_logs do |t|
-      t.string      :message
+      t.text        :message
+      t.integer     :seconds_ran
       t.integer     :ok
       t.integer     :failed
       t.integer     :syncer_id
