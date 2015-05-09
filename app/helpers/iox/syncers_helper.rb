@@ -10,7 +10,7 @@ module Iox
       return unless @channel = ESS.parse_file( @syncer.url ).first
       ok = []
       failed = []
-      @channel.converted_feeds( @channel.link, @channel.rights ).each do |program_entry|
+      @channel.converted_feeds( @channel.link, @channel.rights, syncer.user ).each do |program_entry|
         unless link_or_create_venues(program_entry)
           Rails.logger.info "not all venues could be found or created for #{program_entry.title}"
           failed << program_entry
