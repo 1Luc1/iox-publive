@@ -64,7 +64,6 @@ module Iox
       failed = 0
       program_entry.images.each do |image|
         next unless image.orig_url
-        puts "downloading for #{program_entry.id}"
         extname = File.extname( image.orig_url )
         basename = File.basename( image.orig_url, extname)
         begin
@@ -81,7 +80,8 @@ module Iox
             failed += 1
           end
         rescue OpenURI::HTTPError
-          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to download image: #{image.orig_url}"
+          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to download image: #{image.orig_url}. Image removed"
+          image.destroy
           failed += 1
         end
       end
