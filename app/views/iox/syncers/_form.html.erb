@@ -15,7 +15,7 @@
 
 <div class="field-box">
   <%= f.check_box :send_report %> &nbsp;
-  <label style="float:none; display: inline-block;">Synchronisationsbericht an meine Email Adresse</label>
+  <label style="float:none; display: inline-block;">Synchronisationsbericht an meine Email Adresse. Ein Bericht wird jedenfalls gesendet, wenn ein Fehler aufgetreten ist.</label>
 </div>
 
 <div class="field-box">
@@ -26,5 +26,20 @@
 <div class="field-box">
   <label>CRON (MM HH DAY MON DOW) (mind. ein Leerzeichen oder TAB dazwischen)</label>
   <%= f.text_field :cron_line, class: "fill-width" %>
+  <pre>
+    Beispiele:
+    0 3 * * *   jeden Tag um 03:00
+    @midnight   jeden Tag um Mitternacht
+    @weekly     einmal pro Woche (dzt. Sonntags um 00:05 Uhr, kann aber variieren)
+  </pre>
+
+  <p class="desc">
+  Der Prozess, der diesen Cronjob ausführt, läuft nur einmal stündlich. Einstellungen unter einer Stunde
+  (z.B. */5 * * * *) werden daher ignoriert und trotzdem nur einmal stündlich ausgeführt.
+  <br>
+  Es ist aus Gründen der Serverkapazitäten nicht erwünscht, dass Intervalle &lt;6 Stunden eingestellt werden.
+  Wir bitten dies zu berücksichtigen.
+  </p>
+
 </div>
 
