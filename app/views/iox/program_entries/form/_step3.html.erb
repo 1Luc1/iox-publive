@@ -181,7 +181,12 @@ $(function(){
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
         { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true },
-        { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' } },
+        { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' }, editor: function (container, options) {
+           var input = $("<input/>");
+           input.attr("name", options.field);
+           input.attr("placeholder", 'Bsp.: http://beispiel.at/projekt.html');
+           input.appendTo(container);
+          } },
         { field: 'tickets_email', title: '<%= t('program_event.tickets_email') %>', hidden: true },
         { field: 'tickets_phone', title: '<%= t('program_event.tickets_phone') %>', hidden: true },
         { field: 'additional_note', title: '<%= t('program_event.additional_note') %>' },

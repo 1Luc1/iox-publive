@@ -258,13 +258,16 @@ module Iox
     end
 
     def download_image_from_url
+      require 'uri'
       render( :json => {:errors => (@image ? @image.errors : 'image not found')}.to_json, :status => 500 ) if params[:download_url].blank?
       if @program_entry = ProgramEntry.find_by_id( params[:id] )
         extname = File.extname(params[:download_url])
         basename = File.basename(params[:download_url], extname)
         file = Tempfile.new([basename, extname])
         file.binmode
-        open( params[:download_url] ) do |data|
+        d_url = params[:download_url];
+        d_url = "http://#{d_url}" unless (d_url =~ /\A#{URI::regexp(['http', 'https'])}\z/)
+        open( d_url ) do |data|
           file.write data.read
         end
         file.rewind
@@ -279,7 +282,7 @@ module Iox
           flash.notice = t('program_file.uploaded', name: @image.name )
           render :json => { item: @image.to_jq_upload('file'), flash: flash }
         else
-          logger.error "#{current_user.name} tried to upload #{basename} #{file.content_type}"
+          logger.error "ERROR: #{current_user.name} tried to upload #{basename} #{@image.errors.full_messages.inspect}"
           render :json => {:errors => @image.errors}.to_json, :status => 500
         end
       else
