@@ -83,6 +83,10 @@ module Iox
           @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to download image: #{image.orig_url}. Image removed"
           image.destroy
           failed += 1
+        rescue URI::InvalidURIError
+          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): URL not accepted: #{image.orig_url}. Image removed"
+          image.destroy
+          failed += 1
         end
       end
       failed == 0
