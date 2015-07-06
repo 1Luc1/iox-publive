@@ -69,7 +69,8 @@ module Iox
         begin
           file = Tempfile.new([basename, extname])
           file.binmode
-          open( image.orig_url ) do |data|
+          enc_url = Addressable::URI.parse(image.orig_url)
+          open( enc_url ) do |data|
             file.write data.read
           end
           file.rewind
