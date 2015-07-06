@@ -69,7 +69,8 @@ module Iox
         begin
           file = Tempfile.new([basename, extname])
           file.binmode
-          enc_url = Addressable::URI.parse(image.orig_url)
+          enc_url = URI.escape(image.orig_url)
+          puts "encoding #{enc_url}"
           open( enc_url ) do |data|
             file.write data.read
           end
@@ -85,7 +86,7 @@ module Iox
           image.destroy
           failed += 1
         rescue URI::InvalidURIError
-          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): URL not accepted: #{image.orig_url}. Image removed"
+          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): URL not accepted: #{enc_url}. Image removed"
           image.destroy
           failed += 1
         end
