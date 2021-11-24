@@ -72,7 +72,7 @@ module Iox
           enc_url = URI.escape(image.orig_url)
           enc_url.scheme = "https"
           enc_url.to_s
-          logger.debug "The enc url: #{enc_url}"
+          logger.debug "The enc url: #{enc_ur}l"
           open( enc_url ) do |data|
             file.write data.read
           end
