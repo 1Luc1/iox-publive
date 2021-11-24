@@ -74,7 +74,7 @@ module Iox
           # enc_url.to_s
           enc_url = enc_url.gsub 'http:', 'https:'
           logger.debug "The enc url: #{enc_url}"
-          open( enc_url ) do |data|
+          open( enc_url, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE} ) do |data|
             file.write data.read
           end
           file.rewind
