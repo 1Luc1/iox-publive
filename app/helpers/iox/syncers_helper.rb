@@ -1,4 +1,4 @@
-require 'open_uri_redirections'
+# require 'open_uri_redirections'
 
 module Iox
 
@@ -76,7 +76,7 @@ module Iox
           # enc_url.to_s
           enc_url = enc_url.gsub 'http:', 'https:'
           logger.debug "The enc url: #{enc_url}"
-          open( enc_url, {redirect_to_https: true} ) do |data|
+          open( enc_url, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE} ) do |data|
             file.write data.read
           end
           file.rewind
