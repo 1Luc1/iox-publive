@@ -1,3 +1,5 @@
+require 'open_uri_redirections'
+
 module Iox
 
   module SyncersHelper
