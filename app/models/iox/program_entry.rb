@@ -96,6 +96,7 @@ module Iox
       h[:cabaret_artist_names] = cabaret_artist_names
       h[:url] = to_param
       if image = images.first
+        h[:orig_url] = image.file.url(:original)
         h[:thumb_url] = image.file.url(:thumb)
         h[:thumb_title] = image.description.blank? && image.copyright.blank? ? '' : "#{image.description} ©#{image.copyright}"
       end
