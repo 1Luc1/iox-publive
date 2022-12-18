@@ -95,6 +95,11 @@ module Iox
       h[:venue_name] = venue_name
       h[:cabaret_artist_names] = cabaret_artist_names
       h[:url] = to_param
+      if events.first.nil?
+        h[:tickets_url] = ''
+      else
+        h[:tickets_url] = events.first.tickets_url
+      end
       if image = images.first
         h[:orig_url] = image.file.url(:original)
         h[:thumb_url] = image.file.url(:thumb)
