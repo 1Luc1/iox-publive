@@ -15,7 +15,7 @@
         </div>
       <% end %>
 
-      <div class="field-box categories">
+      <div class="field-box categories with-extension!!!">
         <%= f.label :categories, t('program_entry.form.categories') %>
         <div style="width: 760px; margin-top: 5px">
           <% get_clean_categories.each do |cat| %>
@@ -84,6 +84,47 @@
         <%= f.label :meta_keywords, t('program_entry.form.keywords') %>
         <%= f.text_field :meta_keywords, class: 'select2-container meta-keywords' %>
       </div>
+
+
+       <div class="field-box only-elem kab-only jug-only ttp-only">
+        <%= f.label :extra_info, t('program_entry.form.extra_info') %>
+
+        <div class="pull-right" style="margin-left: 5px">
+          <%= f.check_box :green_event, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.green_event') %></span>
+        </div>
+
+        <div class="pull-right" style="margin-left: 5px">
+          <%= f.check_box :feminism, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.feminism') %></span>
+        </div>
+
+        <div class="pull-right">
+          <%= f.check_box :queer, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.queer') %></span>
+        </div>
+
+        <div class="pull-right" style="margin-left: 5px">
+          <%= f.check_box :barrier_free, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.barrier_free') %></span>
+        </div>
+
+        <div class="pull-right" style="margin-left: 5px">
+          <%= f.check_box :diversity, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.diversity') %></span>
+        </div>
+
+        <div class="pull-right">
+          <%= f.check_box :inklusion, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.inklusion') %></span>
+        </div>
+
+        <div class="pull-right">
+          <%= f.check_box :online_event, style: 'margin: -1px 0px 0 0' %>
+          <span><%= t('program_entry.online_event') %></span>
+        </div>
+      </div>
+
       <div class="field-box only-elem kab-only jug-only ttp-only">
         <%= f.label :duration, t('program_entry.form.duration_in_min') %>
         <div class="pull-right">

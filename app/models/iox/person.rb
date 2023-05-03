@@ -11,6 +11,9 @@ module Iox
     has_many :ensemble_people
     has_many :ensembles, through: :ensemble_people
 
+    has_many :taggings
+    has_many :tags, through: :taggings
+
     belongs_to :creator, class_name: 'Iox::User', foreign_key: 'created_by'
     belongs_to  :updater, class_name: 'Iox::User', foreign_key: 'updated_by'
 

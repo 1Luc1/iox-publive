@@ -286,6 +286,7 @@ de:
       description: "Beschreibung"
       url: "Projekt URL"
       keywords: "Schlüsselwörter"
+      extra_info: "Zusatz Informationen"
       age: "empfohlen ab"
       duration_in_min: "Dauer inkl. Pause"
       duration_desc: "Gib die Spielzeit der Produktion in Minuten an (inklusive Pause)"

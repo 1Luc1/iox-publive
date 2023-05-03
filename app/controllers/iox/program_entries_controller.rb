@@ -366,6 +366,8 @@ module Iox
 
     def entry_params
       params.require(:program_entry).permit([
+        :queer, :feminism, :barrier_free, :diversity, 
+        :fairpay, :green_event,:inklusion, :online_event,
         :title, :subtitle,
         :description, :age,
         :duration, :ensemble_id,
