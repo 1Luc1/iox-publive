@@ -47,7 +47,9 @@ module Iox
         @query << " AND " if @query.size > 0
         @query << " iox_program_entries.published = false"
       end
-      @total_items = ProgramEntry.where( @query ).count
+      @user_query = ProgramEntry.where( @query )
+      @user_query = ProgramEntry.where( @query ).where(created_by: current_user.id) unless current_user.is_admin?
+      @total_items = @user_query.count
       @page = (params[:skip] || 0).to_i
       @page = @page / params[:pageSize].to_i if @page > 0 && params[:pageSize]
       @limit = (params[:take] || 20).to_i
@@ -65,8 +67,9 @@ module Iox
           @order = "#{sort} #{params[:sort]['0'][:dir]}"
         end
       end
-
-      @program_entries = ProgramEntry.where( @query ).includes(:ensemble).includes(:updater).references(:iox_ensembles,:iox_users).limit( @limit ).offset( (@page) * @limit ).order(@order).load.map do |pe|
+      @user_query = ProgramEntry.where( @query )
+      @user_query = ProgramEntry.where( @query ).where(created_by: current_user.id) unless current_user.is_admin?      
+      @program_entries = @user_query.includes(:ensemble).includes(:updater).references(:iox_ensembles,:iox_users).limit( @limit ).offset( (@page) * @limit ).order(@order).load.map do |pe|
         pe.venue_id = ''
         pe.venue_name = ''
         pe.ensemble_name = ''
