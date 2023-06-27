@@ -25,6 +25,7 @@ module Iox
       end
 
       @only_mine = !params[:only_mine] || params[:only_mine] == 'true'
+      @only_mine = true unless current_user.is_admin?
 
       @conflict = params[:conflict] && params[:conflict] == 'true'
       @future_only = params[:future_only] && params[:future_only] == 'true'
