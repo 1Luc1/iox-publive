@@ -19,7 +19,7 @@ module Iox
     before_save :set_default_country,
                 :convert_zip_gkz
 
-    after_save :notify_owner_by_email
+    # after_save :notify_owner_by_email
 
     def program_entries(query='')
       pentries = []
