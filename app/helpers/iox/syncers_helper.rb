@@ -71,7 +71,7 @@ module Iox
         begin
           file = Tempfile.new([basename, extname])
           file.binmode
-          enc_url = URI.escape(image.orig_url)
+          enc_url = URI::DEFAULT_PARSER.escape(image.orig_url)
           # enc_url.scheme = "https"
           # enc_url.to_s
           enc_url = enc_url.gsub 'http:', 'https:'
