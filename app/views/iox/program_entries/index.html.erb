@@ -58,14 +58,14 @@
           } },
         { field: "published", title: "<%= t('published') %>", template: '<span class="publish-button #= published ? "icon-ok-sign" : "icon-ban-circle" #"></span>', width: 30 },
         { field: "title", title: "<%= t('program_entry.form.title') %>" },
-        { field: 'starts_at', title: '<%= t('program_entry.form.from') %>',
+        { field: 'starts_at', title: "<%= t('program_entry.form.from') %>",
           format: '{0:dd.MM.yyyy}',
           width: 100
         },
-        { field: 'ends_at', title: '<%= t('program_entry.form.to') %>',
+        { field: 'ends_at', title: "<%= t('program_entry.form.to') %>",
           format: '{0:dd.MM.yyyy}',
           width: 100 },
-        { field: 'categories', title: '<%= t('program_entry.form.categories') %>', width: 50, sortable: false },
+        { field: 'categories', title: "<%= t('program_entry.form.categories') %>", width: 50, sortable: false },
         { field: "ensemble_name",
           title: "<%= t('ensemble.ensemble_name') %>"
         },
@@ -77,7 +77,7 @@
           title: "<%= t('updated_by') %>"
         },
         { field: 'updated_at',
-          title: '<%= t('updated_at') %>',
+          title: "<%= t('updated_at') %>",
           format: '{0:dd.MM.yyyy HH:mm}',
           width: 120,
           attributes: {
