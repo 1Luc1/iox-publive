@@ -1,7 +1,7 @@
 module Iox
   class ProgramEntryEventsController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
 
     def create
       if pe_event_params[:program_event_id].blank?

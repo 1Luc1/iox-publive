@@ -1,7 +1,7 @@
 module Iox
   class ProgramEntriesController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
     layout 'iox/application'
 
     def index

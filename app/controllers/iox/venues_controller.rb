@@ -3,7 +3,7 @@ require_dependency "iox/application_controller"
 module Iox
   class VenuesController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
 
     def index
 

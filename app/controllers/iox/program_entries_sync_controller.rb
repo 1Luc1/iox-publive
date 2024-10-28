@@ -1,7 +1,7 @@
 module Iox
   class ProgramEntriesSyncController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
     layout 'iox/application'
 
   end

@@ -1,7 +1,7 @@
 module Iox
   class ProgramEntryPeopleController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
 
     def create
       if pe_person_params[:person_id].blank?

@@ -1,7 +1,7 @@
 module Iox
   class ProgramEventsController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
 
     def create
       @program_event = ProgramEvent.new program_event_params

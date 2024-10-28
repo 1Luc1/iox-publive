@@ -3,7 +3,7 @@ require_dependency "iox/application_controller"
 module Iox
   class PeopleController < Iox::ApplicationController
 
-    before_filter :authenticate!, except: [ :show ]
+    before_action :authenticate!, except: [ :show ]
 
     def index
 
