@@ -40,7 +40,7 @@ module Iox
 
     def get_functions_list
       funcs = []
-      ProgramEntryPerson.where(person_id: id).uniq.pluck(:function).each do |func|
+      ProgramEntryPerson.where(person_id: id).distinct.pluck(:function).each do |func|
         func.split(',').each do |f|
           funcs << f unless funcs.include?(f)
         end
