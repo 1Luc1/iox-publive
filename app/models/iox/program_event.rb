@@ -14,8 +14,8 @@ module Iox
 
     before_save :update_start_end_time
 
-    validate :starts_at, presence: true
-    validate :venue_id, presence: true
+    validates :starts_at, presence: true
+    validates :venue_id, presence: true
 
     def price_from=(val)
       super( val.sub(',','.') )
