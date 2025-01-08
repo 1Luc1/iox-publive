@@ -75,7 +75,7 @@ module Iox
           # enc_url.scheme = "https"
           # enc_url.to_s
           enc_url = enc_url.gsub 'http:', 'https:'
-          logger.debug "The enc url: #{enc_url}"
+          Rails.logger.info "The enc url: #{enc_url}"
           open( enc_url, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE} ) do |data|
             file.write data.read
           end
