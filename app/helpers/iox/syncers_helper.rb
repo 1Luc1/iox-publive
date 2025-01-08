@@ -8,25 +8,29 @@ module Iox
       start = Time.now
       @syncer = syncer
       @sync_error_log = []
-      require Rails.root.join("lib/tsp/parsers/ess/ess")
-      return unless @channel = ESS.parse_file( @syncer.url ).first
       ok = []
       failed = []
-      @channel.converted_feeds( @channel.link, @channel.rights, syncer.user ).each do |program_entry|
-        unless link_or_create_venues(program_entry)
-          Rails.logger.info "not all venues could be found or created for #{program_entry.title}"
-          failed << program_entry
-          next
-        end
-        unless download_images(program_entry)
-          Rails.logger.info "downloading images failed for #{program_entry.title}"
-          failed << program_entry
-          next
-        end
-        if program_entry.save
-          ok << program_entry
-        else
-          failed << program_entry
+      require Rails.root.join("lib/tsp/parsers/ess/ess")
+      @channel = ESS.parse_file( @syncer.url ).first
+      if @channel.nil?
+        @sync_error_log << "Parsing #{@syncer.url} failed"
+      else
+        @channel.converted_feeds( @channel.link, @channel.rights, syncer.user ).each do |program_entry|
+          unless link_or_create_venues(program_entry)
+            Rails.logger.info "not all venues could be found or created for #{program_entry.title}"
+            failed << program_entry
+            next
+          end
+          unless download_images(program_entry)
+            Rails.logger.info "downloading images failed for #{program_entry.title}"
+            failed << program_entry
+            next
+          end
+          if program_entry.save
+            ok << program_entry
+          else
+            failed << program_entry
+          end
         end
       end
       @sync_error_log << "completed successfully" if @sync_error_log.size < 1
