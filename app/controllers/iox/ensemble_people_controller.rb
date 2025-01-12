@@ -1,7 +1,7 @@
 module Iox
   class EnsemblePeopleController < Iox::ApplicationController
 
-    before_filter :authenticate!
+    before_action :authenticate!
 
     def create
       if params[:person] && params[:person][:name] && params[:person][:name].include?(' ')

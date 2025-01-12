@@ -3,7 +3,7 @@ module Iox
 
     include Iox::SyncersHelper
 
-    before_filter :authenticate!
+    before_action :authenticate!
     layout 'iox/application'
 
     def index
