@@ -116,7 +116,7 @@ function setupPersonAvatarUpload(){
 function setupDefaultCKEditor($elem){
 
   CKEDITOR.replace( $elem.get(0), {
-    removePlugins: 'elementspath',
+    removePlugins: 'elementspath,wsc',
     toolbar: [
       [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],
       [ 'Bold', 'Italic', 'OrderedList', 'UnorderedList'],
