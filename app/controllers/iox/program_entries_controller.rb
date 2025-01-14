@@ -69,7 +69,7 @@ module Iox
       end
       @user_query = ProgramEntry.where( @query )
       @user_query = ProgramEntry.where( @query ).where(created_by: current_user.id) unless current_user.is_admin?      
-      @program_entries = @user_query.includes(:ensemble).includes(:updater).references(:iox_ensembles,:iox_users).limit( @limit ).offset( (@page) * @limit ).order(@order).load.map do |pe|
+      @program_entries = @user_query.includes(:ensemble).includes(:updater).limit( @limit ).offset( (@page) * @limit ).order(@order).load.map do |pe|
         pe.venue_id = ''
         pe.venue_name = ''
         pe.ensemble_name = ''

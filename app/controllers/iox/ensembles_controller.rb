@@ -51,7 +51,7 @@ module Iox
         end
       end
 
-      @ensembles = Ensemble.where( @query ).limit( @limit ).includes(:updater).references(:iox_users).offset( (@page) * @limit ).order(@order).load
+      @ensembles = Ensemble.where( @query ).limit( @limit ).includes(:updater).offset( (@page) * @limit ).order(@order).load
 
       render json: { items: @ensembles, total: @total_items, order: @order }
 
