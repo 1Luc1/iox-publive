@@ -20,7 +20,7 @@ module Iox
     # paperclip plugin
     has_attached_file :avatar,
                       :styles => Rails.configuration.iox.person_picture_sizes,
-                      :default_url => "/images/:style/missing.png",
+                      :default_url => "/images/iox/avatar/:style/missing.png",
                       :url => "/data/iox/person_avatars/:hash.:extension",
                       :hash_secret => "5b1b59b59b08dfef721470feed062327909b8f92"
 
