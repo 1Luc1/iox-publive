@@ -342,7 +342,13 @@ ul.members.with-img{
   .categories input[type=radio]{
     margin: 0 5px 2px 7px;
   }
-
+  .extra-info-block {
+    div {
+      display: inline-block;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+  }
   .field-box .date .icon-th{
     margin-top: 3px;
   }

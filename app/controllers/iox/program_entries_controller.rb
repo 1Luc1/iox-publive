@@ -372,6 +372,10 @@ module Iox
       params.require(:program_entry).permit([
         :queer, :feminism, :barrier_free, :diversity, 
         :fairpay, :green_event,:inklusion, :online_event,
+        :talk, :sight, :hearing, :fairpay, :theatre,
+        :dance, :performance, :music_theatre, :figures,
+        :young_audience, :circus, :street_theatre,
+        :new_media, :installation, :cabaret,
         :title, :subtitle,
         :description, :age,
         :duration, :ensemble_id,
