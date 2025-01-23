@@ -89,39 +89,103 @@
        <div class="field-box only-elem kab-only jug-only ttp-only">
         <%= f.label :extra_info, t('program_entry.form.extra_info') %>
 
-        <div class="pull-right" style="margin-left: 5px">
-          <%= f.check_box :green_event, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.green_event') %></span>
+        <div class="extra-info-block pull-right">
+          <div>
+            <%= f.check_box :queer, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.queer') %></span>
+          </div>
+          <div>
+            <%= f.check_box :green_event, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.green_event') %></span>
+          </div>
+          <div>
+            <%= f.check_box :feminism, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.equality') %></span>
+          </div>
+          <div>
+            <%= f.check_box :diversity, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.diversity') %></span>
+          </div>
+          <div>
+            <%= f.check_box :online_event, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.online_event') %></span>
+          </div>
+          <div>
+            <%= f.check_box :inklusion, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.inklusion') %></span>
+          </div>
+          <div>
+            <%= f.check_box :fairpay, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.fairpay') %></span>
+          </div>
         </div>
 
-        <div class="pull-right" style="margin-left: 5px">
-          <%= f.check_box :feminism, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.feminism') %></span>
+        <div class="extra-info-block pull-right">
+          <div>
+            <%= f.check_box :hearing, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.hearing') %></span>
+          </div>
+          <div>
+            <%= f.check_box :sight, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.sight') %></span>
+          </div>
+           <div>
+            <%= f.check_box :barrier_free, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.barrier_free') %></span>
+          </div>
+          <div>
+            <%= f.check_box :talk, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.talk') %></span>
+          </div>
         </div>
 
-        <div class="pull-right">
-          <%= f.check_box :queer, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.queer') %></span>
+         <div class="extra-info-block pull-right" style="clear: both">
+          <div>
+            <%= f.check_box :theatre, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.theatre') %></span>
+          </div>
+           <div>
+            <%= f.check_box :dance, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.dance') %></span>
+          </div>
+          <div>
+            <%= f.check_box :performance, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.performance') %></span>
+          </div>
+          <div>
+            <%= f.check_box :music_theatre, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.music_theatre') %></span>
+          </div>
+          <div>
+            <%= f.check_box :figures, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.figures') %></span>
+          </div>
+          <div>
+            <%= f.check_box :young_audience, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.young_audience') %></span>
+          </div>
+          <div>
+            <%= f.check_box :circus, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.circus') %></span>
+          </div>
         </div>
-
-        <div class="pull-right" style="margin-left: 5px">
-          <%= f.check_box :barrier_free, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.barrier_free') %></span>
-        </div>
-
-        <div class="pull-right" style="margin-left: 5px">
-          <%= f.check_box :diversity, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.diversity') %></span>
-        </div>
-
-        <div class="pull-right">
-          <%= f.check_box :inklusion, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.inklusion') %></span>
-        </div>
-
-        <div class="pull-right">
-          <%= f.check_box :online_event, style: 'margin: -1px 0px 0 0' %>
-          <span><%= t('program_entry.online_event') %></span>
+        <div class="extra-info-block pull-right">
+          <div>
+            <%= f.check_box :street_theatre, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.street_theatre') %></span>
+          </div>
+          <div>
+            <%= f.check_box :new_media, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.new_media') %></span>
+          </div>
+          <div>
+            <%= f.check_box :installation, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.installation') %></span>
+          </div>
+          <div>
+            <%= f.check_box :cabaret, style: 'margin: -1px 0px 0 0' %>
+            <span><%= t('program_entry.cabaret') %></span>
+          </div>
         </div>
       </div>
 
