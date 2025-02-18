@@ -81,7 +81,7 @@ module Iox
 
     def new
       @person = Person.new name: (params[:name] || '')
-      names = params[:name].split(' ')
+      names = (params[:name] || '').split(' ')
       @found = Person.where({})
       if names.size > 1
         @found = @found.where("firstname LIKE ?", "%#{names[0..-2].join(' ')}%")
