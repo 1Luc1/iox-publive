@@ -58,7 +58,8 @@ $(function(){
 
               if( !data.venue_id )
                 return alert('Spielort muss angegeben werden');
-              
+              if (!data.tickets_url && !data.tickets_email)
+                return alert('Tickets (URL) oder (Email) muss angegeben werden');
               var redArr = [];
 
               // fix cet -> gmt issue with kendo datetimepicker
@@ -96,7 +97,8 @@ $(function(){
               var data = options.data.models[0];
               if( !data.venue_id )
                 return alert('Spielort muss angegeben werden');
-              console.log('data', data);
+              if (!data.tickets_url && !data.tickets_email)
+                return alert('Tickets (URL) oder (Email) muss angegeben werden');
               $.ajax({ url: '<%= program_events_path %>', type: 'post', dataType: 'json',
                        data: { program_event: data },
                        success: function( json ){ saveCrewSuccess( json, options ) },
