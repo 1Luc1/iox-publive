@@ -4,9 +4,7 @@
 
 <script type="text/javascript">
 
-
   $(document).ready( function(){
-
 
     function prepareSaveCrew( options ){
       var model = options.data.models[0];
@@ -115,7 +113,7 @@
         },
         columns: [
           { field: 'name', title: "<%= t('name') %>", editor: personListEditor },
-          { field: 'function', title: "<%= t('program_entry.person.function') %>" },
+          { field: "function", title: "<%= t('program_entry.person.function') %>", editor: functionDropDownEditor },
           { field: 'role', title: "<%= t('program_entry.person.role') %>" },
           {
             field: "updated_at",
@@ -129,6 +127,23 @@
             { name: "destroy", text: '<%= t('delete')[0,4] %>'} ], title: "&nbsp;", width: "172px" },
         ]
       });
+
+    function functionDropDownEditor(container, options) {
+      $('<input name="' + options.field + '"/>')
+        .appendTo(container)
+        .kendoDropDownList({
+            autoBind: false,
+            filter: 'contains',
+            dataTextField: "name",
+            dataValueField: "name",
+            dataSource: {
+              type: "json",
+              transport: {
+                  read: '<%= simple_tags_path %>'
+              }
+            },
+        });
+    }
 
     function personListEditor( container, options ){
       var crewAutoComplete = $('<input type="text" data-bind="value:' + options.field + '"/>')

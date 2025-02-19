@@ -94,5 +94,11 @@ Iox::Engine.routes.draw do
 
   resources :program_files
 
+  resources :tags do
+    collection do
+      get :simple
+    end
+  end
+
 
 end
