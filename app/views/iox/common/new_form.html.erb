@@ -3,7 +3,7 @@
   <div class="content-padding">
 
     <div class="field-box">
-      <%= f.label t('name') %>
+      <%= f.label :name %>
       <%= f.text_field :name, class: 'js-get-focus' %>
       <% if @help_txt %><br /><span class="mini-desc"><%= @help_txt %></span><% end %>
       <% if @hidden_fields %>
