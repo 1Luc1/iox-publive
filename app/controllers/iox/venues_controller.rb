@@ -77,7 +77,7 @@ module Iox
           redirect_to edit_venue_path( @venue )
         end
       else
-        flash.now.alert = "#{t('venue.saving_failed')}: #{@venue.errors.full_messages.join(' ').html_safe}"
+        flash.now.alert = "#{t('venue.saving_failed', name: @venue.name)}: #{@venue.errors.full_messages.join(' ').html_safe}"
         unless request.xhr?
           render template: 'iox/venues/new'
         end
