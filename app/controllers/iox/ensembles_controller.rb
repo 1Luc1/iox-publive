@@ -92,7 +92,7 @@ module Iox
           return
         end
       else
-        flash.alert = t('ensemble.saving_failed')
+        flash.alert = "#{t('ensemble.saving_failed')}: #{@ensemble.errors.full_messages.join(' ').html_safe}"
         unless request.xhr?
           render template: 'iox/ensembles/new', layout: false
           return

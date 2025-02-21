@@ -100,7 +100,7 @@ de:
     edit: "Person bearbeiten"
     avatar_changed: "Avatar wurde gespeichert"
     saved: "%{name} wurde erfolgreich gespeichert"
-    saving_failed: "%{name} konnte nicht gespeichert werden"
+    saving_failed: "Person %{name} konnte nicht gespeichert werden"
     deleted: "&raquo;%{name}&laquo; wurde gelöscht <a href='/iox/people/%{id}/restore' data-method='post' data-remote='true'><i class='flash-icon icon-undo'></i>Wiederherstellen</a>"
     restored: "&raquo;%{name}&laquo; wurde wiederhergestellt"
     restoring_failed: "Wiederherstellen von &raquo;%{name}&laquo; fehlgeschlagen"

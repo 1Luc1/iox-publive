@@ -107,7 +107,7 @@ module Iox
           redirect_to edit_person_path( @person )
         end
       else
-        flash.alert = t('person.saving_failed')
+        flash.alert = "#{t('person.saving_failed', name: @person.name)}: #{@person.errors.full_messages.join(' ').html_safe}"
         unless request.xhr?
           render template: 'iox/people/new'
         end
