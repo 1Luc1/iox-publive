@@ -15,7 +15,7 @@ module Iox
 
     has_many    :images, -> { order(:position) }, class_name: 'Iox::EnsemblePicture', dependent: :destroy
 
-    validates   :name, presence: true
+    validates   :name, presence: true, uniqueness: true
 
     before_save :set_default_country,
                 :convert_zip_gkz

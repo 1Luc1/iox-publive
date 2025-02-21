@@ -25,7 +25,7 @@ module Iox
                       :hash_secret => "5b1b59b59b08dfef721470feed062327909b8f92"
 
     #validates :firstname, presence: true
-    validates :lastname, presence: true
+    validates :lastname, presence: true, uniqueness: { scope: :firstname, case_sensitive: false }
 
     after_save :notify_owner_by_email
 
