@@ -350,6 +350,7 @@ de:
     saved: "Synchronisation %{name} wurde gespeichert"
     saving_failed: "Synchronisation konnte nicht gespeichert werden"
     now: "Jetzt synchronisieren"
+    deleted: "Synchronisation %{name} wurde gelöscht"
 
   obj:
     mailer:
