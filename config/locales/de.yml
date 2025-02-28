@@ -95,6 +95,7 @@ de:
     firstname: "Vorname"
     lastname: "Nachname"
     firstname_lastname: "In der Ordnung [Vorname] [Nachname] (Bsp.: Erika Sonnenblum)"
+    email_required: "Email wird benötigt"
     person_name: "Personenname"
     projects_amount: "Anzahl Projekte"
     new: "Neue Person"

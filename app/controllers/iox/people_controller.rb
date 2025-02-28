@@ -67,13 +67,17 @@ module Iox
     def new
       @person = Person.new name: (params[:name] || '')
       names = (params[:name] || '').split(' ')
-      @found = Person.where({})
-      if names.size > 1
-        @found = @found.where("firstname LIKE ?", "%#{names[0..-2].join(' ')}%")
+      if names.size != 0
+        @found = Person.where({})
+        puts "names: #{names}"
+        if names.size > 1
+          @found = @found.where("firstname LIKE ?", "%#{names[0..-2].join(' ')}%")
+        end
+        if names.size > 0
+          @found = @found.where("lastname LIKE ?", "%#{names.last}%")
+        end
       end
-      if names.size > 0
-        @found = @found.where("lastname LIKE ?", "%#{names.last}%")
-      end
+      
       @help_txt = t('person.firstname_lastname')
       render template: 'iox/people/new_modal', layout: false
     end

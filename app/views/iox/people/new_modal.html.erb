@@ -6,14 +6,15 @@
       <%= f.label :name %>
       <%= f.text_field :name, class: 'js-get-focus' %>
       <% if @help_txt %><br /><span class="mini-desc"><%= @help_txt %></span><% end %>
-      <% if @hidden_fields %>
-        <% @hidden_fields.each do |hf| %>
-          <%= f.hidden_field hf %>
-        <% end %>
-      <% end %>
+
       <%= hidden_field_tag(:skip_edit, true) if params[:skip_edit] %>
       <%= f.submit '', style: 'display:none' %>
     </div>
+    <div class="field-box">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+      <br /><span class="mini-desc"><%= t('person.email_required') %></span>
+    <div class="field-box">
 
     <% if @found && @found.size > 0 %>
       <p class="desc"><%= t('people.found', count: @found.size) %></p>

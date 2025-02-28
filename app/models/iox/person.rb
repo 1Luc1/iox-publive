@@ -26,6 +26,7 @@ module Iox
 
     #validates :firstname, presence: true
     validates :lastname, presence: true, uniqueness: { scope: :firstname, case_sensitive: false }
+    validates :email, presence: true
 
     after_save :notify_owner_by_email
 
