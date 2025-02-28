@@ -323,6 +323,7 @@ de:
       person: "Person"
       name: "Name"
       function: "Funktion"
+      functions: "Funktionen"
       role: "Rolle (opt)"
 
     already_exists: "Ein Spielplaneintrag mit diesem Namen existiert und hat Termine in der Zukunft (<a href='%{url}'>%{name}</a>)"

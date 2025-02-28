@@ -81,6 +81,14 @@
                   </div>
                 </div>
               <% end %>
+              <div class="field-box">
+                <%= f.label :tags, t('program_entry.person.functions') %>              
+                <%= f.select :tags,
+                  options_from_collection_for_select(Iox::Tag.all.order(name: :asc), :id, :name, @person.tags.ids),
+                  { include_blank: true },
+                  { id: 'select-taggings-id', class: 'select-taggings-id', multiple: 'multiple' }
+                %>
+              </div>
             <% end %>
           </div>
 
@@ -100,6 +108,11 @@
         setupPersonAvatarUpload();
         setupDefaultCKEditor( $('.ckeditor:visible') );
       });
+
+      $(document).ready(function(){
+            $('#select-taggings-id').select2();
+      });
+
     </script>
 
 <% if @layout %>

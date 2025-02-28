@@ -124,6 +124,10 @@ module Iox
           @person.created_by = params[:with_user]
         end
 
+        if params[:person][:tags]
+          @person.tag_ids = params[:person][:tags]
+        end
+
         if @person.save
 
         begin
