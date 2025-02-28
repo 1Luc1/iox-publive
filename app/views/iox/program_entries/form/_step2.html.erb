@@ -106,7 +106,7 @@
         serverPaging: false,
         serverFiltering: false,
         serverSorting: false,
-        height: 230,
+        height: 500,
         editable: {
             confirmation: false,
             mode: "inline"
@@ -114,18 +114,18 @@
         columns: [
           { field: 'name', title: "<%= t('name') %>", editor: personListEditor },
           { field: "function", title: "<%= t('program_entry.person.function') %>", editor: functionDropDownEditor },
-          { field: 'role', title: "<%= t('program_entry.person.role') %>" },
+          { field: 'role', title: "<%= t('program_entry.person.role') %>", width: "150px" },
           {
             field: "updated_at",
             title: "<%= t('updated_at') %>",
-            width: 140,
-            format: "{0:dd.MM.yyyy HH:mm}"
+            width: "100px",
+            format: "{0:dd.MM.yyyy}"
           },
           { field: 'person_id', title: "ID", width: 60 },
           { command: [
             { name: "edit", text: { edit: 'Edit.', cancel: "<%= t('cancel')[0,3] %>.", update: "Ok"} },
             { name: "destroy", text: '<%= t('delete')[0,4] %>'} ], title: "&nbsp;", width: "172px" },
-        ]
+        ],
       });
 
     function functionDropDownEditor(container, options) {
@@ -248,3 +248,18 @@
   });
 
 </script>
+<style>
+  .k-grid-header .k-header {
+    padding: 10px;
+    font-size: 1.2em;
+  }
+  .k-grid-header .k-header[data-field="updated_at"] {
+    font-size: 0.8rem;
+  }
+
+  .k-grid tbody td {
+    padding: 8px;
+    font-size: 1.2em;
+  }
+ 
+</style>
