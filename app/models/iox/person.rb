@@ -64,11 +64,13 @@ module Iox
 
     def as_json(options = { })
       h = super(options)
+      if !options.key?(:simple)
+        h[:projects_num] = program_entries.count
+        h[:to_param] = to_param
+        h[:functions] = program_entry_people.map{ |pep| pep.function }.join(',')
+        h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
+      end
       h[:name] = name
-      h[:projects_num] = program_entries.count
-      h[:to_param] = to_param
-      h[:functions] = program_entry_people.map{ |pep| pep.function }.join(',')
-      h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       h[:ensemble_names] = ensembles.map{ |e| e.name }.join(',')
       h
     end

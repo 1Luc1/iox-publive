@@ -21,26 +21,11 @@ module Iox
       end
 
       @only_mine = !params[:only_mine] || params[:only_mine] == 'true'
-      @conflict = params[:conflict] && params[:conflict] == 'true'
-      @future_only = params[:future_only] && params[:future_only] == 'true'
-      @only_unpublished = params[:only_unpublished] && params[:only_unpublished] == 'true'
-      @q = "only_mine=#{@only_mine}&future_only=#{@future_only}&only_unpublished=#{@only_unpublished}&query=#{filter}"
-      if @future_only
-        @query << " AND " if @query.size > 0
-        @query << " iox_people.ends_at >= '#{Time.now.strftime('%Y-%m-%d')}'"
-      end
       if @only_mine
         @query << " AND " if @query.size > 0
         @query << " iox_people.created_by = #{current_user.id}"
       end
-      if @conflict
-        @query << " AND " if @query.size > 0
-        @query << " (iox_people.conflict IS TRUE OR iox_people.conflict_id IS NOT NULL)"
-      end
-      if @only_unpublished
-        @query << " AND " if @query.size > 0
-        @query << " iox_people.published = false"
-      end
+
       @total_items = Person.where( @query ).count
       @page = (params[:skip] || 0).to_i
       @page = @page / params[:pageSize].to_i if @page > 0 && params[:pageSize]
@@ -54,13 +39,13 @@ module Iox
         unless sort.blank?
           sort = "iox_people.#{sort}" if sort.match(/id|created_at|updated_at|lastname|firstname/)
           sort = "LOWER(title)" if sort === 'title'
-          sort = "LOWER(iox_ensembles.name)" if sort == 'ensemble_name'
+          sort = "LOWER(iox_ensembles.name)" if sort == 'ensemble_names'
           sort = "LOWER(iox_users.username)" if sort == 'updater_name'
           @order = "#{sort} #{params[:sort]['0'][:dir]}"
         end
       end
 
-      @people = Person.where( @query ).includes(:ensembles).includes(:program_entries).includes(:updater).limit( @limit ).offset( (@page) * @limit ).order(@order).load
+      @people = Person.where( @query ).joins(:ensembles).joins(:updater).limit( @limit ).offset( (@page) * @limit ).order(@order).load
 
       render json: { items: @people, total: @total_items, order: @order }
     end
@@ -76,7 +61,7 @@ module Iox
           @query = @query.where("firstname LIKE ? OR lastname LIKE ?", "%#{filter}%", "%#{filter}%" )
         end
       end
-      render json: @query.order('firstname,lastname').load
+      render json: @query.order('firstname,lastname').load, :simple => true
     end
 
     def new
