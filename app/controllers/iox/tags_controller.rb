@@ -9,7 +9,7 @@ module Iox
       tags = Tag.order('id,name').load
       aryTags = tags.to_ary
       aryTags.push({"id":147,"name":"Andere"})
-      render json: aryTags
+      render json: aryTags, only: [:id, :name]
     end
 
   end
