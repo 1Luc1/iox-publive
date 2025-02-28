@@ -45,7 +45,7 @@ module Iox
         end
       end
 
-      @people = Person.where( @query ).joins(:ensembles).joins(:updater).limit( @limit ).offset( (@page) * @limit ).order(@order).load
+      @people = Person.where( @query ).includes(:ensembles).includes(:updater).references(:iox_ensembles, :iox_users).limit( @limit ).offset( (@page) * @limit ).order(@order).load
 
       render json: { items: @people, total: @total_items, order: @order }
     end
