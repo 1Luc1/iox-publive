@@ -64,7 +64,23 @@
                   <%= f.label :description, t('description') %>
                   <%= f.text_area :description, class: 'ckeditor' %>
               </div>
-
+              <% if @person.program_entries.exists? %>
+                <div class="field-box">
+                  <label for="person_projects"><%= t('projects') %></label>
+                  <div id="person_projects" class="cke_chrome">
+                    <% @person.program_entries.each do |program_entry| %>
+                      <div>
+                        <%= program_entry.title %>
+                        <% if current_user.is_admin? || program_entry.created_by == current_user.id %>
+                          <a href="<%= edit_program_entry_path(program_entry) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                            <i class="icon-eye-open"></i>
+                          </a>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
             <% end %>
           </div>
 
