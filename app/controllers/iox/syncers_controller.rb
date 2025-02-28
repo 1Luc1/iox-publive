@@ -7,9 +7,9 @@ module Iox
     layout 'iox/application'
 
     def index
-      @syncers = Syncer.order(:name)
+      @syncers = Iox::Syncer.order(:name)
       unless current_user.is_admin?
-        @syncers.where( user_id: current_user.id )
+        @syncers = @syncers.where( user_id: current_user.id )
       end
       @syncers.load
     end
