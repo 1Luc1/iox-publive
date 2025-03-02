@@ -24,8 +24,8 @@ module Iox
                       :url => "/data/iox/person_avatars/:hash.:extension",
                       :hash_secret => "5b1b59b59b08dfef721470feed062327909b8f92"
 
-    #validates :firstname, presence: true
-    validates :lastname, presence: true, uniqueness: { scope: :firstname, case_sensitive: false }
+    validates :lastname, presence: true
+    validates_uniqueness_of :lastname, scope: [:firstname], case_sensitive: false, conditions: -> { where(deleted_at: nil) }
     validates :email, presence: true
 
     after_save :notify_owner_by_email

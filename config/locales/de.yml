@@ -24,6 +24,12 @@ de:
   search_in_venues: "Namen der Spielorte durchsuchen"
   search_in_title: "Veranstaltungstitel durchsuchen"
 
+  errors:
+      format: "%{attribute} %{message}"
+      messages:
+        taken: "wurde bereits vergeben"
+        blank: "darf nicht leer sein"
+
   ensembles:
     title: "Ensembles"
     filter: "Ensembles filtern"
