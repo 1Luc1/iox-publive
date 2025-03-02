@@ -134,10 +134,10 @@ module Iox
 
         if @person.save
 
-        begin
-          Iox::Activity.create! user_id: current_user.id, obj_name: @person.name, action: 'updated', icon_class: 'icon-group', obj_id: @person.id, obj_type: @person.class.name, obj_path: people_path(@person)
-        rescue
-        end
+          begin
+            Iox::Activity.create! user_id: current_user.id, obj_name: @person.name, action: 'updated', icon_class: 'icon-group', obj_id: @person.id, obj_type: @person.class.name, obj_path: people_path(@person)
+          rescue
+          end
 
           flash.notice = t('person.saved', name: @person.name)
           flash.notice = t('settings_saved', name: @person.name) if params[:settings_form]
@@ -145,7 +145,7 @@ module Iox
             redirect_to edit_person_path( @person )
           end
         else
-          flash.alert = t('person.saving_failed', name: @person.name)
+          flash.alert = "#{t('person.saving_failed', name: @person.name)}: #{@person.errors.full_messages.join(' ').html_safe}"
           flash.alert = t('settings_saving_failed', name: @person.name) if params[:settings_form]
           unless request.xhr?
             render template: 'iox/people/edit'
