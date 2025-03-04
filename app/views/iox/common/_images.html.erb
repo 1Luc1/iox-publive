@@ -53,7 +53,9 @@
 <script type="text/javascript">
 
   $(document).ready( function(){
-    iox.publive.setupGrid( $('.images-grid:visible'), '<%= item_id %>', '<%= pictures_path %>', '<%= item_url %>' )
+    if (iox.publive) {
+      iox.publive.setupGrid( $('.images-grid:visible'), '<%= item_id %>', '<%= pictures_path %>', '<%= item_url %>' )
+    }
   });
 
 </script>

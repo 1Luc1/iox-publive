@@ -87,6 +87,9 @@ de:
       one: "Eine Person trifft auf den Namen zu"
       other: "%{count} Personen treffen auf den Namen zu"
     click_to_user_person: "Auf den Namen klicken um den bestehenden Link zu verwenden"
+    merge: "Zusammenführen"
+    clean: "Bereinigen"
+    deleted: "%{cnt} Personen wurden gelöscht"
 
   person:
     title: "Person"

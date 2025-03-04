@@ -1,0 +1,62 @@
+<% if @insufficient_rights %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+
+  <div class="iox-content-frame auto-overflow">
+      <div class="iox-content-padding">
+     <div> Anzahl Duplikate: <%= @people.size %></div>
+      <span class="small">(gleicher Vornamen & Nachname)</span>
+      <table>
+        <tr>
+         <th>IDS</th>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Anzahl</th>
+          <th>E-Mails</th>
+        </tr>
+        <% @people.each do |person| %>
+          <tr>
+            <td>
+              <% person.ids.split(/, ?/).each do |id| %>
+               <a href="<%= edit_person_path(id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                <%= id %>
+               </a>
+              <% end %>
+            </td>
+            <td><%= person.firstname %></td>
+            <td><%= person.lastname %></td>
+            <td><%= person.cnt %></td>
+            <td><%= person.concat_email %></td>
+          </tr>
+        <% end %>
+      </table>
+      </div>
+  </div>
+<% end %>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+span.small {
+  font-size:11px;
+  font-weight: lighter;
+}
+</style>

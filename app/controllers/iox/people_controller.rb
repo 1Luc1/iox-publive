@@ -205,6 +205,49 @@ module Iox
       end
     end
 
+    def merge
+      return unless is_admin
+      @people = Person.select("firstname, lastname, count(firstname) AS cnt, GROUP_CONCAT(email SEPARATOR ', ') as concat_email, GROUP_CONCAT(id) as ids")
+                      .group("firstname, lastname")
+                      .having("cnt > 1")
+                      .load
+      render layout: true
+    end
+
+    def clean
+      return unless is_admin
+      # ONLY CHECK DIRECT RELETAIONS! since using via table isn't correct
+      #   @people = Person.reflect_on_all_associations().map(&:name)
+      #   [:program_entry_people, :program_entries, :ensemble_people, :ensembles, :taggings, :tags, :creator, :updater, :images] 
+      # ONLY check iox_program_entry_people and iox_ensemble_people
+
+      @people = Person.select("iox_people.id, firstname, lastname").left_outer_joins( :program_entry_people, :ensemble_people)
+      .where(iox_program_entry_people: { id: nil })
+      .where(iox_ensemble_people: { id: nil })
+      .where(email: [nil, ''])
+
+      @cleaned_people = Person.unscoped.where("time(deleted_at) = '00:00:00'")
+
+      render layout: true
+    end
+
+    def clean_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('program_entry_person.no_person_given')
+      else
+        params[:ids].each do |id|
+          person = Person.find(id)
+          person.clean
+        end unless params[:ids].blank?
+        flash.notice = t('people.deleted', cnt: params[:ids].count)
+      end
+      redirect_to clean_people_path
+    end
+    
+
+
     private
 
     def check_404_and_privileges(hard_check=false)
@@ -219,6 +262,15 @@ module Iox
       end
       @insufficient_rights = false
       true
+    end
+
+    def is_admin
+      if !current_user.is_admin?
+        @insufficient_rights = true
+        flash.now.alert = t('insufficient_rights')
+        return false
+      end
+      return true
     end
 
     def person_params

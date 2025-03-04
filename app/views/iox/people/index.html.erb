@@ -22,6 +22,12 @@
             </div>
           </div>
         </div>
+        <% if current_user.is_admin? %>
+          <div class="admin-container">
+            <a href="<%= merge_people_path %>" class="btn btn-secondary" rel="tooltip"><%= t('people.merge') %></a>
+            <a href="<%= clean_people_path %>" class="btn btn-secondary" rel="tooltip"><%= t('people.clean') %></a>
+          </div>
+        <% end %>
       </div>
 
       <div id="person-grid" class="iox-k-grid"></div>

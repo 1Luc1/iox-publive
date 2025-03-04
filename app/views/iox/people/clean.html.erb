@@ -1,0 +1,87 @@
+<% if @insufficient_rights || @nothing_selected %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+
+  <div class="iox-content-frame auto-overflow">
+    <div class="iox-content-padding">
+      <%= form_for('People', :as => 'people', :url => clean_selected_people_path) do |f| %>
+        <div style="overflow: hidden;">
+          <div class="info">
+            <div> Anzahl Personen: <%= @people.size %></div>
+            <span class="small">(ohne E-Mail und ohne Verbindung [:program_entry_people, :ensemble_people] im System)</span>
+          </div>
+          <div class="action">
+            <%= f.submit 'ausgewählte Personen löschen', class: 'btn btn-danger btn-deleted-selected' %>
+            <span class="small">bereits berinigte Personen: <%= @cleaned_people.size %></span>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th class="select-row"><input type="checkbox" name="checkAll" class="checkAll"></th>
+            <th>ID</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+          </tr>
+          <% @people.each do |person| %>
+            <tr>
+              <td class="first-column"><%= check_box_tag 'ids[]', person.id, false, :class => 'table-row-checkbox' %></td>
+              <td>
+                <a href="<%= edit_person_path(person.id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                  <%= person.id %>
+                </a>
+              </td>
+              <td><%= person.firstname %></td>
+              <td><%= person.lastname %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+$(document).ready( function(){
+  $('.checkAll').click(function(){
+    $(".table-row-checkbox").prop("checked", this.checked);
+  });
+});
+</script>
+
+<style>
+.action {
+  float:left;
+  margin-left: 50px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 300px;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.info {
+  float:left;
+}
+
+span.small {
+  font-size:11px;
+  font-weight: lighter;
+  width: 300px;
+  display: block;
+}
+</style>
