@@ -23,6 +23,7 @@ de:
   select_reductions: "Ermäßigungen auswählen"
   search_in_venues: "Namen der Spielorte durchsuchen"
   search_in_title: "Veranstaltungstitel durchsuchen"
+  process_error: "Bei der Ausführung gab es einen Fehler"
 
   errors:
       format: "%{attribute} %{message}"

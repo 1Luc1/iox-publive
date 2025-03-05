@@ -237,18 +237,31 @@ module Iox
         @nothing_selected = true
         flash.notice = t('program_entry_person.no_person_given')
       else
+        logger = get_loger("clean")
+        logger.info "Start cleaning #{params[:ids].count} persons"
+        error_occoured = false
         params[:ids].each do |id|
           person = Person.find(id)
-          person.clean
+          if !person.clean
+            logger.error "Person.ID(#{id}): #{person.errors.full_messages.join(' ')}"
+            error_occoured = true
+          end
         end unless params[:ids].blank?
-        flash.notice = t('people.deleted', cnt: params[:ids].count)
+        logger.info "Finished cleaning"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('people.deleted', cnt: params[:ids].count)
+        end
       end
       redirect_to clean_people_path
     end
-    
 
 
     private
+    def get_loger(type)
+      Logger.new("#{Rails.root}/log/people_#{type}.log")
+    end
 
     def check_404_and_privileges(hard_check=false)
       @insufficient_rights = true
