@@ -22,7 +22,7 @@
             <span class="small">(ohne E-Mail und ohne Verbindung [:program_entry_people, :ensemble_people] im System)</span>
           </div>
           <div class="action">
-            <%= f.submit 'ausgewählte Personen löschen', class: 'btn btn-danger btn-deleted-selected' %>
+            <%= f.submit 'ausgewählte Personen löschen', class: 'btn btn-danger btn-deleted-selected', disabled: true %>
             <span class="small">bereits berinigte Personen: <%= @cleaned_people.size %></span>
           </div>
           <div class="description">
