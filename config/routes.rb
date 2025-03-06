@@ -89,6 +89,7 @@ Iox::Engine.routes.draw do
       get :clean
     end
     post :clean_selected, :on => :collection
+    post :merge_selected, :on => :collection
     resources :person_pictures, path: 'images'
   end
   resources :person_pictures

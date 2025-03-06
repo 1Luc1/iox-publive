@@ -89,6 +89,23 @@
                   { id: 'select-taggings-id', class: 'select-taggings-id', multiple: 'multiple' }
                 %>
               </div>
+              <% if @person.ensembles.exists? %>
+               <div class="field-box">
+                  <%= f.label :ensembles, t('program_entry.person.ensembles') %>              
+                  <div id="person_projects" class="cke_chrome">
+                    <% @person.ensembles.each do |ensemble| %>
+                      <div>
+                        <%= ensemble.name %>
+                        <% if current_user.is_admin? || ensemble.created_by == current_user.id %>
+                          <a href="<%= edit_ensemble_path(ensemble) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                            <i class="icon-eye-open"></i>
+                          </a>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
             <% end %>
           </div>
 

@@ -205,13 +205,86 @@ module Iox
       end
     end
 
+
+
     def merge
       return unless is_admin
-      @people = Person.select("firstname, lastname, count(firstname) AS cnt, GROUP_CONCAT(email SEPARATOR ', ') as concat_email, GROUP_CONCAT(id) as ids")
+      @people = Person.select("firstname, lastname")
+                      .select("count(firstname) AS cnt")
+                      .select("GROUP_CONCAT(iox_people.id) as ids")
                       .group("firstname, lastname")
+                      .order("iox_people.id ASC")
                       .having("cnt > 1")
                       .load
+      @merged_people = Person.unscoped
+                            .where("time(deleted_at) = '00:00:00'")
+                            .where("conflicting_with_id is not null")
+                            .group("conflicting_with_id").load
       render layout: true
+    end
+
+    def merge_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('program_entry_person.no_person_given')
+      else
+        logger = get_loger("merge")
+        logger.info "Start merging #{params[:ids].count} people duplicats"
+        error_occoured = false
+        params[:ids].each do |ids|
+          # sort ids asc; first will be main person to merge into
+          sort_ids = ids.split(/, ?/).sort_by(&:to_i)
+          main_id = sort_ids.shift() 
+          
+          url = ""
+          email = ""
+          description = ""
+          ensemble_people = Array.new
+          program_entry_people = Array.new
+          taggings = Array.new
+
+          sort_ids.each do |id|
+            person = Person.find(id)
+
+            url = person.url unless person.url.nil?
+            email = person.email unless person.email.nil?
+            description = person.description unless person.description.nil?
+            # deep copy releations to preserve db entries for merged people 
+            person.ensemble_people.each{|e| ensemble_people << e.dup}
+            person.program_entry_people.each{|e| program_entry_people << e.dup}
+            person.taggings.each{|e| taggings << e.dup unless taggings.any? {|t| t.tag_id == e.tag_id}}
+
+            # set conflicting_with_id for merged person before delete
+            person.conflicting_with_id = main_id
+            person.clean
+          end
+
+          main_person = Person.find(main_id)
+         
+          main_person.url = url if !url.empty? && (main_person.url.nil? || main_person.url.empty?)
+          main_person.email = email if !email.empty? && (main_person.email.nil? || main_person.email.empty?)
+          main_person.description = description if !description.empty? && (main_person.description.nil? || main_person.description.empty?)
+          main_person.ensemble_people << ensemble_people
+          main_person.program_entry_people << program_entry_people
+          main_person.taggings.each{|e| taggings << e.dup unless taggings.any? {|t| t.tag_id == e.tag_id}}
+          main_person.taggings = taggings
+
+          main_person.conflicting_with_id = 0
+          
+          if !main_person.save
+              logger.error "Main_Person.ID(#{main_id}): #{main_person.errors.full_messages.join(' ')}"
+              error_occoured = true
+          end
+        end unless params[:ids].blank?
+        logger.info "Finished merging"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('people.merged', cnt: params[:ids].count)
+        end
+      end
+      redirect_to merge_people_path
     end
 
     def clean
@@ -226,7 +299,7 @@ module Iox
       .where(iox_ensemble_people: { id: nil })
       .where(email: [nil, ''])
 
-      @cleaned_people = Person.unscoped.where("time(deleted_at) = '00:00:00'")
+      @cleaned_people = Person.unscoped.where("time(deleted_at) = '00:00:00'").where("conflicting_with_id is null")
 
       render layout: true
     end

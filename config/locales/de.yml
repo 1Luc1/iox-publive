@@ -91,6 +91,7 @@ de:
     merge: "Zusammenführen"
     clean: "Bereinigen"
     deleted: "%{cnt} Personen wurden gelöscht"
+    merged: "%{cnt} Personen wurden zusammengeführt"
 
   person:
     title: "Person"

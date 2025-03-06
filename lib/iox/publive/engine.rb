@@ -11,6 +11,8 @@ module Iox
         Rails.application.config.assets.precompile += %w(
           program_entries.js
           program_entries.css
+          merge_clean.js
+          merge_clean.css
           3rdparty/leaflet.js
           3rdparty/leaflet.css
           3rdparty/leaflet.ie.css

@@ -40,7 +40,7 @@ module Iox
     end
 
     def should_validate?
-      !deleted_at.present?
+      !deleted_at.present? && !conflicting_with_id.present?
     end
 
     def get_functions_list
