@@ -123,7 +123,7 @@ module Iox
         @proceed_to_step = 1
         render template: 'iox/program_entries/edit'
       else
-        flash.now.alert = t('program_entry.failed_to_save')
+        flash.now.alert = "#{t('program_entry.failed_to_save')}: #{@program_entry.errors.full_messages.join(' ').html_safe}"
         render template: 'iox/program_entries/new'
       end
     end
@@ -144,7 +144,7 @@ module Iox
 
           flash.now.notice = t('program_entry.saved')
         else
-          flash.now.alert = t('program_entry.failed_to_save')
+          flash.now.alert = "#{t('program_entry.failed_to_save')}: #{@program_entry.errors.full_messages.join(' ').html_safe}"
         end
       else
         flash.now.alert = t('not_found')

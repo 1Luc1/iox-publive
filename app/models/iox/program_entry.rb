@@ -24,7 +24,6 @@ module Iox
     validates   :title, presence: true, length: { in: 2..255 }
     validates   :subtitle, length: { maximum: 255 }
     validates   :meta_keywords, length: { maximum: 255 }
-    validates   :meta_keywords, length: { maximum: 255 }
     validates   :age, inclusion: { in: 1..20 }, numericality: true, allow_blank: true
     validates   :duration, inclusion: { in: 1..960 }, numericality: true, allow_blank: true
 

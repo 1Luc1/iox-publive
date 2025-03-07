@@ -30,6 +30,7 @@ de:
       messages:
         taken: "wurde bereits vergeben"
         blank: "darf nicht leer sein"
+        too_long: "%{count} Zeichen sind maximal zulässige"
 
   ensembles:
     title: "Ensembles"
