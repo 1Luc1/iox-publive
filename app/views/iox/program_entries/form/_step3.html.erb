@@ -119,6 +119,7 @@ $(function(){
                 'price_from': { editable: true, type: 'number' },
                 'price_to': { editable: true, type: 'number' },
                 'event_type': { editable: true },
+                'show_in_magazin': { editable: true, type: 'boolean' },
                 'tickets_url': { editable: true },
                 'tickets_email': { editable: true },
                 'tickets_phone': { editable: true },
@@ -150,6 +151,14 @@ $(function(){
         mode: 'popup'
       },
       edit: function(e){
+        // on first load hide show checkbox depending on event type
+        hideShowInMagazinCheckbox(e.model.event_type, e);
+
+        // on premiere selection show hide input
+        $('[name="event_type"]').on('change', function(){
+          hideShowInMagazinCheckbox(this.value, e);
+        });
+
         var last = getLastEventItem();
         if( last && e.model.isNew() && !e.model.dirty) {
           e.model.set( 'venue_id', last.venue_id );
@@ -165,6 +174,7 @@ $(function(){
           e.model.set( 'additional_note', last.additional_note );
           e.model.set( 'reductions', last.reductions );
         }
+
         setupMultiplierEvent('venue_id', e.container, e.model);
         setupMultiplierEvent('tickets_url', e.container, e.model);
         setupMultiplierEvent('tickets_phone', e.container, e.model);
@@ -182,6 +192,7 @@ $(function(){
           editor: dateTimeEditor,
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
+        { field: 'show_in_magazin', title: '<%= t('program_event.show_in_magazin') %>', template: '<input type="checkbox" #=data.show_in_magazin ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
         { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true },
         { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' }, editor: function (container, options) {
            var input = $("<input/>");
@@ -202,6 +213,17 @@ $(function(){
           ], title: "&nbsp;", width: "172px" },
       ]
     });
+
+    function hideShowInMagazinCheckbox(selection, e) {
+      if (selection == "Premiere") {
+        e.container.find('input[name="show_in_magazin"]').parent().show();
+        e.container.find('label[for="show_in_magazin"]').parent().show();
+      } else {
+        e.container.find('input[name="show_in_magazin"]').parent().hide();
+        e.container.find('label[for="show_in_magazin"]').parent().hide();
+        e.model.set( 'show_in_magazin', null );
+      }
+    }
 
     function reductionsEditor( container, options ){
       function createMultiSelect(){

@@ -6,6 +6,7 @@ module Iox
         def index
             return if !redirect_if_no_rights
             @events = Iox::ProgramEvent.where("LOWER(event_type) LIKE '%premiere%'")
+                        .where("show_in_magazin = true")
                         .where("starts_at >= ?", Time.now())
                         .includes(:program_entry, :venue)
                         .order("starts_at")

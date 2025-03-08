@@ -175,6 +175,7 @@ de:
   program_event:
     timescale: "Zeitraum"
     type: "Typ"
+    show_in_magazin: "in Magazin veröffentlichen"
     tickets_url: "Tickets (URL)"
     tickets_phone: "Tickets (Tel)"
     tickets_email: "Tickets (Email)"
@@ -342,6 +343,10 @@ de:
 
     already_exists: "Ein Spielplaneintrag mit diesem Namen existiert und hat Termine in der Zukunft (<a href='%{url}'>%{name}</a>)"
     must_have_title: "Du musst mindestens einen Titel für die Veranstaltung angeben"
+
+  premiere:
+    no_premieres: "Derzeit gibt es keine Premieren"
+    regie: "Regie"
 
   program_entry_person:
     no_person_given: "Du hast keine Person ausgewählt"

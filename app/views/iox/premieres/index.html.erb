@@ -1,5 +1,8 @@
 <div class="iox-content-frame auto-overflow" style="right:auto; padding-right: 10px;">
     <div class="iox-content-padding">
+        <% if @events.empty? %>
+            <%= t('premiere.no_premieres') %>
+        <% end %>
         <% @events.each do |event| %>
             <% next unless event.program_entry %>
             <%= I18n.localize(event.starts_at, :format => '%a, %d.%m.%Y')%>
@@ -7,14 +10,15 @@
             <%= event.program_entry.title %>
             <br>            
             <% event.program_entry.program_entry_people.where("function = 'Regie'").map do |program_entry_people| %>
-                Regie: <%= program_entry_people.person.name %>
+                
+                <%= t('premiere.regie') %>Regie: <%= program_entry_people.person.name %>
                 <br>
             <% end %>
             <% if event.program_entry.ensemble %>
-                Gruppe: <%= event.program_entry.ensemble.name  %>
+                 <%= t('ensemble.ensemble') %>: <%= event.program_entry.ensemble.name  %>
                 <br>
             <% end %>
-            Ort: <%= event.venue.name %>
+            <%= t('venue.title') %>: <%= event.venue.name %>
             <br>
             <%= event.program_entry.url || event.tickets_url %>
             <hr>
