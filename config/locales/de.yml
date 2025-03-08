@@ -380,6 +380,8 @@ de:
       models:
         "iox/program_file":
           attributes:
+            file:
+              in_between: "Das Bild entspricht nicht den Anforderungen (mind 300x300, max. 10 MB)"
             content_type: "Dieser Dateitype wird nicht unterstützt. Nur: png,jpeg,jpg,gif"
             file_file_size:
               in_between: "Das Bild entspricht nicht den Anforderungen (mind 300x300, max. 10 MB)"
