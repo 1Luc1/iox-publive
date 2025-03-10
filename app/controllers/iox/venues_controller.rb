@@ -189,7 +189,7 @@ module Iox
 
     def merge
       return unless is_admin
-      @venues = Venue.select("name") .group("name")
+      @venues = Venue.select("name")
                       .select("count(name) AS cnt")
                       .select("GROUP_CONCAT(iox_venues.id) as ids")
                       .group("name")
@@ -222,6 +222,11 @@ module Iox
           description = ""
           phone = ""
           zip = ""
+          city = ""
+          street = ""
+          twitter_url = ""
+          facebook_url = ""
+          youtube_url = ""
           program_events = Array.new
 
           sort_ids.each do |id|
@@ -232,6 +237,11 @@ module Iox
             description = venue.description unless venue.description.nil?
             phone = venue.phone unless venue.phone.nil?
             zip = venue.zip unless venue.zip.nil?
+            city = venue.city unless venue.city.nil?
+            street = venue.street unless venue.street.nil?
+            twitter_url = venue.twitter_url unless venue.twitter_url.nil?
+            facebook_url = venue.facebook_url unless venue.facebook_url.nil?
+            youtube_url = venue.youtube_url unless venue.youtube_url.nil?
             # deep copy releations to preserve db entries for merged venues 
             venue.program_events.each{|e| program_events << e.dup}
          
@@ -245,8 +255,13 @@ module Iox
           main_venue.url = url if !url.empty? && (main_venue.url.nil? || main_venue.url.empty?)
           main_venue.email = email if !email.empty? && (main_venue.email.nil? || main_venue.email.empty?)
           main_venue.description = description if !description.empty? && (main_venue.description.nil? || main_venue.description.empty?)
-          main_venue.phone = url if !phone.empty? && (main_venue.phone.nil? || main_venue.phone.empty?)
-          main_venue.zip = url if !zip.empty? && (main_venue.zip.nil? || main_venue.zip.empty?)
+          main_venue.phone = phone if !phone.empty? && (main_venue.phone.nil? || main_venue.phone.empty?)
+          main_venue.zip = zip if !zip.empty? && (main_venue.zip.nil? || main_venue.zip.empty?)
+          main_venue.city = city if !city.empty? && (main_venue.city.nil? || main_venue.city.empty?)
+          main_venue.street = street if !street.empty? && (main_venue.street.nil? || main_venue.street.empty?)
+          main_venue.twitter_url = twitter_url if !twitter_url.empty? && (main_venue.twitter_url.nil? || main_venue.twitter_url.empty?)
+          main_venue.facebook_url = facebook_url if !facebook_url.empty? && (main_venue.facebook_url.nil? || main_venue.facebook_url.empty?)
+          main_venue.youtube_url = youtube_url if !youtube_url.empty? && (main_venue.youtube_url.nil? || main_venue.youtube_url.empty?)
           main_venue.program_events << program_events
 
           main_venue.conflicting_with_id = 0
@@ -268,7 +283,7 @@ module Iox
 
     def clean
       return unless is_admin
-      @venues = Venue.select("iox_venues.id, name, email, phone").left_outer_joins( :program_events)
+      @venues = Venue.select("iox_venues.id, name").left_outer_joins( :program_events)
       .where(iox_program_events: { id: nil })
       .where("(`iox_venues`.`email` = '' OR `iox_venues`.`email` IS NULL) AND (`iox_venues`.`phone`= '' OR `iox_venues`.`phone` IS NULL) AND (`iox_venues`.`zip`= '' OR `iox_venues`.`zip` IS NULL)")
 
