@@ -24,6 +24,8 @@ de:
   search_in_venues: "Namen der Spielorte durchsuchen"
   search_in_title: "Veranstaltungstitel durchsuchen"
   process_error: "Bei der Ausführung gab es einen Fehler"
+  merge: "Zusammenführen"
+  clean: "Bereinigen"
 
   errors:
       format: "%{attribute} %{message}"
@@ -78,8 +80,6 @@ de:
       one: "Ein Termin wurde nach %{name} transferiert"
       other: "%{count} Termine wurde nach %{name} transferiert"
 
-
-
   people:
     title: "Personen"
     filter: "Personen filtern"
@@ -89,8 +89,6 @@ de:
       one: "Eine Person trifft auf den Namen zu"
       other: "%{count} Personen treffen auf den Namen zu"
     click_to_user_person: "Auf den Namen klicken um den bestehenden Link zu verwenden"
-    merge: "Zusammenführen"
-    clean: "Bereinigen"
     deleted: "%{cnt} Personen wurden gelöscht"
     merged: "%{cnt} Personen wurden zusammengeführt"
 
