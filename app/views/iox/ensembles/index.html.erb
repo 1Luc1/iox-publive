@@ -22,6 +22,12 @@
             </div>
           </div>
         </div>
+        <% if current_user.is_admin? %>
+          <div class="admin-container">
+            <a href="<%= merge_ensembles_path %>" class="btn btn-secondary" rel="tooltip"><%= t('merge') %></a>
+            <a href="<%= clean_ensembles_path %>" class="btn btn-secondary" rel="tooltip"><%= t('clean') %></a>
+          </div>
+        <% end %>
       </div>
 
       <div id="ensemble-grid" class="iox-k-grid"></div>

@@ -15,7 +15,7 @@ module Iox
 
     has_many    :images, -> { order(:position) }, class_name: 'Iox::EnsemblePicture', dependent: :destroy
 
-    validates   :name, presence: true, uniqueness: true
+    validates   :name, presence: true, uniqueness: true, if: :should_validate?
 
     before_save :set_default_country,
                 :convert_zip_gkz
@@ -24,6 +24,10 @@ module Iox
 
     def to_param
       [id, name.parameterize].join("-")
+    end
+
+    def should_validate?
+      !deleted_at.present? && !conflicting_with_id.present?
     end
 
     def as_json(options = { })

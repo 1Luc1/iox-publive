@@ -200,7 +200,145 @@ module Iox
       end
     end
 
+    def merge
+      return unless is_admin
+      @ensembles = Ensemble.select("name")
+                          .select("count(name) AS cnt")
+                          .select("GROUP_CONCAT(iox_ensembles.id) as ids")
+                          .group("name")
+                          .order("iox_ensembles.id ASC")
+                          .having("cnt > 1")
+                          .load
+      @merged_ensembles = Ensemble.unscoped
+                        .where("time(deleted_at) = '00:00:00'")
+                        .where("conflicting_with_id is not null")
+                        .group("conflicting_with_id").load
+      render layout: true
+    end
+
+    def merge_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('ensembles.no_ensembles_selected')
+      else
+        logger = get_loger("merge")
+        logger.info "Start merging #{params[:ids].count} ensembles duplicats"
+        error_occoured = false
+        params[:ids].each do |ids|
+          # sort ids asc; first will be main ensemble to merge into
+          sort_ids = ids.split(/, ?/).sort_by(&:to_i)
+          main_id = sort_ids.shift() 
+          
+          url = ""
+          email = ""
+          description = ""
+          phone = ""
+          zip = ""
+          city = ""
+          street = ""
+          twitter_url = ""
+          facebook_url = ""
+          youtube_url = ""
+          ensemble_people = Array.new
+          program_entries = Array.new
+
+          sort_ids.each do |id|
+            ensemble = Ensemble.find(id)
+
+            url = ensemble.url unless ensemble.url.nil?
+            email = ensemble.email unless ensemble.email.nil?
+            description = ensemble.description unless ensemble.description.nil?
+            phone = ensemble.phone unless ensemble.phone.nil?
+            zip = ensemble.zip unless ensemble.zip.nil?
+            city = ensemble.city unless ensemble.city.nil?
+            street = ensemble.street unless ensemble.street.nil?
+            twitter_url = ensemble.twitter_url unless ensemble.twitter_url.nil?
+            facebook_url = ensemble.facebook_url unless ensemble.facebook_url.nil?
+            youtube_url = ensemble.youtube_url unless ensemble.youtube_url.nil?
+            # deep copy releations to preserve db entries for merged ensembles
+            ensemble.ensemble_people.each{|e| ensemble_people << e.dup}
+            ensemble.program_entries.each{|e| program_entries << e.dup}
+         
+            # set conflicting_with_id for merged ensemble before delete
+            ensemble.conflicting_with_id = main_id
+            ensemble.clean
+          end
+
+          main_ensemble = Ensemble.find(main_id)
+         
+          main_ensemble.url = url if !url.empty? && (main_ensemble.url.nil? || main_ensemble.url.empty?)
+          main_ensemble.email = email if !email.empty? && (main_ensemble.email.nil? || main_ensemble.email.empty?)
+          main_ensemble.description = description if !description.empty? && (main_ensemble.description.nil? || main_ensemble.description.empty?)
+          main_ensemble.phone = phone if !phone.empty? && (main_ensemble.phone.nil? || main_ensemble.phone.empty?)
+          main_ensemble.zip = zip if !zip.empty? && (main_ensemble.zip.nil? || main_ensemble.zip.empty?)
+          main_ensemble.city = city if !city.empty? && (main_ensemble.city.nil? || main_ensemble.city.empty?)
+          main_ensemble.street = street if !street.empty? && (main_ensemble.street.nil? || main_ensemble.street.empty?)
+          main_ensemble.twitter_url = twitter_url if !twitter_url.empty? && (main_ensemble.twitter_url.nil? || main_ensemble.twitter_url.empty?)
+          main_ensemble.facebook_url = facebook_url if !facebook_url.empty? && (main_ensemble.facebook_url.nil? || main_ensemble.facebook_url.empty?)
+          main_ensemble.youtube_url = youtube_url if !youtube_url.empty? && (main_ensemble.youtube_url.nil? || main_ensemble.youtube_url.empty?)
+          main_ensemble.ensemble_people << ensemble_people
+          main_ensemble.program_entries << program_entries
+
+          main_ensemble.conflicting_with_id = 0
+          
+          if !main_ensemble.save
+              logger.error "main_ensemble.ID(#{main_id}): #{main_ensemble.errors.full_messages.join(' ')}"
+              error_occoured = true
+          end
+        end unless params[:ids].blank?
+        logger.info "Finished merging"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('ensembles.merged', cnt: params[:ids].count)
+        end
+      end
+      redirect_to merge_ensembles_path
+    end
+
+    def clean
+      return unless is_admin
+      @ensembles = Ensemble.select("iox_ensembles.id, name").left_outer_joins( :ensemble_people, :program_entries)
+      .where(iox_program_entries: { id: nil })
+      .where(iox_ensemble_people: { id: nil })
+      .where("(`iox_ensembles`.`email` = '' OR `iox_ensembles`.`email` IS NULL) AND (`iox_ensembles`.`phone`= '' OR `iox_ensembles`.`phone` IS NULL) AND (`iox_ensembles`.`zip`= '' OR `iox_ensembles`.`zip` IS NULL)")
+
+      @cleaned_ensembles = Ensemble.unscoped.where("time(deleted_at) = '00:00:00'").where("conflicting_with_id is null")
+
+      render layout: true
+    end
+
+    def clean_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('ensembles.no_ensembles_selected')
+      else
+        logger = get_loger("clean")
+        logger.info "Start cleaning #{params[:ids].count} ensembles"
+        error_occoured = false
+        params[:ids].each do |id|
+          ensemble = Ensemble.find(id)
+          if !ensemble.clean
+            logger.error "Ensemble.ID(#{id}): #{ensemble.errors.full_messages.join(' ')}"
+            error_occoured = true
+          end
+        end unless params[:ids].blank?
+        logger.info "Finished cleaning"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('ensembles.deleted', cnt: params[:ids].count)
+        end
+      end
+      redirect_to clean_ensembles_path
+    end
+
     private
+    def get_loger(type)
+      Logger.new("#{Rails.root}/log/ensembles_#{type}.log")
+    end
 
     def check_404_and_privileges( hard_check=false )
       @insufficient_rights = true
@@ -225,6 +363,15 @@ module Iox
       end
       @insufficient_rights = false
       true
+    end
+
+    def is_admin
+      if !current_user.is_admin?
+        @insufficient_rights = true
+        flash.now.alert = t('insufficient_rights')
+        return false
+      end
+      return true
     end
 
     def ensemble_params

@@ -44,6 +44,9 @@ de:
     new: "Neues Ensemble"
     current_activities: "Aktuelle Aktivitäten"
     no_results: "Kein Ensemble trifft auf die Suche zu"
+    no_ensembles_selected: "Keine Ensembles ausgewählt"
+    deleted: "%{cnt} Ensembles wurden gelöscht"
+    merged: "%{cnt} Ensembles wurden zusammengeführt"
 
   ensemble:
     saved: "Ensemble %{name} wurde erfolgreich gespeichert"
