@@ -125,6 +125,9 @@ de:
     filter: "Filtern"
     venues: "Spielorte"
     no_results: "Kein Spielort trifft auf die Suche zu"
+    no_venue_selected: "Keine Spielorte ausgewählt"
+    deleted: "%{cnt} Spielorte wurden gelöscht"
+    merged: "%{cnt} Spielorte wurden zusammengeführt"
 
   venue:
     title: "Spielort"

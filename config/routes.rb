@@ -68,7 +68,11 @@ Iox::Engine.routes.draw do
     end
     collection do
       get :simple
+      get :merge
+      get :clean
     end
+    post :clean_selected, :on => :collection
+    post :merge_selected, :on => :collection
     resources :venue_pictures, path: 'images'
   end
   resources :venue_pictures

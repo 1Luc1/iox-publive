@@ -1,0 +1,65 @@
+<%= content_for :add_css do %>
+  <%= stylesheet_link_tag 'merge_clean' %>
+<% end %>
+<%= content_for :add_js do %>
+  <%= javascript_include_tag "merge_clean" %>
+<% end %>
+
+<% if @insufficient_rights %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+
+  <div class="iox-content-frame auto-overflow">
+    <div class="iox-content-padding venues-merge">
+      <%= form_for('Venues', :as => 'venues', :url => merge_selected_venues_path) do |f| %>
+        <div style="overflow: hidden;">
+          <div class="info">
+            <div> Anzahl Duplikate: <%= @venues.size %></div>
+            <span class="small">(gleicher Name)</span>
+          </div>
+          <div class="action">
+            <%= f.submit 'ausgewählte Spielorte zusammenführen', class: 'btn btn-danger btn-deleted-selected', disabled: true %>
+            <span class="small">bereits bereinigte Spielorte: <%= @merged_venues.size %></span>
+          </div>
+          <div class="description">
+            <h4>Zusamenführungs-Strategie:</h4>
+            <p class="small">Der Haupteintrag ist jener mit der niedrigsten ID. Alle anderen Einträge werden in den Haupteintrag zusammengeführt.
+            Dabei werden alle Einträge von den Programm Events Einträgen in den Haupteintrag zusammengeführt.
+            Url, E-Mail, Telefonnummer, PLZ und Beschreibung wird nur dann zusammengeführt wenn der Haupteintrag einen solchen Eintrag nicht besitzt.
+            Dann wird immer vom Eintrag mit der Höchsten ID der Wert verwendet.
+            </p>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th class="select-row"><input type="checkbox" name="checkAll" class="checkAll"></th>
+            <th>IDs</th>
+            <th>Name</th>
+            <th>Anzahl</th>
+          </tr>
+          <% @venues.each do |venue, idx| %>
+            <tr>
+              <td class="first-column"><%= check_box_tag 'ids[]', venue.ids, false, :class => 'table-row-checkbox' %></td>
+              <td>
+                <% venue.ids.split(/, ?/).sort_by(&:to_i).each_with_index do |id, index| %>
+                  <a href="<%= edit_venue_path(id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                    <%= id %>
+                  </a>
+                  <% if index == 0 %>
+                    &lt;&lt;
+                  <% end %>
+                <% end %>
+              </td>
+              <td><%= venue.name %></td>
+              <td><%= venue.cnt %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+<% end %>

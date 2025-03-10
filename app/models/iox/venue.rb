@@ -14,12 +14,16 @@ module Iox
 
     has_many    :images, -> { order(:position) }, class_name: 'Iox::VenuePicture', dependent: :destroy
 
-    validates :name, presence: true, uniqueness: true
+    validates :name, presence: true, uniqueness: true, if: :should_validate?
 
     before_save :set_default_country,
                 :convert_zip_gkz
 
     # after_save :notify_owner_by_email
+
+    def should_validate?
+      !deleted_at.present? && !conflicting_with_id.present?
+    end
 
     def program_entries(query='')
       pentries = []

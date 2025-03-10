@@ -1,0 +1,56 @@
+<%= content_for :add_css do %>
+  <%= stylesheet_link_tag 'merge_clean' %>
+<% end %>
+<%= content_for :add_js do %>
+  <%= javascript_include_tag "merge_clean" %>
+<% end %>
+
+<% if @insufficient_rights || @nothing_selected %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+
+  <div class="iox-content-frame auto-overflow">
+    <div class="iox-content-padding venues-clean">
+      <%= form_for('Venues', :as => 'venue', :url => clean_selected_venues_path) do |f| %>
+        <div style="overflow: hidden;">
+          <div class="info">
+            <div> Anzahl Spielorte: <%= @venues.size %></div>
+            <span class="small">(ohne E-Mail, Telefonnummer, PLZ und ohne Verbindung [:program_events] im System)</span>
+          </div>
+          <div class="action">
+            <%= f.submit 'ausgewählte Spielorte löschen', class: 'btn btn-danger btn-deleted-selected', disabled: true %>
+            <span class="small">bereits bereinigte Spielorte: <%= @cleaned_venues.size %></span>
+          </div>
+          <div class="description">
+            <h4>Bereinigungs-Strategie:</h4>
+            <p class="small">Einträge werden nur angezeigt wenn diese keine E-Mail, Telefonnummer, PLZ besitzen
+            und in keinem Programm Event verwendet werden.
+            </p>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th class="select-row"><input type="checkbox" name="checkAll" class="checkAll"></th>
+            <th>ID</th>
+            <th>Name</th>
+          </tr>
+          <% @venues.each do |venue| %>
+            <tr>
+              <td class="first-column"><%= check_box_tag 'ids[]', venue.id, false, :class => 'table-row-checkbox' %></td>
+              <td>
+                <a href="<%= edit_venue_path(venue.id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                  <%= venue.id %>
+                </a>
+              </td>
+              <td><%= venue.name %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+<% end %>

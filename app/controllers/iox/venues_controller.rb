@@ -187,8 +187,126 @@ module Iox
       end
     end
 
+    def merge
+      return unless is_admin
+      @venues = Venue.select("name") .group("name")
+                      .select("count(name) AS cnt")
+                      .select("GROUP_CONCAT(iox_venues.id) as ids")
+                      .group("name")
+                      .order("iox_venues.id ASC")
+                      .having("cnt > 1")
+                      .load
+      @merged_venues = Venue.unscoped
+                            .where("time(deleted_at) = '00:00:00'")
+                            .where("conflicting_with_id is not null")
+                            .group("conflicting_with_id").load
+      render layout: true
+    end
+
+    def merge_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('venues.no_venue_selected')
+      else
+        logger = get_loger("merge")
+        logger.info "Start merging #{params[:ids].count} venue duplicats"
+        error_occoured = false
+        params[:ids].each do |ids|
+          # sort ids asc; first will be main venue to merge into
+          sort_ids = ids.split(/, ?/).sort_by(&:to_i)
+          main_id = sort_ids.shift() 
+          
+          url = ""
+          email = ""
+          description = ""
+          phone = ""
+          zip = ""
+          program_events = Array.new
+
+          sort_ids.each do |id|
+            venue = Venue.find(id)
+
+            url = venue.url unless venue.url.nil?
+            email = venue.email unless venue.email.nil?
+            description = venue.description unless venue.description.nil?
+            phone = venue.phone unless venue.phone.nil?
+            zip = venue.zip unless venue.zip.nil?
+            # deep copy releations to preserve db entries for merged venues 
+            venue.program_events.each{|e| program_events << e.dup}
+         
+            # set conflicting_with_id for merged venue before delete
+            venue.conflicting_with_id = main_id
+            venue.clean
+          end
+
+          main_venue = Venue.find(main_id)
+         
+          main_venue.url = url if !url.empty? && (main_venue.url.nil? || main_venue.url.empty?)
+          main_venue.email = email if !email.empty? && (main_venue.email.nil? || main_venue.email.empty?)
+          main_venue.description = description if !description.empty? && (main_venue.description.nil? || main_venue.description.empty?)
+          main_venue.phone = url if !phone.empty? && (main_venue.phone.nil? || main_venue.phone.empty?)
+          main_venue.zip = url if !zip.empty? && (main_venue.zip.nil? || main_venue.zip.empty?)
+          main_venue.program_events << program_events
+
+          main_venue.conflicting_with_id = 0
+          
+          if !main_venue.save
+              logger.error "main_venue.ID(#{main_id}): #{main_venue.errors.full_messages.join(' ')}"
+              error_occoured = true
+          end
+        end unless params[:ids].blank?
+        logger.info "Finished merging"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('venues.merged', cnt: params[:ids].count)
+        end
+      end
+      redirect_to merge_venues_path
+    end
+
+    def clean
+      return unless is_admin
+      @venues = Venue.select("iox_venues.id, name, email, phone").left_outer_joins( :program_events)
+      .where(iox_program_events: { id: nil })
+      .where("(`iox_venues`.`email` = '' OR `iox_venues`.`email` IS NULL) AND (`iox_venues`.`phone`= '' OR `iox_venues`.`phone` IS NULL) AND (`iox_venues`.`zip`= '' OR `iox_venues`.`zip` IS NULL)")
+
+      @cleaned_venues = Venue.unscoped.where("time(deleted_at) = '00:00:00'").where("conflicting_with_id is null")
+
+      render layout: true
+    end
+
+    def clean_selected
+      return unless is_admin
+      if !params[:ids]
+        @nothing_selected = true
+        flash.notice = t('venues.no_venue_selected')
+      else
+        logger = get_loger("clean")
+        logger.info "Start cleaning #{params[:ids].count} venues"
+        error_occoured = false
+        params[:ids].each do |id|
+          venue = Venue.find(id)
+          if !venue.clean
+            logger.error "Venue.ID(#{id}): #{venue.errors.full_messages.join(' ')}"
+            error_occoured = true
+          end
+        end unless params[:ids].blank?
+        logger.info "Finished cleaning"
+        if error_occoured
+          flash.alert = t('process_error')
+        else
+          flash.notice = t('venues.deleted', cnt: params[:ids].count)
+        end
+      end
+      redirect_to clean_venues_path
+    end
 
     private
+    def get_loger(type)
+      Logger.new("#{Rails.root}/log/venues_#{type}.log")
+    end
 
     def check_404_and_privileges(hard_check=false)
       @insufficient_rights = true
@@ -212,6 +330,15 @@ module Iox
       end
       @insufficient_rights = false
       true
+    end
+
+    def is_admin
+      if !current_user.is_admin?
+        @insufficient_rights = true
+        flash.now.alert = t('insufficient_rights')
+        return false
+      end
+      return true
     end
 
     def venue_params
