@@ -26,6 +26,7 @@ de:
   process_error: "Bei der Ausführung gab es einen Fehler"
   merge: "Zusammenführen"
   clean: "Bereinigen"
+  file_to_big: "Bild Datei zu groß. Max. 10 MB."
 
   errors:
       format: "%{attribute} %{message}"

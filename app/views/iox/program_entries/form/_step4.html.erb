@@ -120,7 +120,11 @@
         }, 500 );
       },
       error: function( response, type, msg ){
-        iox.flash.alert( JSON.parse(response.responseText).errors.file[0] );
+        if (response.status == 413) {
+          iox.flash.alert( '<%= t("file_to_big") %>' );
+        } else {
+          iox.flash.alert( JSON.parse(response.responseText).errors.file[0] );
+        }
       },
       progressall: function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
