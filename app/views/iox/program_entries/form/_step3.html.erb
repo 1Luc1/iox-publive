@@ -25,10 +25,10 @@ $(function(){
     options.error();
   }
 
-  function setupMultiplierEvent( field, $container, model ){
+  function setupMultiplierEvent( field, $container, model, gm = true ){
     var $btn = $('<span class="icon-magic"></span>');
     $btn.attr('title', '<%= t('program_event.multiply_field') %>')
-       .css({cursor: 'pointer', 'marginLeft': 40});
+       .css({cursor: 'pointer', 'marginLeft': gm ? 40 : 68 });
     var $input = $container.find('input[name='+field+']')
     $input.after($btn);
     $btn.on('click', function(e){
@@ -159,6 +159,11 @@ $(function(){
           hideShowInMagazinCheckbox(this.value, e);
         });
 
+        // make popup bigger
+        $(e.container).parent().css({
+            width: '500px'
+        });
+
         var last = getLastEventItem();
         if( last && e.model.isNew() && !e.model.dirty) {
           e.model.set( 'venue_id', last.venue_id );
@@ -175,13 +180,18 @@ $(function(){
           e.model.set( 'reductions', last.reductions );
         }
 
+        var $div = $('<span class="small"><%= t('program_event.premiere_magazin_description') %><a href="https://freietheater.at/premierenkalender-inserate/" target="_blank">freietheater.at/premierenkalender-inserate</a></span>');
+        $div.css({'marginLeft': 6, 'fontSize': 11});
+        var $input = e.container.find('input[name=show_in_magazin]')
+        $input.after($div);
+
         setupMultiplierEvent('venue_id', e.container, e.model);
         setupMultiplierEvent('tickets_url', e.container, e.model);
         setupMultiplierEvent('tickets_phone', e.container, e.model);
         setupMultiplierEvent('tickets_email', e.container, e.model);
         setupMultiplierEvent('reductions', e.container, e.model);
-        setupMultiplierEvent('price_from', e.container, e.model);
-        setupMultiplierEvent('price_to', e.container, e.model);
+        setupMultiplierEvent('price_from', e.container, e.model, false);
+        setupMultiplierEvent('price_to', e.container, e.model, false);
         setupMultiplierEvent('additional_note', e.container, e.model);
       },
       columns: [
@@ -193,9 +203,9 @@ $(function(){
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
         { field: 'show_in_magazin', title: '<%= t('program_event.show_in_magazin') %>', template: '<input type="checkbox" #=data.show_in_magazin ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
-        { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true },
-        { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, attributes: { 'class': 'apply-all' }, editor: function (container, options) {
-           var input = $("<input/>");
+        { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true, width: "220px" },
+        { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, editor: function (container, options) {
+           var input = $("<input class='k-input k-textbox' type='text'/>");
            input.attr("name", options.field);
            input.attr("placeholder", 'Bsp.: http://beispiel.at/projekt.html');
            input.appendTo(container);
@@ -381,5 +391,27 @@ $(function(){
 });
 
 </script>
+<style>
+    .k-edit-form-container {
+        width: auto;
+        height: auto;
+    }
+    .k-popup-edit-form .k-edit-label
+    {
+        width: 20%;
+        text-align: left;
+    }
+
+    .k-popup-edit-form .k-edit-field
+    {
+        width: 70%;
+    }
+
+    .k-popup-edit-form .k-edit-field > .k-textbox,
+    .k-popup-edit-form .k-edit-field > .k-widget:not(.k-tooltip)
+    {
+        width: 80%;
+    }
+</style>
 
 <% end %>

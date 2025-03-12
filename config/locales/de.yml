@@ -175,7 +175,7 @@ de:
   program_event:
     timescale: "Zeitraum"
     type: "Typ"
-    show_in_magazin: "in Magazin veröffentlichen"
+    show_in_magazin: "Premiere in gift - zeitschrift abdrucken"
     tickets_url: "Tickets (URL)"
     tickets_phone: "Tickets (Tel)"
     tickets_email: "Tickets (Email)"
@@ -206,6 +206,7 @@ de:
     reductions: "Ermäßigungen"
     price_from: "Preis (von)"
     price_to: "Preis (bis)"
+    premiere_magazin_description: "Ich möchte, dass meine Premiere in der nächsten Ausgabe der gift - zeitschrift für freie theaterarbeit, tanz, performance und zirkus im Bereich 'Premierenkalender' mit den von mir eingegebenen Informationen abgedruckt wird. Ich verstehe, dass die Redaktion keine Gewähr auf Veröffentlichung geben kann. Weitere Informationen: "
 
 
   program_entries:
