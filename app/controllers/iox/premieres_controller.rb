@@ -5,11 +5,21 @@ module Iox
        
         def index
             return if !redirect_if_no_rights
+            @filter = "all"
+            if params.has_key?(:filter) && ["all", "magazin", "newsletter"].include?(params["filter"])
+                @filter = params["filter"]
+            end
             @events = Iox::ProgramEvent.where("LOWER(event_type) LIKE '%premiere%'")
-                        .where("show_in_magazin = true")
                         .where("starts_at >= ?", Time.now())
                         .includes(:program_entry, :venue)
                         .order("starts_at")
+            if @filter == 'magazin'
+                @events = @events.where("show_in_magazin = true")
+            end
+            if @filter == 'newsletter'
+                @events = @events.where("show_in_newsletter = true")
+            end
+
             render layout: true
         end
 

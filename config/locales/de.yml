@@ -176,6 +176,7 @@ de:
     timescale: "Zeitraum"
     type: "Typ"
     show_in_magazin: "Premiere in gift - zeitschrift abdrucken"
+    show_in_newsletter: "Premiere in Newsletter anzeigen"
     tickets_url: "Tickets (URL)"
     tickets_phone: "Tickets (Tel)"
     tickets_email: "Tickets (Email)"
@@ -207,7 +208,7 @@ de:
     price_from: "Preis (von)"
     price_to: "Preis (bis)"
     premiere_magazin_description: "Ich möchte, dass meine Premiere in der nächsten Ausgabe der gift - zeitschrift für freie theaterarbeit, tanz, performance und zirkus im Bereich 'Premierenkalender' mit den von mir eingegebenen Informationen abgedruckt wird. Ich verstehe, dass die Redaktion keine Gewähr auf Veröffentlichung geben kann. Weitere Informationen: "
-
+    premiere_newsletter_description: "Ich möchte, dass meine Premiere im nächsten Newsletter 'Premierenkalender von theaterspielplan.at' (Link zum NL) mit den von mir eingegebenen Informationen erscheint. Die Redaktion kann keine Gewähr auf Veröffentlichung geben. Ich verstehe, dass die Redaktion keine Gewähr auf Veröffentlichung geben kann. Weitere Informationen: (Link zum NL)"
 
   program_entries:
     title: "Termine"
@@ -346,8 +347,10 @@ de:
     must_have_title: "Du musst mindestens einen Titel für die Veranstaltung angeben"
 
   premiere:
-    no_premieres: "Derzeit gibt es keine Premieren"
+    no_premieres: "keine Premieren gefunden"
     regie: "Regie"
+    reload: "aktualisieren"
+    no_filter: "ohne Filter"
 
   program_entry_person:
     no_person_given: "Du hast keine Person ausgewählt"

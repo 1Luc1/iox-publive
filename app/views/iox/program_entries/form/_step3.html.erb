@@ -120,6 +120,7 @@ $(function(){
                 'price_to': { editable: true, type: 'number' },
                 'event_type': { editable: true },
                 'show_in_magazin': { editable: true, type: 'boolean' },
+                'show_in_newsletter': { editable: true, type: 'boolean' },
                 'tickets_url': { editable: true },
                 'tickets_email': { editable: true },
                 'tickets_phone': { editable: true },
@@ -180,10 +181,15 @@ $(function(){
           e.model.set( 'reductions', last.reductions );
         }
 
-        var $div = $('<span class="small"><%= t('program_event.premiere_magazin_description') %><a href="https://freietheater.at/premierenkalender-inserate/" target="_blank">freietheater.at/premierenkalender-inserate</a></span>');
-        $div.css({'marginLeft': 6, 'fontSize': 11});
+        var $magazin_div = $('<span class="small"><%= t('program_event.premiere_magazin_description') %><a href="https://freietheater.at/premierenkalender-inserate/" target="_blank">freietheater.at/premierenkalender-inserate</a></span>');
+        $magazin_div.css({'marginLeft': 6, 'fontSize': 11});
         var $input = e.container.find('input[name=show_in_magazin]')
-        $input.after($div);
+        $input.after($magazin_div);
+
+        var $newsletter_div = $('<span class="small"><%= t('program_event.premiere_newsletter_description') %></span>');
+        $newsletter_div.css({'marginLeft': 6, 'fontSize': 11});
+        var $input = e.container.find('input[name=show_in_newsletter]')
+        $input.after($newsletter_div);
 
         setupMultiplierEvent('venue_id', e.container, e.model);
         setupMultiplierEvent('tickets_url', e.container, e.model);
@@ -203,6 +209,7 @@ $(function(){
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
         { field: 'show_in_magazin', title: '<%= t('program_event.show_in_magazin') %>', template: '<input type="checkbox" #=data.show_in_magazin ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
+        { field: 'show_in_newsletter', title: '<%= t('program_event.show_in_newsletter') %>', template: '<input type="checkbox" #=data.show_in_newsletter ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
         { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true, width: "220px" },
         { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, editor: function (container, options) {
            var input = $("<input class='k-input k-textbox' type='text'/>");
@@ -228,10 +235,15 @@ $(function(){
       if (selection == "Premiere") {
         e.container.find('input[name="show_in_magazin"]').parent().show();
         e.container.find('label[for="show_in_magazin"]').parent().show();
+        e.container.find('input[name="show_in_newsletter"]').parent().show();
+        e.container.find('label[for="show_in_newsletter"]').parent().show();
       } else {
         e.container.find('input[name="show_in_magazin"]').parent().hide();
         e.container.find('label[for="show_in_magazin"]').parent().hide();
         e.model.set( 'show_in_magazin', null );
+        e.container.find('input[name="show_in_newsletter"]').parent().hide();
+        e.container.find('label[for="show_in_newsletter"]').parent().hide();
+        e.model.set( 'show_in_newsletter', null );
       }
     }
 
