@@ -182,12 +182,12 @@ $(function(){
         }
 
         var $magazin_div = $('<span class="small"><%= t('program_event.premiere_magazin_description') %><a href="https://freietheater.at/premierenkalender-inserate/" target="_blank">freietheater.at/premierenkalender-inserate</a></span>');
-        $magazin_div.css({'marginLeft': 6, 'fontSize': 11});
+        $magazin_div.css({'marginLeft': 6, 'fontSize': 12});
         var $input = e.container.find('input[name=show_in_magazin]')
         $input.after($magazin_div);
 
         var $newsletter_div = $('<span class="small"><%= t('program_event.premiere_newsletter_description') %></span>');
-        $newsletter_div.css({'marginLeft': 6, 'fontSize': 11});
+        $newsletter_div.css({'marginLeft': 6, 'fontSize': 12});
         var $input = e.container.find('input[name=show_in_newsletter]')
         $input.after($newsletter_div);
 
