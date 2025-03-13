@@ -1,5 +1,33 @@
 <div class="iox-content-frame auto-overflow" style="right:auto; padding-right: 10px;">
     <div class="iox-content-padding">
+
+ <%= form_tag "premieres", :method => :get do %>
+        <div class="iox-user-header iox-grid-header clearfix">
+            <%= submit_tag t('premiere.reload'), class: 'btn btn-primary' %>
+            <div class="options-container">
+                <div class="options-container-inner">
+                    <div class="item-col">
+                     <span class="item">
+                            <%= radio_button_tag 'filter', 'all', @filter == 'all' %>
+                            <%= t('premiere.no_filter') %>
+                        </span><br />
+                        <span class="item">
+                            <%= radio_button_tag 'filter', 'magazin', @filter == 'magazin' %>
+                            <%= t('program_event.show_in_magazin') %>
+                        </span><br />
+                        <span class="item">
+                            <%= radio_button_tag 'filter', 'newsletter', @filter == 'newsletter' %>
+                            <%= t('program_event.show_in_newsletter') %>
+                        </span><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% end %>
+
+        <% if @events.empty? %>
+            <%= t('premiere.no_premieres') %>
+        <% end %>
         <% @events.each do |event| %>
             <% next unless event.program_entry %>
             <%= I18n.localize(event.starts_at, :format => '%a, %d.%m.%Y')%>
@@ -7,14 +35,15 @@
             <%= event.program_entry.title %>
             <br>            
             <% event.program_entry.program_entry_people.where("function = 'Regie'").map do |program_entry_people| %>
-                Regie: <%= program_entry_people.person.name %>
+                
+                <%= t('premiere.regie') %>Regie: <%= program_entry_people.person.name %>
                 <br>
             <% end %>
             <% if event.program_entry.ensemble %>
-                Gruppe: <%= event.program_entry.ensemble.name  %>
+                 <%= t('ensemble.ensemble') %>: <%= event.program_entry.ensemble.name  %>
                 <br>
             <% end %>
-            Ort: <%= event.venue.name %>
+            <%= t('venue.title') %>: <%= event.venue.name %>
             <br>
             <%= event.program_entry.url || event.tickets_url %>
             <hr>

@@ -89,6 +89,8 @@ module Iox
         :event_type, 
         :starts_at_time, 
         :venue_id, 
+        :show_in_magazin,
+        :show_in_newsletter,
         :price_from, 
         :price_to, 
         :additional_note, 
