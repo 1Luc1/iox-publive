@@ -208,8 +208,9 @@ $(function(){
           editor: dateTimeEditor,
           format: "{0:dd.MM.yyyy HH:mm}" },
         { field: 'event_type', title: '<%= t('program_event.type') %>', values: [ '', 'Premiere', 'Derniere', 'Abgesagt' ], width: 100 },
-        { field: 'show_in_magazin', title: '<%= t('program_event.show_in_magazin') %>', template: '<input type="checkbox" #=data.show_in_magazin ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
-        { field: 'show_in_newsletter', title: '<%= t('program_event.show_in_newsletter') %>', template: '<input type="checkbox" #=data.show_in_newsletter ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
+        // TODO if this feature gets released, enable fields again
+        //{ field: 'show_in_magazin', title: '<%= t('program_event.show_in_magazin') %>', template: '<input type="checkbox" #=data.show_in_magazin ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
+        //{ field: 'show_in_newsletter', title: '<%= t('program_event.show_in_newsletter') %>', template: '<input type="checkbox" #=data.show_in_newsletter ? checked="checked" : "" # class="chkbx k-checkbox k-checkbox-md k-rounded-md" ></input>', hidden: true},
         { field: 'reductions', title: '<%= t('program_event.reductions') %>', hidden: true, width: "220px" },
         { field: 'tickets_url', title: '<%= t('program_event.tickets_url') %>', hidden: true, editor: function (container, options) {
            var input = $("<input class='k-input k-textbox' type='text'/>");
