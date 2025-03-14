@@ -36,6 +36,15 @@ module Iox
       h
     end
 
+    def valid_tickets_url()
+      valid_url = tickets_url
+      uri = URI.parse(valid_url)
+      if !%w( http https ).include?(uri.scheme)
+        valid_url = "https://#{valid_url}"
+      end
+      return valid_url
+    end
+
     private
 
     def update_start_end_time
