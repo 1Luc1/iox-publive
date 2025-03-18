@@ -69,7 +69,7 @@ module Iox
     end
 
     def cabaret_artist_names
-      program_entry_people.where( function: 'Künstler').map{ |a| a.person.name }.join(',')
+      program_entry_people.where( function: 'Künstler').map{ |a| a.person.name unless a.person.nil? }.join(',')
     end
 
     def author_ids
