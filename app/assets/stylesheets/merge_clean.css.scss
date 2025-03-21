@@ -1,6 +1,8 @@
 .people-clean, .people-merge,
 .venues-clean, .venues-merge,
-.ensembles-clean, .ensembles-merge {
+.ensembles-clean, .ensembles-merge,
+.people-merged, .ensembles-merged,
+.venues-merged {
   .action {
     float:left;
     width:30%;
@@ -8,6 +10,9 @@
   .info {
     float:left;
     width:20%;
+    .back-btn {
+      margin-bottom: 10px;
+    }
   }
   .description {
     float: left;
@@ -33,10 +38,15 @@
     background-color: #dddddd;
   }
   
-  
   span.small, p.small {
     font-size:11px;
     font-weight: lighter;
     display: block;
+  }
+
+  span.medium {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
   }
 }

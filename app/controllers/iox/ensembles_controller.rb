@@ -216,6 +216,20 @@ module Iox
       render layout: true
     end
 
+    def merged
+      return unless is_admin
+      @ensembles = Ensemble.select("iox_ensembles.id, iox_ensembles.name")
+              .select("count(iox_ensembles.name) AS cnt")
+              .select("GROUP_CONCAT(refe.id) as ids")
+              .select("DATE(MIN(refe.deleted_at)) as merged_at")
+              .joins("LEFT JOIN iox_ensembles as refe ON refe.conflicting_with_id = iox_ensembles.id")
+              .where("iox_ensembles.conflicting_with_id = 0")
+              .group("iox_ensembles.name")
+              .order("iox_ensembles.id ASC")
+              .load
+      render layout: true
+    end
+
     def merge_selected
       return unless is_admin
       if !params[:ids]

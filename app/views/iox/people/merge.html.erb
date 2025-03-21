@@ -23,7 +23,7 @@
           </div>
           <div class="action">
             <%= f.submit 'ausgewählte Personen zusammenführen', class: 'btn btn-danger btn-deleted-selected' %>
-            <span class="small">bereits bereinigte Personen: <%= @merged_people.size %></span>
+            <span class="medium">bereits zusammengeführte Duplikate: <%= link_to( @merged_people.size, merged_people_path ) %> </span>
           </div>
           <div class="description">
             <h4>Zusamenführungs-Strategie:</h4>

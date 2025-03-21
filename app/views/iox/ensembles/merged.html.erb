@@ -1,0 +1,51 @@
+<%= content_for :add_css do %>
+  <%= stylesheet_link_tag 'merge_clean' %>
+<% end %>
+
+<% if @insufficient_rights %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+
+  <div class="iox-content-frame auto-overflow">
+    <div class="iox-content-padding ensembles-merged">
+    
+        <div style="overflow: hidden;">
+          <div class="info">
+            <div class="back-btn"><%= link_to( 'Zurück', merge_ensembles_path ) %></div>
+            <div>Anzahl zusammengeführter Duplikate: <%= @ensembles.size %></div>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th>IDs</th>
+            <th>Name</th>
+            <th>Anzahl</th>
+            <th>zusammengeführt am</th>
+          </tr>
+          <% @ensembles.each do |ensemble, idx| %>
+            <tr>
+              <td>
+                <a href="<%= edit_ensemble_path(ensemble.id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                  <%= ensemble.id %>
+                </a>
+                &lt;&lt;
+                <% ensemble.ids.split(/, ?/).sort_by(&:to_i).each_with_index do |id, index| %>
+                  <a href="<%= edit_ensemble_path(id) %>" target="_blank" title="<%= t('program_entry.view') %>">
+                    <%= id %>
+                  </a>
+                <% end %>
+              </td>
+              <td><%= ensemble.name %></td>
+              <td><%= ensemble.cnt %></td>
+              <td><%= ensemble.merged_at %></td>
+            </tr>
+          <% end %>
+        </table>
+    
+    </div>
+  </div>
+<% end %>

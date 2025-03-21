@@ -203,6 +203,20 @@ module Iox
       render layout: true
     end
 
+    def merged
+      return unless is_admin
+      @venues = Venue.select("iox_venues.id, iox_venues.name")
+              .select("count(iox_venues.name) AS cnt")
+              .select("GROUP_CONCAT(refv.id) as ids")
+              .select("DATE(MIN(refv.deleted_at)) as merged_at")
+              .joins("LEFT JOIN iox_venues as refv ON refv.conflicting_with_id = iox_venues.id")
+              .where("iox_venues.conflicting_with_id = 0")
+              .group("iox_venues.name")
+              .order("iox_venues.id ASC")
+              .load
+      render layout: true
+    end
+
     def merge_selected
       return unless is_admin
       if !params[:ids]

@@ -223,6 +223,20 @@ module Iox
       render layout: true
     end
 
+    def merged
+      return unless is_admin
+      @people = Person.select("iox_people.id, iox_people.firstname, iox_people.lastname")
+              .select("count(iox_people.firstname) AS cnt")
+              .select("GROUP_CONCAT(refp.id) as ids")
+              .select("DATE(MIN(refp.deleted_at)) as merged_at")
+              .joins("LEFT JOIN iox_people as refp ON refp.conflicting_with_id = iox_people.id")
+              .where("iox_people.conflicting_with_id = 0")
+              .group("iox_people.firstname, iox_people.lastname")
+              .order("iox_people.id ASC")
+              .load
+      render layout: true
+    end
+
     def merge_selected
       return unless is_admin
       if !params[:ids]

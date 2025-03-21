@@ -54,6 +54,7 @@ Iox::Engine.routes.draw do
       get :simple
       get :merge
       get :clean
+      get :merged
     end
     post :clean_selected, :on => :collection
     post :merge_selected, :on => :collection
@@ -74,6 +75,7 @@ Iox::Engine.routes.draw do
       get :simple
       get :merge
       get :clean
+      get :merged
     end
     post :clean_selected, :on => :collection
     post :merge_selected, :on => :collection
@@ -95,6 +97,7 @@ Iox::Engine.routes.draw do
       get :simple
       get :merge
       get :clean
+      get :merged
     end
     post :clean_selected, :on => :collection
     post :merge_selected, :on => :collection
