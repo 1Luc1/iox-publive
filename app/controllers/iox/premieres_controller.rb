@@ -10,9 +10,9 @@ module Iox
                 @filter = params["filter"]
             end
             @events = Iox::ProgramEvent.where("LOWER(event_type) LIKE '%premiere%'")
-                        .where("starts_at >= ?", Time.now())
-                        .includes(:program_entry, :venue)
-                        .order("starts_at")
+                        .where("iox_program_events.starts_at >= ?", Time.now())
+                        .joins(:program_entry, :venue)
+                        .order("iox_program_events.starts_at")
             if @filter == 'magazin'
                 @events = @events.where("show_in_magazin = true")
             end

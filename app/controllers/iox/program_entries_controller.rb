@@ -217,8 +217,17 @@ module Iox
     def events_for
       @program_entry = ProgramEntry.find_by_id( params[:id] )
       events = []
-      @program_entries = @program_entry.events.includes(:venue,:festival).references(:iox_venues,:iox_program_entries).order('iox_program_events.starts_at').load
-      render json: @program_entries
+      @program_entries = @program_entry.events.includes(:venue,:festival)
+                          .references(:iox_venues,:iox_program_entries)
+                          .order('iox_program_events.starts_at')
+                          .load
+      json_pe = []
+      @program_entries.each do |program_entry|
+        if !program_entry.venue.nil?
+          json_pe << program_entry
+        end
+      end
+      render json: json_pe
     end
 
     def images_for
