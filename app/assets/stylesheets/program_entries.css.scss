@@ -532,6 +532,20 @@ table.syncers th{
   float: left;
 }
 
+.iox-user-header .meta-container {
+  float: right;
+  margin-right: 20px;
+}
+
+.meta-container input[type=text] {
+  font-size: inherit !important;
+  padding: inherit !important;
+  width: inherit !important;
+}
+.meta-container .field-box label {
+  width: 110px !important;
+}
+
 .people-merge {
   table {
     width: 100%;

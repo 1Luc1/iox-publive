@@ -41,6 +41,8 @@ Iox::Engine.routes.draw do
 
   resources :program_entry_people
 
+  resources :instagram_syncs
+
   resources :ensembles do
     member do
       post :upload_logo
