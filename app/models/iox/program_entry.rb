@@ -111,6 +111,20 @@ module Iox
       h
     end
 
+    def next_event_date
+      if events.empty? 
+        return Date.current.to_date
+      end
+      
+      event = events.where('starts_at > ?', Date.current).first
+
+      if event.nil?
+        event = events.reorder(starts_at: :desc).first
+      end
+
+      return "#{event.starts_at.beginning_of_month.to_date}##{event.starts_at.to_date}"
+    end
+
     private
 
     def update_people_links

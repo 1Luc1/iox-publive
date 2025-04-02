@@ -36,6 +36,7 @@
           <a href="<%= program_entries_path %>" class="btn"><i class="icon-chevron-left"></i> <%= t('back') %></a>
         <% end %>
         <% unless @program_entry.new_record? %>
+          <a href="/?starts_at=<%=@program_entry.next_event_date %>" class="btn" title="<%= t('view') %>" target="_blank"><i class="icon-eye-open"></i></a>
           <a href="<%= edit_program_entry_path(@program_entry) %>" class="btn"><i class="icon-link" title="<%= t('program_entry.full_link') %>" target="_blank"></i></a>
           <a href="#" data-xhr-win="true" data-xhr-href="<%= settings_for_program_entry_path(@program_entry) %>" class="btn" title="<%= t('settings') %>"><i class="icon-gear"></i></a>
         <% end %>
