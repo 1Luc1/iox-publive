@@ -10,7 +10,7 @@
         <p>
           <label><%= t('change_ownership') %></label>
           <br />
-          <%= f.select :user_id, options_from_collection_for_select( Iox::User.all, :id, :full_name, (@obj.user_id || current_user.id )),{ include_blank: false } , { class: 'admin-select-user'} %>
+          <%= f.select :user_id, options_from_collection_for_select( Iox::User.all, :id, :full_name_email, (@obj.user_id || current_user.id )),{ include_blank: false } , { class: 'admin-select-user'} %>
         </p>
         <script type="text/javascript">
           $(document).ready(function(){
