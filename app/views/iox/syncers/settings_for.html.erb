@@ -1,0 +1,33 @@
+<span data-iox-win-title="true"><%= t('settings_for', name: (@obj.respond_to?(:name) ? @obj.name : @obj.title)) %> (ID: <%= @obj.id %>)</span>
+<%= form_for @obj, remote: true, html: { class: 'iox-win-auth-form'} do |f| %>
+
+  <div class="content-padding">
+
+    <% if (!current_user.is_admin?) %>
+      <p class="iox-inline-notice"><%= raw t('settings_locked') %></p>
+    <% else %>
+      <% if current_user.is_admin? %>
+        <p>
+          <label><%= t('change_ownership') %></label>
+          <br />
+          <%= f.select :user_id, options_from_collection_for_select( Iox::User.all, :id, :full_name, (@obj.user_id || current_user.id )),{ include_blank: false } , { class: 'admin-select-user'} %>
+        </p>
+        <script type="text/javascript">
+          $(document).ready(function(){
+            $('.admin-select-user').select2();
+          });
+        </script>
+      <% end %>
+
+      <%= hidden_field_tag :settings_form, true %>
+
+      <div class="iox-win-footer">
+        <button type="submit" class="btn btn-primary"><%= t('save') %></button>
+        <button class="btn" data-close-win="true"><%= t('cancel') %></button>
+      </div>
+    <% end %>
+  </div>
+
+
+
+<% end %>

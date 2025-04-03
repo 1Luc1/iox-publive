@@ -27,6 +27,7 @@ Iox::Engine.routes.draw do
     member do
       get :sync
       get :now
+      get :settings_for
     end
   end
 

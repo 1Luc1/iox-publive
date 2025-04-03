@@ -35,7 +35,7 @@ module Iox
       @syncer = Iox::Syncer.find_by_id params[:id]
       if @syncer.update syncer_params
         flash[:notice] = t 'syncer.saved', name: @syncer.name
-        redirect_to syncers_path
+        redirect_to syncers_path unless params["settings_form"]
       else
         flash[:error] = "Einstellungen konnten nicht gespeichert werden"
         render template: 'edit'
@@ -67,12 +67,43 @@ module Iox
       end
     end
 
+    def settings_for
+      check_404_and_privileges
+      @obj = @syncer
+      render template: '/iox/syncers/settings_for', layout: false
+    end
+
     private
 
     def syncer_params
       params.require(:syncer).permit(
-        %w( name cron_line url festival_id send_report send_report_to )
+        %w( name cron_line url festival_id send_report send_report_to user_id )
       )
+    end
+
+    def check_404_and_privileges(hard_check=false)
+      @insufficient_rights = true
+      unless @syncer = Syncer.unscoped.where( id: params[:id] ).first
+        if request.xhr?
+          flash.now.alert = t('not_found')
+        else
+          flash.alert = t('not_found')
+          redirect_to syncers_path
+        end
+        return false
+      end
+
+      if !current_user.is_admin? && @syncer.user_id != current_user.id && hard_check
+        if request.xhr?
+          flash.now.alert = t('insufficient_rights_you_cannot_save')
+        else
+          flash.alert = t('insufficient_rights_you_cannot_save')
+          redirect_to syncers_path
+        end
+        return false
+      end
+      @insufficient_rights = false
+      true
     end
 
   end
