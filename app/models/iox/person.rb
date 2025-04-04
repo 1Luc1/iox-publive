@@ -75,8 +75,11 @@ module Iox
         h[:functions] = program_entry_people.map{ |pep| pep.function }.join(',')
         h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       end
+      if !options.key?(:simple_plus)
+        h[:ensemble_names] = ensembles.map{ |e| e.name }.join(',')
+      end
       h[:name] = name
-      h[:ensemble_names] = ensembles.map{ |e| e.name }.join(',')
+      
       h
     end
 

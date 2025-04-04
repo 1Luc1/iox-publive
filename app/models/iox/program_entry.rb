@@ -90,25 +90,28 @@ module Iox
 
     def as_json(options = { })
       h = super(options)
-      h[:venue_id] = venue_id
-      h[:venue_name] = venue_name
-      h[:cabaret_artist_names] = cabaret_artist_names
-      h[:url] = to_param
-      if events.first.nil?
-        h[:tickets_url] = ''
-      else
-        h[:tickets_url] = events.first.tickets_url
+      h[:name] = title
+      if !options.key?(:simple)
+        h[:venue_id] = venue_id
+        h[:venue_name] = venue_name
+        h[:cabaret_artist_names] = cabaret_artist_names
+        h[:url] = to_param
+        if events.first.nil?
+          h[:tickets_url] = ''
+        else
+          h[:tickets_url] = events.first.tickets_url
+        end
+        if image = images.first
+          h[:orig_url] = image.file.url(:original)
+          h[:thumb_url] = image.file.url(:thumb)
+          h[:thumb_title] = image.description.blank? && image.copyright.blank? ? '' : "#{image.description} ©#{image.copyright}"
+        end
+        h[:votes_mean] = votes_mean
+        h[:votes_count] = votes.count
+        h[:ensemble_name] = ensemble ? ensemble.name : ''
+        h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
       end
-      if image = images.first
-        h[:orig_url] = image.file.url(:original)
-        h[:thumb_url] = image.file.url(:thumb)
-        h[:thumb_title] = image.description.blank? && image.copyright.blank? ? '' : "#{image.description} ©#{image.copyright}"
-      end
-      h[:votes_mean] = votes_mean
-      h[:votes_count] = votes.count
-      h[:ensemble_name] = ensemble ? ensemble.name : ''
-      h[:updater_name] = updater ? updater.full_name : ( creator ? creator.full_name : ( import_foreign_db_name.blank? ? '' : import_foreign_db_name ) )
-      h
+        h
     end
 
     def next_event_date

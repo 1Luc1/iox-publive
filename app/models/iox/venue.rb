@@ -55,8 +55,10 @@ module Iox
 
     def as_json(options = { })
       h = super(options)
-      h[:events_num] = events.count
-      h[:updater_name] = updater ? updater.full_name : (creator ? creator.full_name : ( import_foreign_db_name ? import_foreign_db_name : '' ))
+      if !options.key?(:simple)
+        h[:events_num] = events.count
+        h[:updater_name] = updater ? updater.full_name : (creator ? creator.full_name : ( import_foreign_db_name ? import_foreign_db_name : '' ))
+      end
       h
     end
 
