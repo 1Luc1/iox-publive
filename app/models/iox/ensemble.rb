@@ -15,7 +15,8 @@ module Iox
 
     has_many    :images, -> { order(:position) }, class_name: 'Iox::EnsemblePicture', dependent: :destroy
 
-    validates   :name, presence: true, uniqueness: true, if: :should_validate?
+    validates   :name, presence: true, if: :should_validate?
+    validates_uniqueness_of :name, case_sensitive: false, conditions: -> { where(deleted_at: nil) }, if: :should_validate?
 
     before_save :set_default_country,
                 :convert_zip_gkz
