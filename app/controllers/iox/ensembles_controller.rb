@@ -142,7 +142,8 @@ module Iox
           end
         end
 
-        if @ensemble.save
+        # admin can skip validation to make duplicate entries on purpose to merge them afterwards
+        if @ensemble.save :validate => !current_user.is_admin?
 
           Iox::Activity.create! user_id: current_user.id, obj_name: @ensemble.name, action: 'updated', icon_class: 'icon-asterisk', obj_id: @ensemble.id, obj_type: @ensemble.class.name, obj_path: ensemble_path(@ensemble)
 
@@ -150,7 +151,7 @@ module Iox
           flash.notice = t('settings_saved', name: @ensemble.name) if params[:settings_form]
           redirect_to edit_ensemble_path( @ensemble ) unless request.xhr?
         else
-          flash.alert = t('ensemble.saving_failed')
+          flash.alert = "#{t('ensemble.saving_failed')}: #{@ensemble.errors.full_messages.join(' ').html_safe}"
           flash.alert = t('settings_saving_failed', name: @ensemble.name) if params[:settings_form]
           render template: 'iox/ensembles/edit' unless request.xhr?
         end

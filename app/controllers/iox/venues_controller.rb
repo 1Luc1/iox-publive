@@ -135,14 +135,16 @@ module Iox
             return
           end
         end
-        if @venue.save
+
+        # admin can skip validation to make duplicate entries on purpose to merge them afterwards
+        if @venue.save :validate => !current_user.is_admin?
           Iox::Activity.create! user_id: current_user.id, obj_name: @venue.name, action: 'updated', icon_class: 'icon-map-marker', obj_id: @venue.id, obj_type: @venue.class.name, obj_path: venue_path(@venue)
 
           flash.now.notice = t('venue.saved', name: @venue.name)
           flash.now.notice = t('settings_saved', name: @venue.name) if params[:settings_form]
           redirect_to edit_venue_path( @venue ) unless request.xhr?
         else
-          flash.now.alert = t('venue.saving_failed')
+          flash.now.alert = "#{t('venue.saving_failed', name: @venue.name)}: #{@venue.errors.full_messages.join(' ').html_safe}"
           flash.now.alert = t('settings_saved', name: @venue.name) if params[:settings_form]
           render template: 'iox/venues/edit' unless request.xhr?
         end

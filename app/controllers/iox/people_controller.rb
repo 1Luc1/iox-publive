@@ -132,7 +132,8 @@ module Iox
           @person.tag_ids = params[:person][:tags]
         end
 
-        if @person.save
+        # admin can skip validation to make duplicate entries on purpose to merge them afterwards
+        if @person.save :validate => !current_user.is_admin?
 
           begin
             Iox::Activity.create! user_id: current_user.id, obj_name: @person.name, action: 'updated', icon_class: 'icon-group', obj_id: @person.id, obj_type: @person.class.name, obj_path: people_path(@person)
