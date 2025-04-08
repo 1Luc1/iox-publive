@@ -20,6 +20,6 @@ zu:
   Dabei wurde der Stand vom <%= @changes[:updated_at][0] %> überschreiben.
 <% end %>
 
-http://<%= Rails.configuration.iox.domain_name %><%= url_for @obj %>/edit
+<%= url_for @obj %>/edit
 
 <%= t 'auto_generated', support_email: Rails.configuration.iox.support_email %>
