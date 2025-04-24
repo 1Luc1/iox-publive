@@ -1,0 +1,137 @@
+<% if @insufficient_rights %>
+  <script type="text/javascript">
+    iox.flash.rails( <%= raw flash.to_json %> );
+    $('.iox-content:last').remove();
+    $('.iox-content:last').show();
+  </script>
+<% else %>
+    <%= content_for :add_css do %>
+        <%= stylesheet_link_tag 'program_entries' %>
+    <% end %>
+    <div class="iox-content iox-content-container" id="iox-pe-content">
+        <div class="iox-content-frame">
+            <div class="iox-content-padding instagram-post">
+                <div class="back-btn"><%= link_to( 'Zurück', user_path(current_user) ) %></div>
+
+                <div class="description">
+                    <h4>Allgemeine Information:</h4>
+                    <div class="small">
+                        Es müssen folgende Kriterien stimmen, damit ein Instagram Post möglich ist.
+                        <ul>
+                            <li>der Termin muss eine Premiere sein</li>
+                            <li>die Checkbox (auf Instagram posten) für die Premiere muss angehackt sein</li>
+                            <li>der Program Eintrag muss mindestens ein Bild haben</li>
+                            <li>der Program Eintrag darf keinen bereits vorhanndenen Instagram Post haben</li>
+                            <li>der Termin darf nicht in der vergangenheit liegen</li>
+                        </ul>
+                        Ein Instagram Post wird einen Monat vor Premiere gepostet.
+                        Das automatsche überprüfen und posten geschieht einmal täglich.
+                    </div>
+                </div>
+
+                <div class="iox-user-header clearfix">
+                    <div class="iox-form meta-container">
+                        <div class="fields-header">Instagram Access Token</div>
+                        <div class="field-box">
+                            <label>Token</label>
+                            <%= text_field_tag 'access_token', @access_token_escaped, disabled: true %>
+                        </div>
+
+                        <div class="field-box">
+                            <label>Expires At</label>
+                            <%= text_field_tag 'access_token_expires_at', @access_token_expires_at.strftime("%d.%m.%Y"), disabled: true %>
+                        </div>
+
+                        <div class="field-box">
+                            <label>API Docs</label>
+                            <%= link_to '<i class="icon-external-link icon"></i>'.html_safe, "https://developers.facebook.com/docs/instagram-platform/reference/refresh_access_token/" , target: :blank %>
+                        </div>            
+                    </div>
+
+                    <div class="iox-form meta-container">
+                        <div class="fields-header">Content Publishing Limit (50 within 24 hrs)</div>
+                        <div class="field-box">
+                            <label>Current Usage</label>
+                            <%= text_field_tag 'content_publising_limit', @content_publishing_current_usage, disabled: true %>
+                        </div>
+                        <div class="field-box">
+                            <label>API Docs</label>
+                            <%= link_to '<i class="icon-external-link icon"></i>'.html_safe, "https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/content_publishing_limit/" , target: :blank %>
+                        </div>         
+                    </div>
+                </div>
+
+                <div class="iox-form">
+                    <div class="fields-header">Posted on Instagram</div>
+                    <table class="syncers">
+                        <thead>
+                        <tr>
+                        <th>ID</th>
+                            <th>Program Event ID</th>
+                            <th>Program Entry</th>
+                            <th>IG_CONTAINER_ID</th>
+                            <th>IG_MEDIA_ID</th>
+                            <th>SHORTCODE</th>
+                            <th>Status</th>
+                            <th>created</th>
+                            <th>updated</th>
+                            <th>AKTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @posted_on_instagram.each do |posted| %>
+                            <tr>
+                                <td><%= posted.id %></td>
+                                <td><%= posted.program_event.id %></td>
+                                <td><%= posted.program_entry.title %></td>
+                                <td><%= posted.ig_container_id %></td>
+                                <td><%= posted.ig_media_id %></td>
+                                <td><%= posted.shortcode %></td>
+                                <td><%= posted.status %></td>
+                                <td><%= posted.created_at.to_date %></td>
+                                <td><%= posted.updated_at.to_date %></td>
+                                <td>
+                                    <%= link_to t('view'), edit_program_entry_path(posted.program_event.program_entry), class: 'btn', target: :blank %>
+                                    <% if posted.shortcode %>
+                                        <%= link_to t('instagram'), "https://www.instagram.com/p/" + posted.shortcode, class: 'btn', target: :blank %>
+                                    <% end %>
+                                </td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="iox-form">
+                    <div class="fields-header">Upcoming Instagram Posts</div>
+                    <table class="syncers">
+                        <thead>
+                        <tr>
+                            <th>Program Event ID</th>
+                            <th>Program Entry</th>
+                            <th>Event Type</th>
+                            <th><%= t('program_entry.starts') %></th>
+                            <th>publish on</th>
+                            <th>AKTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @upcoming_posts.each do |upcoming_post| %>
+                            <tr>
+                                <td><%= upcoming_post.id %></td>
+                                <td><%= upcoming_post.program_entry.title %></td>
+                                <td><%= upcoming_post.event_type %></td>
+                                <td><%= upcoming_post.starts_at.to_date %></td>
+                                <td><%= upcoming_post.starts_at.to_date - 1.month %></td>
+                                <td>
+                                    <%= link_to t('view'), edit_program_entry_path(upcoming_post.program_entry), class: 'btn', target: :blank %>
+                                </td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>

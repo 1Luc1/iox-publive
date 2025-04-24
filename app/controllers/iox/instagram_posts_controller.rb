@@ -1,5 +1,5 @@
 module Iox
-  class InstagramSyncsController < Iox::ApplicationController
+  class InstagramPostsController < Iox::ApplicationController
     before_action :authenticate!
     layout 'iox/application'
 
@@ -11,6 +11,10 @@ module Iox
       @access_token_escaped = instagram_helper.access_token_escaped
       @access_token_expires_at = instagram_helper.access_token_expires_at
       @content_publishing_current_usage = instagram_helper.content_publishing_current_usage
+
+      @posted_on_instagram = Iox::InstagramPost.all()
+     
+      @upcoming_posts = Iox::ProgramEvent.postable_on_instagram.order(:starts_at)
 
       render layout: true
     end

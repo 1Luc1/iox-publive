@@ -13,6 +13,7 @@ module Iox
     belongs_to  :organizer, class_name: 'Iox::Ensemble', foreign_key: 'organizer_id'
     belongs_to  :creator, class_name: 'Iox::User', foreign_key: 'created_by'
     belongs_to  :updater, class_name: 'Iox::User', foreign_key: 'updated_by'
+    has_one     :instagram_post, class_name: 'Iox::InstagramPost'
     has_many    :program_entry_people, -> { order(:position) }, dependent: :delete_all
     has_many    :program_entry_events, dependent: :delete_all
     has_many    :crew, through: :program_entry_people, source: :person

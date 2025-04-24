@@ -10,11 +10,6 @@
 
       <div class="iox-user-header iox-grid-header clearfix">
         <a href="<%= new_syncer_path %>" class="btn btn-primary" data-tree-role="new" rel="tooltip">Neue Synchronisation</a>
-        <% if current_user.is_admin? %>
-          <div class="admin-container">
-            <a href="<%= instagram_syncs_path %>" class="btn btn-secondary" rel="tooltip">Instagram</a>
-          </div>
-        <% end %>
       </div>
 
       <table class="syncers">
@@ -45,6 +40,7 @@
             </td>
           </tr>
         <% end %>
+        </tbody>
       </table>
     </div>
 

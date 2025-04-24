@@ -558,6 +558,26 @@ table.syncers th{
   }
 }
 
+.instagram-post {
+  .description {
+    float: left;
+    width: 45%;
+
+    h4 {
+      margin-bottom: 5px;
+    }
+
+    div.small {
+      font-size:12px;
+      display: block;
+  
+      ul {
+        margin: 0px;
+      }
+    }
+  }
+}
+
 .people-clean, .people-merge {
   .action {
     float:left;

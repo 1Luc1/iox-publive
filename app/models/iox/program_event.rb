@@ -45,6 +45,28 @@ module Iox
       return valid_url
     end
 
+    # 'starts_at >' means premieres on the same date won't be posted
+    # DateTime.now.beginning_of_day - 1.day we exclude dates which are on the current date
+    # show every premiere starting tomorrow
+    # get all program events which ... 
+    # is a premiere
+    # have checkbox post on instagram true
+    # have at least one image
+    # only one premiere (post) per program entry
+    # arn't in the past and not one month away
+    def self.postable_on_instagram
+      joins(program_entry: :images).left_outer_joins(program_entry: :instagram_post)
+        .where(post_on_instagram: true)
+        .where('iox_program_events.starts_at > ?', DateTime.now.beginning_of_day + 1.day)
+        .where(iox_program_entries: {published: true})
+        .where.not(iox_program_files: { id: nil })
+        .where(iox_instagram_posts: { id: nil }).distinct
+    end
+
+    def self.max_one_month
+      where('iox_program_events.starts_at <= ?', DateTime.now + 1.month)
+    end
+
     private
 
     def update_start_end_time

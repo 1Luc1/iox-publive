@@ -33,14 +33,45 @@ module Iox
         Settings.instagram_access_token = response["access_token"]
     end
 
-    def media_publish
-      options = {query: {access_token: Settings.instagram_access_token}, body: JSON.generate({caption: "...", image_url:"https://theaterspielplan.at/data/avatars/4288301063264bfe824119328a864ba21895d653.jpg"}), headers: { 'Content-Type' => 'application/json' }}
+    def create_media_container(caption, image_url)
+      options = {query: {access_token: Settings.instagram_access_token}, 
+                body: JSON.generate({caption: caption, image_url: image_url}), 
+                headers: { 'Content-Type' => 'application/json' }}
       response = self.class.post("/v22.0/#{Settings.instagram_user_id}/media", options)
-      ig_container_id = response["id"]
-      
-      options = {query: {access_token: Settings.instagram_access_token}, body: JSON.generate({creation_id: ig_container_id}), headers: { 'Content-Type' => 'application/json' }}
+      if response.code == 200
+        return response["id"]        
+      else
+        @@logger.error response['error']['message']
+      end 
+
+      return false
+    end
+
+    # Returns array with 'id' and 'shortcode' key on success or false on error
+    def publish_media(ig_container_id)
+      options = {query: {access_token: Settings.instagram_access_token, fields: 'shortcode'},
+                body: JSON.generate({creation_id: ig_container_id}),
+                headers: { 'Content-Type' => 'application/json' }}
       response = self.class.post("/v22.0/#{Settings.instagram_user_id}/media_publish", options)
-      ig_media_id = response["id"]
+      if response.code == 200
+        return response
+      else
+        @@logger.error response['error']['message']
+      end 
+        
+      return false
+    end
+
+    def container_status(ig_container_id)
+      options = {query: {access_token: Settings.instagram_access_token, fields: 'status_code'}}
+      response = self.class.get("/v22.0/#{ig_container_id}", options)
+      if response.code == 200
+        return response['status_code']
+      else
+        @@logger.error response['error']['message']
+      end 
+        
+      return false
     end
 
     def content_publishing_current_usage

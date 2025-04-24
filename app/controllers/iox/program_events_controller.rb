@@ -91,6 +91,7 @@ module Iox
         :venue_id, 
         :show_in_magazin,
         :show_in_newsletter,
+        :post_on_instagram,
         :price_from, 
         :price_to, 
         :additional_note, 

@@ -42,7 +42,7 @@ Iox::Engine.routes.draw do
 
   resources :program_entry_people
 
-  resources :instagram_syncs
+  resources :instagram_posts
 
   resources :ensembles do
     member do
