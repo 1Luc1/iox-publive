@@ -18,7 +18,7 @@ namespace :iox do
       @program_events.each do |event|
         instagram_post = Iox::InstagramPost.new(program_entry_id: event.program_entry_id, program_event_id: event.id)
         caption = get_caption event
-        image_url = "https://" + Rails.configuration.iox.domain_name + event.program_entry.images.first.file.url(:original)
+        image_url = "https://" + Rails.configuration.iox.domain_name + event.program_entry.images.first.file.url(:original, timestamp: false)
         # for development usage
         # image_url = "https://theaterspielplan.at/data/avatars/4288301063264bfe824119328a864ba21895d653.jpg";
         logger.info image_url
