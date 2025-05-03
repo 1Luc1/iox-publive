@@ -18,7 +18,10 @@ module Iox
     has_attached_file :file,
                       :styles => Rails.configuration.iox.program_file_sizes,
                       :default_url => "/images/:style/missing.png",
-                      :url => "/data/:class/:program_entry_id_part/:program_entry_id/:style/:updated_at_:basename.:extension"
+                      :url => "/data/:class/:program_entry_id_part/:program_entry_id/:style/:updated_at_:basename.:extension",
+                      :restricted_characters => /[&$+,\/:;=?@<>\[\]\{\}\|\\\^~%# äöüÄÖÜß]/
+                      # default value plus umlaute will be escaped with underscore _
+
 
     validates_attachment :file,
                         attachment_presence: true,
