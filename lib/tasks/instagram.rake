@@ -21,7 +21,6 @@ namespace :iox do
         image_url = "https://" + Rails.configuration.iox.domain_name + event.program_entry.images.first.file.url(:original, timestamp: false)
         # for development usage
         # image_url = "https://theaterspielplan.at/data/avatars/4288301063264bfe824119328a864ba21895d653.jpg";
-        logger.info image_url
         if ig_container_id = instagram_helper.create_media_container(caption, image_url)
           instagram_post.update(:ig_container_id => ig_container_id, :status => 1)
           # since instagram needs some time to process the container we wait and check status before we proceed
