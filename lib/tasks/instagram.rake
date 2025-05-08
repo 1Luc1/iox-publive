@@ -68,7 +68,7 @@ namespace :iox do
       caption << @hr_line
       caption << event.venue.name
       caption << @new_line
-      caption << event.venue.street
+      caption << event.venue.street if event.venue.street
       caption << "#{event.venue.zip}, #{event.venue.city}" if event.venue.zip && event.venue.city
       caption << @hr_line
       caption << Nokogiri::HTML(event.program_entry.description).text
