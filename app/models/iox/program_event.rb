@@ -67,6 +67,13 @@ module Iox
       where('iox_program_events.starts_at <= ?', DateTime.now + 1.month)
     end
 
+    def self.by_year(year)
+      dt = DateTime.new(year)
+      boy = dt.beginning_of_year
+      eoy = dt.end_of_year
+      where("iox_program_events.starts_at >= ? and iox_program_events.starts_at <= ?", boy, eoy)
+    end
+
     private
 
     def update_start_end_time
