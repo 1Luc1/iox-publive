@@ -38,9 +38,11 @@ module Iox
 
     def valid_tickets_url()
       valid_url = tickets_url
-      uri = URI.parse(valid_url.strip)
-      if !%w( http https ).include?(uri.scheme)
-        valid_url = "https://#{valid_url}"
+      if !valid_url.nil?
+        uri = URI.parse(valid_url.strip)
+        if !%w( http https ).include?(uri.scheme)
+          valid_url = "https://#{valid_url}"
+        end
       end
       return valid_url
     end
