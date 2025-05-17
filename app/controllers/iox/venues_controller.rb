@@ -225,7 +225,7 @@ module Iox
         @nothing_selected = true
         flash.notice = t('venues.no_venue_selected')
       else
-        logger = get_loger("merge")
+        logger = Logger.new("#{Rails.root}/log/merge_clean.log")
         logger.info "Start merging #{params[:ids].count} venue duplicats"
         error_occoured = false
         params[:ids].each do |ids|
@@ -314,7 +314,7 @@ module Iox
         @nothing_selected = true
         flash.notice = t('venues.no_venue_selected')
       else
-        logger = get_loger("clean")
+        logger = Logger.new("#{Rails.root}/log/merge_clean.log")
         logger.info "Start cleaning #{params[:ids].count} venues"
         error_occoured = false
         params[:ids].each do |id|
@@ -335,10 +335,6 @@ module Iox
     end
 
     private
-    def get_loger(type)
-      Logger.new("#{Rails.root}/log/venues_#{type}.log")
-    end
-
     def check_404_and_privileges(hard_check=false)
       @insufficient_rights = true
       unless @venue = Venue.unscoped.where( id: params[:id] ).first

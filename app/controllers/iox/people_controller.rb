@@ -244,7 +244,7 @@ module Iox
         @nothing_selected = true
         flash.notice = t('program_entry_person.no_person_given')
       else
-        logger = get_loger("merge")
+        logger = Logger.new("#{Rails.root}/log/merge_clean.log")
         logger.info "Start merging #{params[:ids].count} people duplicats"
         error_occoured = false
         params[:ids].each do |ids|
@@ -325,7 +325,7 @@ module Iox
         @nothing_selected = true
         flash.notice = t('program_entry_person.no_person_given')
       else
-        logger = get_loger("clean")
+        logger = Logger.new("#{Rails.root}/log/merge_clean.log")
         logger.info "Start cleaning #{params[:ids].count} persons"
         error_occoured = false
         params[:ids].each do |id|
@@ -347,10 +347,6 @@ module Iox
 
 
     private
-    def get_loger(type)
-      Logger.new("#{Rails.root}/log/people_#{type}.log")
-    end
-
     def check_404_and_privileges(hard_check=false)
       @insufficient_rights = true
       unless @person = Person.unscoped.where( id: params[:id] ).first
