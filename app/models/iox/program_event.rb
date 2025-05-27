@@ -76,6 +76,14 @@ module Iox
       where("iox_program_events.starts_at >= ? and iox_program_events.starts_at <= ?", boy, eoy)
     end
 
+    def self.by_month(month)
+      where('extract(month from iox_program_events.starts_at) = ?', month)
+    end
+
+    def self.by_day(day)
+      where('extract(day from iox_program_events.starts_at) = ?', day)
+    end
+
     private
 
     def update_start_end_time
