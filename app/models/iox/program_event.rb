@@ -84,6 +84,10 @@ module Iox
       where('extract(day from iox_program_events.starts_at) = ?', day)
     end
 
+    def self.by_gkz(gkz)
+      where('left(gkz, 1) = ?', gkz)
+    end
+
     private
 
     def update_start_end_time
