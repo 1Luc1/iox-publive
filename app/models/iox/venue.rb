@@ -16,6 +16,7 @@ module Iox
 
     validates :name, presence: true, if: :should_validate?
     validates_uniqueness_of :name, case_sensitive: false, conditions: -> { where(deleted_at: nil) }, if: :should_validate?
+    validates :zip, presence: true, if: :should_validate?
 
     before_save :set_default_country,
                 :convert_zip_gkz

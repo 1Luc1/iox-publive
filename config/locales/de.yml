@@ -27,6 +27,7 @@ de:
   merge: "Zusammenführen"
   clean: "Bereinigen"
   file_to_big: "Bild Datei zu groß. Max. 10 MB."
+  zip_required: "Postleitzahl muss angegeben werden"
 
   errors:
       format: "%{attribute} %{message}"
@@ -392,6 +393,11 @@ de:
     moved_events: "%{user} hat Termine von %{icon} %{name} nach %{icon} %{recipient_name} verschoben"
 
   activerecord:
+    attributes:
+    "iox/venue":
+      zip: "PLZ"
+    "iox/ensemble":
+      zip: "PLZ"
     errors:
       models:
         "iox/program_file":
