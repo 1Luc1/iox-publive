@@ -82,7 +82,7 @@
                         <% @posted_on_instagram.each do |posted| %>
                             <tr>
                                 <td><%= posted.id %></td>
-                                <td><%= posted.program_event.id %></td>
+                                <td><%= posted.program_event.nil? ? "N.A." : posted.program_event.id %></td>
                                 <td><%= posted.program_entry.title %></td>
                                 <td><%= posted.ig_container_id %></td>
                                 <td><%= posted.ig_media_id %></td>
@@ -91,7 +91,7 @@
                                 <td><%= posted.created_at.to_date %></td>
                                 <td><%= posted.updated_at.to_date %></td>
                                 <td>
-                                    <%= link_to t('view'), edit_program_entry_path(posted.program_event.program_entry), class: 'btn', target: :blank %>
+                                    <%= link_to t('view'), edit_program_entry_path(posted.program_entry), class: 'btn', target: :blank %>
                                     <% if posted.shortcode %>
                                         <%= link_to t('instagram'), "https://www.instagram.com/p/" + posted.shortcode, class: 'btn', target: :blank %>
                                     <% end %>
