@@ -29,9 +29,20 @@ module Iox
                         content_type: { :content_type => ['image/jpg', 'image/png', 'image/jpeg', 'image/gif'] },
                         size: { in: 0..10.megabytes },
                         on: :create
-
+    validate :aspect_ratio
 
     belongs_to :program_entry
+
+    protected
+    def aspect_ratio
+      if file.content_type.include? "image"
+        dimensions = Paperclip::Geometry.from_file(file.queued_for_write[:original].path)
+        aspect_ratio_number = dimensions.width / dimensions.height
+        if !(aspect_ratio_number >= 0.8 && aspect_ratio_number <= 1.91)
+          errors.add(:file, "Das Seitenverhältnis des Bildes muss zwischen 4:5 und 1,91:1 (bzw. 0.8 und 1.91) liegen.")
+        end
+      end
+    end
 
   end
 end
