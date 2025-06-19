@@ -65,6 +65,20 @@ module Iox
         .where(iox_instagram_posts: { id: nil }).distinct
     end
 
+    def self.show_in_newsletter
+      joins(program_entry: :images).left_outer_joins(program_entry: :crew).joins(:venue).joins(program_entry: :events)
+        .where(show_in_newsletter: true)
+        .where(iox_program_entries: {published: true})
+        .where.not(iox_program_files: { id: nil }).distinct
+    end
+
+    def self.next_month
+      dt = DateTime.now + 1.month
+      bom = dt.beginning_of_month
+      eom = dt.end_of_month
+      where("iox_program_events.starts_at >= ? and iox_program_events.starts_at <= ?", bom, eom)
+    end
+
     def self.max_one_month
       where('iox_program_events.starts_at <= ?', DateTime.now + 1.month)
     end
