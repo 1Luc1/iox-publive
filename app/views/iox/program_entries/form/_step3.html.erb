@@ -186,7 +186,7 @@ $(function(){
         var $input = e.container.find('input[name=show_in_magazin]')
         $input.after($magazin_div);
 
-        var $newsletter_div = $('<span class="small"><%= t('program_event.premiere_newsletter_description') %></span>');
+        var $newsletter_div = $('<span class="small"><%= t('program_event.premiere_newsletter_description') %><a href="/newsletter-anmeldung" target="_blank">Newsletter Anmeldung</a></span>');
         $newsletter_div.css({'marginLeft': 6, 'fontSize': 12});
         var $input = e.container.find('input[name=show_in_newsletter]')
         $input.after($newsletter_div);

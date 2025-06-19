@@ -215,7 +215,7 @@ de:
     price_from: "Preis (von)"
     price_to: "Preis (bis)"
     premiere_magazin_description: "Ich möchte, dass meine Premiere in der nächsten Ausgabe der gift - zeitschrift für freie theaterarbeit, tanz, performance und zirkus im Bereich 'Premierenkalender' mit den von mir eingegebenen Informationen abgedruckt wird. Ich verstehe, dass die Redaktion keine Gewähr auf Veröffentlichung geben kann. Weitere Informationen: "
-    premiere_newsletter_description: "Ich möchte, dass meine Premiere im nächsten Newsletter 'Premierenkalender von theaterspielplan.at' (Link zum NL) mit den von mir eingegebenen Informationen erscheint. Die Redaktion kann keine Gewähr auf Veröffentlichung geben. Ich verstehe, dass die Redaktion keine Gewähr auf Veröffentlichung geben kann. Weitere Informationen: (Link zum NL)"
+    premiere_newsletter_description: "Ich möchte, dass meine Premiere im nächsten Newsletter 'Premierenkalender von theaterspielplan.at' mit den von mir eingegebenen Informationen erscheint. Die Redaktion kann keine Gewähr auf Veröffentlichung geben. Weitere Informationen: "
     premiere_instagram_description: "Ich möchte, dass meine Premiere auf dem Instagramkanal %{instagram_link} veröffentlicht wird. Dieser Beitrag kann nachträglich nicht bearbeitet werden. Voraussichtliche Veröffentlichung ist ein Monat vor der Premiere."
 
   program_entries:
