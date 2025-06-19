@@ -129,6 +129,10 @@ module Iox
       return "#{event.starts_at.beginning_of_month.to_date}##{event.starts_at.to_date}"
     end
 
+    def next_event_dates(e)
+      events.where("starts_at >= ?", e.starts_at).where('iox_program_events.id <> ?', e.id).order(:starts_at)
+    end
+
     private
 
     def update_people_links
