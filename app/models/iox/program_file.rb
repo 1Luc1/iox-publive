@@ -35,7 +35,7 @@ module Iox
 
     protected
     def aspect_ratio
-      if file.content_type.include? "image"
+      if !file.content_type.nil? && (file.content_type.include? "image") && !file.queued_for_write[:original].nil?
         dimensions = Paperclip::Geometry.from_file(file.queued_for_write[:original].path)
         aspect_ratio_number = dimensions.width / dimensions.height
         if !(aspect_ratio_number >= 0.8 && aspect_ratio_number <= 1.91)
