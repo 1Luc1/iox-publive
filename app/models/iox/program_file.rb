@@ -29,7 +29,7 @@ module Iox
                         content_type: { :content_type => ['image/jpg', 'image/png', 'image/jpeg', 'image/gif'] },
                         size: { in: 0..10.megabytes },
                         on: :create
-    validate :aspect_ratio
+    validate :aspect_ratio,  if: -> { !sync_id.presence }
 
     belongs_to :program_entry
 
