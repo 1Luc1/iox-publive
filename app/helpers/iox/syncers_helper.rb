@@ -87,7 +87,7 @@ module Iox
 
           image.file = file
           unless image.save
-            @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to save (unknown reason)"
+            @sync_error_log << "#{program_entry.id} (#{program_entry.title}): #{image.errors[:file].first}"
             failed += 1
           end
         rescue OpenURI::HTTPError
