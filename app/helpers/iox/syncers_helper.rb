@@ -44,7 +44,7 @@ module Iox
       program_entry.events.each do |event|
         event.festival_id = @syncer.festival_id unless @syncer.festival_id.blank?
         unless event.save
-          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to save event #{event.id}"
+          @sync_error_log << "#{program_entry.id} (#{program_entry.title}): Failed to save event #{event.id} (#{event.errors.full_messages})"
         end
         next unless (event.venue && event.venue.new_record?)
         if venue = Venue.find_by_sync_id( event.venue.sync_id )
