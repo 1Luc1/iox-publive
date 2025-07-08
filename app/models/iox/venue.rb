@@ -24,7 +24,7 @@ module Iox
     # after_save :notify_owner_by_email
 
     def should_validate?
-      !deleted_at.present? && !conflicting_with_id.present?
+      !deleted_at.present? && !conflicting_with_id.present? && !sync_id.present?
     end
 
     def program_entries(query='')
