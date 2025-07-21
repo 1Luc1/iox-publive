@@ -5,7 +5,7 @@ module Iox
        
         def index
             return if !redirect_if_no_rights
-            @filter = "all"
+            @filter = "magazin"
             if params.has_key?(:filter) && ["all", "magazin", "newsletter"].include?(params["filter"])
                 @filter = params["filter"]
             end
