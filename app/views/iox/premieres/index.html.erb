@@ -1,9 +1,9 @@
 <div class="iox-content-frame auto-overflow" style="right:auto; padding-right: 10px;">
     <div class="iox-content-padding">
 
-        <%= form_tag "premieres", :method => :get do %>
+        <%= form_tag "premieres", :method => :get, enforce_utf8: false do %>
             <div class="iox-user-header iox-grid-header clearfix">
-                <%= submit_tag t('premiere.reload'), class: 'btn btn-primary' %>
+                <%= submit_tag t('premiere.reload'), name: nil, class: 'btn btn-primary' %>
                 <div class="options-container">
                     <div class="options-container-inner">
                         <div class="item-col">
