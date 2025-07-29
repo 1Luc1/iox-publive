@@ -68,7 +68,7 @@ namespace :iox do
                   'Name'=> "Theaterspielplan Newsletter"
               }
           ],
-          'TemplateID'=> ENV['7040280'],
+          'TemplateID'=> ENV['MAILJET_TSP_NEWSLETTER_TEMPLATE_ID'],
           'TemplateLanguage'=> true,
           'TemplateErrorReporting' => {
             'Email' => ENV['ADMIN_USER_EMAIL'],
