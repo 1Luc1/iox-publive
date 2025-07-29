@@ -74,11 +74,16 @@
         <p>
           <label><%= t('change_ownership') %></label>
           <br />
-          <%= select_tag :with_user, options_from_collection_for_select( Iox::User.all, :id, :full_name_email, (@obj.created_by || current_user.id )), class: 'admin-select-user' %>
+          <% if @obj.created_by.nil? || !Iox::User.exists?(@obj.created_by) %>
+            <p class="alert"><%= t('owner_was_deleted') %></p>
+          <% end %>
+          <%= select_tag :with_user, options_from_collection_for_select( Iox::User.all, :id, :full_name_email, @obj.created_by), include_blank: true, class: 'admin-select-user' %>
         </p>
         <script type="text/javascript">
           $(document).ready(function(){
-            $('.admin-select-user').select2();
+            $('.admin-select-user').select2({
+              placeholder: '<%= t('change_ownership') %>',
+            });
           });
         </script>
       <% end %>

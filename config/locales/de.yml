@@ -28,6 +28,7 @@ de:
   clean: "Bereinigen"
   file_to_big: "Bild Datei zu groß. Max. 10 MB."
   zip_required: "Postleitzahl muss angegeben werden"
+  owner_was_deleted: "Der Besitzer wurde gelöscht. Bitte wählen Sie einen neuen aus."
 
   errors:
       format: "%{attribute} %{message}"
