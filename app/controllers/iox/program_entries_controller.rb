@@ -16,7 +16,6 @@ module Iox
           @query = "iox_program_entries.import_foreign_db_id LIKE '#{filter}%' OR iox_program_entries.id =#{filter}"
         else
           if params[:only_venues] && params[:only_venues] == 'true'
-            puts "\n\n DETECTED \n\n"
             return search_by_venue_name(filter)
           else
             @query = "LOWER(title) LIKE '%#{filter}%' OR LOWER(subtitle) LIKE '%#{filter}%' OR LOWER(iox_program_entries.meta_keywords) LIKE '%#{filter}%'"
