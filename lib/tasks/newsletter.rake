@@ -49,7 +49,8 @@ namespace :iox do
         rows << {"columns" => columns}
 
         year = Date.today.year
-        month = I18n.t("date.month_names")[(DateTime.now + 1.month).month]
+        current_month = I18n.t("date.month_names")[(DateTime.now).month]
+        next_month = I18n.t("date.month_names")[(DateTime.now + 1.month).month]
         
         # need to use mailjet v3.1 to use send method
         Mailjet.configure do |config|
@@ -74,13 +75,13 @@ namespace :iox do
             'Email' => ENV['ADMIN_USER_EMAIL'],
             'Name' => 'Admin'
           },
-          'Subject' => "Newsletter Theaterspielplan #{month}/#{year}",
+          'Subject' => "Newsletter Theaterspielplan #{current_month} #{year}",
           'Variables'=> {
                 "rows" => rows,
                 "year" => "#{year}",
-                "month" => "#{month}"
+                "month" => "#{next_month}"
                 },
-          'CustomCampaign' => "Theaterspielplan Newsletter #{month}/#{year}"
+          'CustomCampaign' => "Theaterspielplan Newsletter #{current_month} #{year}"
           }]
         )
 
