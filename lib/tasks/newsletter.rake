@@ -8,7 +8,7 @@ namespace :iox do
       logger = Logger.new("#{Rails.root}/log/newsletter.log")
       @program_events = Iox::ProgramEvent.show_in_newsletter.next_month.order(:starts_at)
       number_of_program_events = @program_events.count
-      logger.info "Start sending newsletter with program_events #{number_of_program_events}"
+      logger.info "Prepare newsletter with #{number_of_program_events} program_events"
 
       # only proceed if there are events
       if number_of_program_events > 0
@@ -58,6 +58,7 @@ namespace :iox do
         end
 
         # send newsletter
+        logger.info "Send newsletter with Subject >Newsletter Theaterspielplan #{current_month} #{year}<"
         variable = Mailjet::Send.create(messages: [{
           'From'=> {
               'Email'=> ENV['MAILJET_TSP_NEWSLETTER_LIST_MAIL'],
