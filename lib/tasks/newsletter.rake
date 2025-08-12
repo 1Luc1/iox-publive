@@ -61,8 +61,8 @@ namespace :iox do
         logger.info "Send newsletter with Subject >Newsletter Theaterspielplan #{current_month} #{year}<"
         variable = Mailjet::Send.create(messages: [{
           'From'=> {
-              'Email'=> ENV['MAILJET_TSP_NEWSLETTER_LIST_MAIL'],
-              'Name'=> 'Freietheater'
+              'Email'=> ENV['NEWSLETTER_EMAIL_FROM'],
+              'Name'=> 'IG Freie Theaterarbeit'
           },
           'To'=> [
               {
