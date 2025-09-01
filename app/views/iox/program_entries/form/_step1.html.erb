@@ -249,50 +249,9 @@
     updateOnlyElems();
     $('.category-selector').on('change', updateOnlyElems);
 
-    $('#select-cabaret-artist-id').select2()
-      .select2('container').find('.select2-input').on('keydown', function( e ){
-        var term = $(this).val();
-        if( e.keyCode !== 13 || term.indexOf(' ') < 1 )
-          return;
-        if( confirm( term + ' <%= t('does_not_exist_create') %>') )
-          $.ajax({
-            url: '/iox/people',
-            type: 'post',
-            dataType: 'script',
-            data: { person: { name: term } }
-          });
-    });
-
-    $('#select-author-id').select2()
-      .select2('container').find('.select2-input').on('keydown', function( e ){
-        var term = $(this).val();
-        if( e.keyCode !== 13 || term.indexOf(' ') < 1 )
-          return;
-        if( confirm( term + ' <%= t('does_not_exist_create') %>') )
-          $.ajax({
-            url: '/iox/people',
-            type: 'post',
-            dataType: 'script',
-            data: { person: { name: term } }
-          });
-    });
-
-    $('.ensemble-select2').select2({
-      formatNoMatches: function( term ){
-        return '<%= t('no_matches') %>! '+term+' <%= t("create").downcase %>? <%= t('if_yes_press_enter') %>';
-      }
-    }).select2('container').find('.select2-input').on('keydown', function( e ){
-      if( e.keyCode !== 13 )
-        return;
-      var term = $(this).val();
-      if( confirm( term + ' <%= t('does_not_exist_create') %>') )
-        $.ajax({
-          url: '/iox/ensembles',
-          type: 'post',
-          dataType: 'script',
-          data: { ensemble: { name: term } }
-        });
-    });
+    $('#select-cabaret-artist-id').select2();
+    $('#select-author-id').select2();
+    $('.ensemble-select2').select2();
 
     CKEDITOR.replace( $('#program_entry_description').get(0), {
       removePlugins: 'elementspath,wsc',
@@ -303,8 +262,6 @@
         ['Source' ]
       ]
     });
-
-
 
     $('#step1 form:first').on('submit', function(e){
       $('#program_entry_description').val( CKEDITOR.instances['program_entry_description'].getData() );
