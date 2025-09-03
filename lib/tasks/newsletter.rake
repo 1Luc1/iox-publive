@@ -35,6 +35,7 @@ namespace :iox do
 
           # make variables
           columns << { "title" => event.program_entry.title,
+            "premiereDate" => event.starts_at.strftime('%d.%m.%Y'),
             "venue" => event.venue.name,
             "img" => domain_name + event.program_entry.images.first.file.url(:original, timestamp: false),
             "text" => event.program_entry.description,
