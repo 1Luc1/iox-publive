@@ -12,7 +12,7 @@ module Iox
       @access_token_expires_at = instagram_helper.access_token_expires_at
       @content_publishing_current_usage = instagram_helper.content_publishing_current_usage
 
-      @posted_on_instagram = Iox::InstagramPost.all()
+      @posted_on_instagram = Iox::InstagramPost.order(created_at: :desc).all()
      
       @upcoming_posts = Iox::ProgramEvent.postable_on_instagram.order(:starts_at)
 
