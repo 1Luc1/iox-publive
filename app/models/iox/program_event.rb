@@ -16,6 +16,7 @@ module Iox
 
     validates :starts_at, presence: true
     validates :venue_id, presence: true
+    validate :event_type_uniquness
 
     def price_from=(val)
       super( val.sub(',','.') )
@@ -106,6 +107,17 @@ module Iox
 
     def self.by_day(day)
       where('extract(day from iox_program_events.starts_at) = ?', day)
+    end
+
+    protected
+
+    def event_type_uniquness
+      if event_type == "Premiere" && program_entry.events.where.not({id: id}).exists?(event_type: 'Premiere')
+          errors.add(:event_type, "Premiere darf nur einmal vorkommen!")
+      end
+      if event_type == "Derniere" && program_entry.events.where.not({id: id}).exists?(event_type: 'Derniere')
+          errors.add(:event_type, "Derniere darf nur einmal vorkommen!")
+      end
     end
 
     private

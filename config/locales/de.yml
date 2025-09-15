@@ -395,10 +395,12 @@ de:
 
   activerecord:
     attributes:
-    "iox/venue":
-      zip: "PLZ"
-    "iox/ensemble":
-      zip: "PLZ"
+      "iox/venue":
+        zip: "PLZ"
+      "iox/ensemble":
+        zip: "PLZ"
+      "iox/program_event":
+        event_type: "Typ"
     errors:
       models:
         "iox/program_file":

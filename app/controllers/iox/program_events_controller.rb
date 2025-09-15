@@ -21,7 +21,7 @@ module Iox
         end
         @json_event = { id: @program_event.id, festival_name: (@program_event.festival && @program_event.festival.title), venue_name: (@program_event.venue && @program_event.venue.name), starts_at: @program_event.starts_at }.to_json
       else
-        flash.now.alert = t('program_event.saving_failed')
+        flash.now.alert = "#{t('program_event.saving_failed')}: #{@program_event.errors.full_messages.join(' ').html_safe}"
       end
       render json: { flash: flash, item: @program_event }
     end
@@ -34,7 +34,7 @@ module Iox
       if @program_event.save
         flash.now.notice = t('program_event.saved', starts: (@program_event.starts_at ? l(@program_event.starts_at, format: :short) : ''), venue: (@program_event.venue ? @program_event.venue.name : '') )
       else
-        flash.now.alert = t('program_event.saving_failed')
+        flash.now.alert = "#{t('program_event.saving_failed')}: #{@program_event.errors.full_messages.join(' ').html_safe}"
       end
       render json: { flash: flash, success: flash[:success], item: @program_event }
     end
