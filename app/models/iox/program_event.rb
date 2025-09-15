@@ -48,7 +48,11 @@ module Iox
           valid_url = "https://#{valid_url}"
         end
       else
-        return false
+        if !tickets_email.nil? && !tickets_email.empty?
+          valid_url = "mailto:#{tickets_email}"
+        else
+          return false
+        end
       end
       return valid_url
     end
