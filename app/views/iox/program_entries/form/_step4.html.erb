@@ -123,7 +123,7 @@
         if (response.status == 413) {
           iox.flash.alert( '<%= t("file_to_big") %>' );
         } else {
-          iox.flash.alert( JSON.parse(response.responseText).errors.file[0] );
+          iox.flash.alert( JSON.parse(response.responseText).errors );
         }
       },
       progressall: function (e, data) {

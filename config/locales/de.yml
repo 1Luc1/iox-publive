@@ -401,6 +401,8 @@ de:
         zip: "PLZ"
       "iox/program_event":
         event_type: "Typ"
+      "iox/program_file":
+        description: "Beschreibung"
     errors:
       models:
         "iox/program_file":

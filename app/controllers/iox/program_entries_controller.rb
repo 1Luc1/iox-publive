@@ -261,7 +261,7 @@ module Iox
           flash.notice = t('program_file.uploaded', name: @image.name )
           render :json => { item: @image.to_jq_upload('file'), flash: flash }
         else
-          render :json => {:errors => @image.errors}.to_json, :status => 500
+          render :json => {:errors => "#{t('program_file.uploading_failed')}: #{@image.errors.full_messages.join(' ').html_safe}"}.to_json, :status => 500
         end
       else
         logger.error "program entry not found (#{params[:id]})"

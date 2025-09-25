@@ -30,7 +30,7 @@ module Iox
                         size: { in: 0..10.megabytes },
                         on: :create
     validate :aspect_ratio,  if: -> { !sync_id.presence }
-
+    validates   :description, length: { maximum: 255 }
     belongs_to :program_entry
 
     protected
