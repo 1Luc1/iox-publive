@@ -8,7 +8,7 @@ module Iox
       h = super(options)
       h[:avatar_link] = person ? person.avatar.url(:thumb) : nil
       h[:person] = person
-      h[:name] = person.name
+      h[:name] = person ? person.name : ''
       h[:person_function] = function
       h
     end
