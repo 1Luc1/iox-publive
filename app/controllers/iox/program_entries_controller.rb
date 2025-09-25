@@ -261,8 +261,6 @@ module Iox
           flash.notice = t('program_file.uploaded', name: @image.name )
           render :json => { item: @image.to_jq_upload('file'), flash: flash }
         else
-          # don't think, this should be logged; since user gets information and can handle it
-          logger.error "#{current_user.name} tried to upload #{@image.file.original_filename} #{@image.file.content_type}"
           render :json => {:errors => @image.errors}.to_json, :status => 500
         end
       else
@@ -295,7 +293,6 @@ module Iox
           flash.notice = t('program_file.uploaded', name: @image.name )
           render :json => { item: @image.to_jq_upload('file'), flash: flash }
         else
-          logger.info "ERROR: #{current_user.name} tried to upload #{basename} #{@image.errors.full_messages.inspect}"
           render :json => {:errors => @image.errors}.to_json, :status => 500
         end
       else
