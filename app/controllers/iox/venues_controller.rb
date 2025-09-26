@@ -13,6 +13,7 @@ module Iox
       filter = (params[:filter] && params[:filter][:filters] && params[:filter][:filters]['0'] && params[:filter][:filters]['0'][:value]) || ''
       unless filter.blank?
         filter = filter.downcase
+        filter = quote_string(filter)
         if filter.match(/^[\d]*$/)
           @query = "iox_venues.import_foreign_db_id LIKE '#{filter}%' OR iox_venues.id =#{filter}"
         else
