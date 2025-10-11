@@ -1,5 +1,4 @@
 require 'mailjet'
-require 'json'
 
 namespace :iox do
   namespace :newsletter do
@@ -80,7 +79,7 @@ namespace :iox do
           },
           'Subject' => "Newsletter Theaterspielplan #{current_month} #{year}",
           'Variables'=> {
-                "rows" => rows.to_json,
+                "rows" => rows,
                 "year" => "#{year}",
                 "month" => "#{next_month}"
                 },
