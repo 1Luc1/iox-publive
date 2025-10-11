@@ -1,4 +1,5 @@
 require 'mailjet'
+require 'json'
 
 namespace :iox do
   namespace :newsletter do
@@ -60,7 +61,7 @@ namespace :iox do
 
         # send newsletter
         logger.info "Send newsletter with Subject >Newsletter Theaterspielplan #{current_month} #{year}<"
-        variable = Mailjet::Send.create(messages: [{
+        msg = [{
           'From'=> {
               'Email'=> ENV['NEWSLETTER_EMAIL_FROM'],
               'Name'=> 'IG Freie Theaterarbeit'
@@ -85,10 +86,10 @@ namespace :iox do
                 },
           'CustomCampaign' => "Theaterspielplan Newsletter #{current_month} #{year}"
           }]
-        )
+
+        variable = Mailjet::Send.create(messages: msg.to_json)
 
         logger.info "Mailjet Message: #{variable.attributes['Messages']}"
-
       end
     end
   end
