@@ -80,14 +80,14 @@ namespace :iox do
           },
           'Subject' => "Newsletter Theaterspielplan #{current_month} #{year}",
           'Variables'=> {
-                "rows" => rows,
+                "rows" => rows.to_json,
                 "year" => "#{year}",
                 "month" => "#{next_month}"
                 },
           'CustomCampaign' => "Theaterspielplan Newsletter #{current_month} #{year}"
           }]
 
-        variable = Mailjet::Send.create(messages: msg.to_json)
+        variable = Mailjet::Send.create(messages: msg)
 
         logger.info "Mailjet Message: #{variable.attributes['Messages']}"
       end
