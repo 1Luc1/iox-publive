@@ -51,8 +51,7 @@ namespace :iox do
         # out of loop -> add last columns
         rows << {"columns" => columns}
 
-        year = Date.today.year
-        current_month = I18n.t("date.month_names")[(DateTime.now).month]
+        year = (DateTime.now + 1.month).year
         next_month = I18n.t("date.month_names")[(DateTime.now + 1.month).month]
         
         # need to use mailjet v3.1 to use send method
@@ -61,7 +60,7 @@ namespace :iox do
         end
 
         # send newsletter
-        logger.info "Send newsletter with Subject >Newsletter Theaterspielplan #{current_month} #{year}<"
+        logger.info "Send newsletter with Subject >theaterspielplan.at: Premieren im #{next_month} #{year}<"
         msg = [{
           'From'=> {
               'Email'=> ENV['NEWSLETTER_EMAIL_FROM'],
@@ -79,13 +78,13 @@ namespace :iox do
             'Email' => ENV['ADMIN_USER_EMAIL'],
             'Name' => 'Admin'
           },
-          'Subject' => "Newsletter Theaterspielplan #{current_month} #{year}",
+          'Subject' => "theaterspielplan.at: Premieren im #{next_month} #{year}",
           'Variables'=> {
                 "rows" => rows,
                 "year" => "#{year}",
                 "month" => "#{next_month}"
                 },
-          'CustomCampaign' => "Theaterspielplan Newsletter #{current_month} #{year}"
+          'CustomCampaign' => "theaterspielplan.at: Premieren im #{next_month} #{year}"
           }]
 
         variable = Mailjet::Send.create(messages: msg)
