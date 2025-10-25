@@ -35,13 +35,14 @@ namespace :iox do
 
           # make variables
           columns << { 
-            "title" => event.program_entry.title,
-            "premiereDate" => event.starts_at.strftime('%d.%m.%Y'),
-            "venue" => event.venue.name,
+            "title" => event.program_entry.nil? ? "" : event.program_entry.title,
+            "premiereDate" => event.starts_at.nil? ? "" : event.starts_at.strftime('%d.%m.%Y'),
+            "venue" => event.nil? ? "" : event.venue.name,
             "img" => domain_name + event.program_entry.images.first.file.url(:original, timestamp: false),
             "text" => "#{event.program_entry.description[0..200]} ...",
-            "contributors" => "", #event.program_entry.crew.map{ |person| person.name }.join(", "),
+            "contributors" => event.program_entry.crew.nil? ? "" : event.program_entry.crew.map{ |person| person.name }.join(", "),
             "dates" => (dates.empty? ? "" : "weitere Termine: ") + dates.join(", "),
+            "moreLink" => "#{domain_name}/spielplan/#{event.program_entry.id}?event#{event.id}",
             "ics" => "#{domain_name}/#{event.id}/theaterspielplan.ics"
           }
 
