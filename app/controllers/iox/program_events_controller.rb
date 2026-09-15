@@ -33,6 +33,14 @@ module Iox
       #@program_event.reductions = @program_event.reductions.join(',') #params[:program_event][:reductions_arr] #.join(',') if params[:program_event][:reductions_arr] && params[:program_event][:reductions_arr].size > 0
       if @program_event.save
         flash.now.notice = t('program_event.saved', starts: (@program_event.starts_at ? l(@program_event.starts_at, format: :short) : ''), venue: (@program_event.venue ? @program_event.venue.name : '') )
+        @pentry = @program_event.program_entry
+        if @pentry.events
+          firstEvent = @pentry.events.reorder(starts_at: :asc).first
+          lastEvent = @pentry.events.reorder(starts_at: :desc).first
+          @pentry.starts_at = firstEvent.starts_at
+          @pentry.ends_at = lastEvent.starts_at
+          @pentry.save
+        end
       else
         flash.now.alert = "#{t('program_event.saving_failed')}: #{@program_event.errors.full_messages.join(' ').html_safe}"
       end
@@ -61,6 +69,14 @@ module Iox
       @program_event = ProgramEvent.find_by_id( params[:id] )
       if @program_event.destroy
         flash.now.notice = t('program_event.deleted', starts: l(@program_event.starts_at, format: :short), venue: (@program_event.venue ? @program_event.venue.name : ''))
+        @pentry = @program_event.program_entry
+        if @pentry.events
+          firstEvent = @pentry.events.reorder(starts_at: :asc).first
+          lastEvent = @pentry.events.reorder(starts_at: :desc).first
+          @pentry.starts_at = firstEvent.starts_at
+          @pentry.ends_at = lastEvent.starts_at
+          @pentry.save
+        end
       else
         flash.now.alert = t('program_event.deletion_failed')
       end
