@@ -70,11 +70,15 @@ module Iox
       if @program_event.destroy
         flash.now.notice = t('program_event.deleted', starts: l(@program_event.starts_at, format: :short), venue: (@program_event.venue ? @program_event.venue.name : ''))
         @pentry = @program_event.program_entry
-        if @pentry.events
+        if @pentry.events.any?
           firstEvent = @pentry.events.reorder(starts_at: :asc).first
           lastEvent = @pentry.events.reorder(starts_at: :desc).first
           @pentry.starts_at = firstEvent.starts_at
           @pentry.ends_at = lastEvent.starts_at
+          @pentry.save
+        else
+          @pentry.starts_at = nil
+          @pentry.ends_at = nil
           @pentry.save
         end
       else
